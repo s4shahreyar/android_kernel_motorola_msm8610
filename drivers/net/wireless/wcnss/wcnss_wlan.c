@@ -44,6 +44,8 @@
 
 #include <asm/system_info.h>
 
+#include <asm/system_info.h>
+
 #ifdef CONFIG_WCNSS_MEM_PRE_ALLOC
 #include "wcnss_prealloc.h"
 #endif
