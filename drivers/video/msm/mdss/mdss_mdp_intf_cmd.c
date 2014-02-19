@@ -494,6 +494,7 @@ int mdss_mdp_cmd_reconfigure_splash_done(struct mdss_mdp_ctl *ctl, bool handoff)
 		pr_err("%s: fail to send event PANEL_CONT_SPLASH_FINISH. "
 			"ret = %d\n", __func__, ret);
 	mdss_mdp_ctl_intf_event(ctl, MDSS_EVENT_PANEL_CLK_CTRL, (void *)0);
+	mdss_mdp_clk_ctrl(MDP_BLOCK_POWER_OFF, false);
 
 	/* Give back the reserved memory to the system */
 	memblock_free(mdp5_data->splash_mem_addr, mdp5_data->splash_mem_size);
