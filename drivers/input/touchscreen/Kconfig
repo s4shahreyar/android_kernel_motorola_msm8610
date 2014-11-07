@@ -1119,6 +1119,28 @@ config TOUCHSCREEN_GT9XX
 
           If unsure, say N.
 
+config TOUCHSCREEN_PREVENT_SLEEP
+	bool "Inihibit sleep on modified touchscreen drivers"
+	default y
+	help
+	This disables the sleep function of modified touchscreen drivers.
+
+config TOUCHSCREEN_SWEEP2WAKE
+	tristate "Sweep2Wake for touchscreens"
+	select TOUCHSCREEN_PREVENT_SLEEP
+	default y
+
+config TOUCHSCREEN_DOUBLETAP2WAKE
+	tristate "DoubleTap2Wake for touchscreens"
+	select TOUCHSCREEN_PREVENT_SLEEP
+	default y
+
+config TOUCHSCREEN_POWERSUSPEND
+	tristate "powersuspend for dtw and s2w"
+	default y
+
+
+
 source "drivers/input/touchscreen/gt9xx/Kconfig"
 
 endif
