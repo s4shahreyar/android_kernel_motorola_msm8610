@@ -7,10 +7,7 @@
 wm97xx-ts-y := wm97xx-core.o
 
 
-# for sweep2wake, leave 1st to avoid merge issues at the end of the file
-obj-$(CONFIG_TOUCHSCREEN_SWEEP2WAKE) += sweep2wake.o
-# for doubletap2wake, leave 1st to avoid merge issues at the end of the file
-obj-$(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE) += doubletap2wake.o
+
 
 obj-$(CONFIG_TOUCHSCREEN_SY3200)	+= sy3200.o
 obj-$(CONFIG_TOUCHSCREEN_SY3400)	+= sy3400.o
@@ -102,3 +99,7 @@ obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_I2C) += synaptics_dsx_i2c.o
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_RMI_DEV) += synaptics_dsx_rmi_dev.o
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_TEST_REPORTING) += synaptics_dsx_test_reporting.o
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_FW_UPDATE_MMI) += synaptics_dsx_fw_update.o
+# for sweep2wake, leave 1st to avoid merge issues at the end of the file
+obj-$(CONFIG_TOUCHSCREEN_SWEEP2WAKE) += sweep2wake.o
+# for doubletap2wake, leave 1st to avoid merge issues at the end of the file
+obj-$(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE) += doubletap2wake.o

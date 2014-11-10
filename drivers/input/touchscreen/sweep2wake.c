@@ -32,9 +32,9 @@
 #include <linux/slab.h>
 #include <linux/workqueue.h>
 #include <linux/input.h>
-#ifdef CONFIG_POWERSUSPEND
+//#ifdef CONFIG_POWERSUSPEND
 #include <linux/powersuspend.h>
-#endif
+//#endif
 #include <linux/hrtimer.h>
 
 /* uncomment since no touchscreen defines android touch, do that here */
@@ -57,7 +57,7 @@ MODULE_LICENSE("GPLv2");
 #define S2W_S2SONLY_DEFAULT	0
 #define S2W_PWRKEY_DUR          60
 
-#define DEFAULT_S2W_Y_MAX               888
+#define DEFAULT_S2W_Y_MAX               960
 #define DEFAULT_S2W_X_MAX               540
 #define DEFAULT_S2W_Y_LIMIT             DEFAULT_S2W_Y_MAX-100
 #define DEFAULT_S2W_X_B1                100
