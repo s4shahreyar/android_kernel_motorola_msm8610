@@ -32,9 +32,9 @@
 #include <linux/slab.h>
 #include <linux/workqueue.h>
 #include <linux/input.h>
-//#ifdef CONFIG_POWERSUSPEND
+#ifdef CONFIG_POWERSUSPEND
 #include <linux/powersuspend.h>
-//#endif
+#endif
 #include <linux/hrtimer.h>
 
 /* uncomment since no touchscreen defines android touch, do that here */
