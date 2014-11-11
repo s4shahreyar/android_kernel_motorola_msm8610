@@ -160,7 +160,7 @@ config CPU_FREQ_GOV_ONDEMAND
 
 	  For details, take a look at linux/Documentation/cpu-freq.
 
-	  If in doubt, say N.
+	  If in doubt, say Y.
 
 
 config CPU_FREQ_GOV_ALPHA
@@ -187,7 +187,7 @@ config CPU_FREQ_GOV_INTERACTIVE
 
 	  For details, take a look at linux/Documentation/cpu-freq.
 
-	  If in doubt, say N.
+	  If in doubt, say Y.
 
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
