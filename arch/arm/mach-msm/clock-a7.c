@@ -243,10 +243,11 @@ static void get_speed_bin(struct platform_device *pdev, int *bin, int *version)
 
 	if (redundant_sel == 1)
 		*bin = (pte_efuse >> 27) & 0x7;
-	#ifdef CONFIG_CPU_OVERCLOCK
+#ifdef CONFIG_CPU_OVERCLOCK
 	dev_info(&pdev->dev, "Speed bin being set to 1 for overclock!\n");
 	*bin = 1;
-	#else
+	valid = true ;
+#else
 
 	if (!valid) {
 		dev_info(&pdev->dev, "Speed bin not set. Defaulting to 0!\n");
