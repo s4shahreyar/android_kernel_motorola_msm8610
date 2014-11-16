@@ -1,6 +1,6 @@
 /*
  * Author: Paul Reioux aka Faux123 <reioux@gmail.com>
- *
+ * Ported to msm 8610 by Savoca@xda
  * WCD93xx sound control module
  * Copyright 2013~2014 Paul Reioux
  *
