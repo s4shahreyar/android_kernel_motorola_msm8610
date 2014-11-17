@@ -366,6 +366,10 @@ static const struct device_type wlan_type = {
 };
 
 
+static const struct device_type wlan_type = {
+	.name = "wlan",
+};
+
 /*
  * drv_init() - a device potentially for us
  *
