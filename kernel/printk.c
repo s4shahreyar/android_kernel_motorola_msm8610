@@ -42,6 +42,7 @@
 #include <linux/notifier.h>
 #include <linux/rculist.h>
 #include <linux/apanic_mmc.h>
+#include "printk_interface.h"
 
 #include <asm/uaccess.h>
 
@@ -830,6 +831,10 @@ asmlinkage int printk(const char *fmt, ...)
 	uncached_logk_pc(LOGK_LOGBUF, caller, (void *)log_end);
 #endif
 
+ // if printk mode is disabled, terminate instantly
+	if (printk_mode == 0)
+		return 0;
+
 	if (is_emergency_dump())
 		return 0;
 #ifdef CONFIG_KGDB_KDB
@@ -928,6 +933,11 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 	char *p;
 	size_t plen;
 	char special;
+
+	// if printk mode is disabled, terminate instantly
+	if (printk_mode == 0)
+		return 0;
+
 
 	boot_delay_msec();
 	printk_delay();
