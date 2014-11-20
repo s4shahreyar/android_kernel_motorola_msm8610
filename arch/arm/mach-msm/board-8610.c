@@ -111,7 +111,11 @@ void __init msm8610_add_drivers(void)
 	rpm_regulator_smd_driver_init();
 	qpnp_regulator_init();
 	tsens_tm_init_driver();
+#ifdef CONFIG_INTELLI_THERMAL
+	msm_thermal_init(NULL);
+#else
 	msm_thermal_device_init();
+#endif
 
 	if (of_board_is_rumi())
 		msm_clock_init(&msm8610_rumi_clock_init_data);
