@@ -2158,7 +2158,9 @@ static int synaptics_rmi4_irq_enable(struct synaptics_rmi4_data *rmi4_data,
 					__func__);
 			return retval;
 		}
+#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
 		irq_set_irq_wake(rmi4_data->irq, 1);
+#endif
 
 		dev_dbg(&rmi4_data->i2c_client->dev,
 				"%s: Started irq thread\n", __func__);
@@ -3702,16 +3704,16 @@ static int synaptics_rmi4_suspend(struct device *dev)
 	 if (prox_covered) {
 #endif
 
-	synaptics_dsx_sensor_state(rmi4_data, STATE_SUSPEND);
-	rmi4_data->poweron = false;
+	 synaptics_dsx_sensor_state(rmi4_data, STATE_SUSPEND);
+	 rmi4_data->poweron = false;
 
-	if (rmi4_data->purge_enabled) {
+	 if (rmi4_data->purge_enabled) {
 		int value = 1; /* set flag */
 		atomic_set(&rmi4_data->panel_off_flag, value);
 		pr_debug("touches purge is %s\n", value ? "ON" : "OFF");
-	}
+	 }
 
-	if (!rmi4_data->touch_stopped) {
+	 if (!rmi4_data->touch_stopped) {
 		if (platform_data->regulator_en) {
 			regulator_disable(rmi4_data->regulator);
 			pr_debug("touch-vdd regulator is %s\n",
@@ -3722,7 +3724,7 @@ static int synaptics_rmi4_suspend(struct device *dev)
 		gpio_free(platform_data->reset_gpio);
 
 		rmi4_data->touch_stopped = true;
-	}
+	 }
 #ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
 		} else {
 			pr_info("suspend avoided!\n");
