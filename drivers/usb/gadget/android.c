@@ -2247,7 +2247,7 @@ static struct android_usb_function *supported_functions[] = {
 	&audio_source_function,
 #endif
 	&uasp_function,
-	&hid_funtion,
+	&hid_function,
 	&usbnet_function,
 	NULL
 };
