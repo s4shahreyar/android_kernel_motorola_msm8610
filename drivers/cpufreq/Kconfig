@@ -171,6 +171,13 @@ config CPU_FREQ_GOV_ALPHA
 	
 	 If in doubt, say Y.
 
+config CPU_FREQ_GOV_INTELLIDEMAND
+	tristate "'INTELLIDEMAND' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	 'Intelli demand'
+	
+	 If in doubt, say Y.
 
 config CPU_FREQ_GOV_INTERACTIVE
 	tristate "'interactive' cpufreq policy governor"
