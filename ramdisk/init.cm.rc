@@ -111,6 +111,7 @@ on boot
     setprop net.tcp.usercfg.wifi       1
     setprop net.tcp.usercfg.lte        1
 
+
 # adb over network
 on property:service.adb.tcp.port=5555
     stop adbd
@@ -121,6 +122,9 @@ on property:service.adb.tcp.port=-1
 
 # sysinit (/system/etc/init.d)
 service sysinit /system/bin/sysinit
+    chown root /system/etc/init.d/*
+    chgrp shell /system/etc/init.d/*
     user root
+    group shell
     oneshot
     disabled
