@@ -1135,6 +1135,11 @@ config TOUCHSCREEN_DOUBLETAP2WAKE
 	select TOUCHSCREEN_PREVENT_SLEEP
 	default y
 
+config TOUCHSCREEN_TAP2UNLOCK
+	tristate "Tap to unlock for touchscreens"
+	select TOUCHSCREEN_PREVENT_SLEEP
+	default y
+
 config TOUCHSCREEN_POWERSUSPEND
 	tristate "powersuspend for dtw and s2w"
 	default y

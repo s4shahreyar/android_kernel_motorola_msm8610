@@ -1,4 +1,3 @@
-#
 # Makefile for the touchscreen drivers.
 #
 
@@ -103,3 +102,4 @@ obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_FW_UPDATE_MMI) += synaptics_dsx_fw_update
 obj-$(CONFIG_TOUCHSCREEN_SWEEP2WAKE) += sweep2wake.o
 # for doubletap2wake, leave 1st to avoid merge issues at the end of the file
 obj-$(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE) += doubletap2wake.o
+obj-$(CONFIG_TOUCHSCREEN_TAP2UNLOCK) += tap2unlock.o

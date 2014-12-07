@@ -10,6 +10,11 @@
  * GNU General Public License for more details.
  */
 
+#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#endif
+#endif
 #include <linux/module.h>
 #include <linux/interrupt.h>
 #include <linux/of.h>
@@ -31,6 +36,10 @@
 
 #include "mdss_dsi.h"
 #include "dsi_v2.h"
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+#include <linux/input/tap2unlock.h>
+#endif
+
 
 #define DT_CMD_HDR 6
 #define ESD_DROPBOX_MSG "ESD event detected"
@@ -50,6 +59,7 @@
 #define TE_PULSE_USEC  100
 
 #define PWR_MODE_DISON 0x4
+
 
 DEFINE_LED_TRIGGER(bl_led_trigger);
 
@@ -587,6 +597,9 @@ static int mdss_dsi_panel_cont_splash_on(struct mdss_panel_data *pdata)
 
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 	extern bool dt2w_scr_suspended;
+	extern bool t2u_scr_suspended;
+	extern void touch_suspend(void);
+	extern void touch_resume(void);
 #endif
 
 
@@ -595,6 +608,7 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 	struct mipi_panel_info *mipi;
 	struct mdss_dsi_ctrl_pdata *ctrl = NULL;
 	u8 pwr_mode = 0;
+
 
 	if (pdata == NULL) {
 		pr_err("%s: Invalid input data\n", __func__);
@@ -646,9 +660,20 @@ end:
 
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 	dt2w_scr_suspended = false;
+	t2u_scr_suspended = false;
+#endif
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+	if ((t2u_switch > 0) && (t2u_allow == false))
+	{
+		t2u_scr_suspended = false;
+		pr_info("t2u : calling to suspend touch ");
+		touch_suspend();
+
+	}
 #endif
 
 	return 0;
+
 }
 
 static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
@@ -687,6 +712,12 @@ disable_regs:
 
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 	dt2w_scr_suspended = true;
+#endif
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+	t2u_scr_suspended = true;
+	t2u_allow = false;
+	if (t2u_switch > 0)
+		touch_resume();
 #endif
 
 	return 0;
