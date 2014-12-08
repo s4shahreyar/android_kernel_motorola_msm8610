@@ -55,23 +55,22 @@ MODULE_VERSION(DRIVER_VERSION);
 MODULE_LICENSE("GPLv2");
 
 /* Tuneables */
-#define t2u_DEBUG		1
+#define t2u_DEBUG		0
 #define t2u_DEFAULT		1
 
 #define t2u_PWRKEY_DUR		20
 #define t2u_FEATHER		200
-#define t2u_TIME		3000
+#define t2u_TIME		600 //gap(in ms) allowed between 'each' touch (for 4 letter pattern - 4x600 =2400 ms)
 #define VERTICAL_SCREEN_MIDWAY  480 // Your device's vertical resolution / 2
 #define HORIZONTAL_SCREEN_MIDWAY  270 // Your device's horizontal resolution / 2
 
 /* Resources */
-int t2u_switch = t2u_DEFAULT, i;
+int t2u_switch = t2u_DEFAULT;
 int t2u_pattern[4] = {1,2,3,4};
 bool t2u_scr_suspended = false;
-static cputime64_t tap_time_pre;
-static int touch_x = 0, touch_y = 0, touch_nr = 0, x_pre[4], y_pre[4];
+static cputime64_t tap_time_pre = 0;
+static int touch_x = 0, touch_y = 0, touch_nr = 0;
 static bool touch_x_called = false, touch_y_called = false, touch_cnt = false;
-static bool exec_count = true;
 //#ifndef CONFIG_HAS_EARLYSUSPEND
 //#static struct notifier_block t2u_lcd_notif;
 //#endif
@@ -79,7 +78,6 @@ static struct input_dev * tap2unlock_pwrdev;
 static DEFINE_MUTEX(pwrkeyworklock);
 static struct workqueue_struct *t2u_input_wq;
 static struct work_struct t2u_input_work;
-bool t2u_wake = false;
 bool t2u_allow = false;
 
 /* Read cmdline for t2u */
@@ -98,17 +96,6 @@ static int __init read_t2u_cmdline(char *t2u)
 }
 __setup("t2u=", read_t2u_cmdline);
 
-/* reset on finger release */
-static void tap2unlock_reset(void) {
-	exec_count = true;
-	touch_nr = 0;
-	tap_time_pre = 0;
-	for ( i = 0; i < 4; i++) {
-		x_pre[i] = 0;
-		y_pre[i] = 0;
-	}
-	t2u_wake = false;
-}
 
 /* PowerKey work func */
 static void tap2unlock_presspwr(struct work_struct * tap2unlock_presspwr_work) {
@@ -131,93 +118,64 @@ static void tap2unlock_pwrtrigger(void) {
         return;
 }
 
-/* unsigned */
+/* unsigned - calculate the region where the touch has occured */
 static unsigned int calc_feather(int coord, int prev_coord) {
 
-	int calc_coord = 0;
 
 	if (prev_coord < VERTICAL_SCREEN_MIDWAY)
 		if (coord < HORIZONTAL_SCREEN_MIDWAY)
-			calc_coord = 1;
+			return 1;
 		else
-			calc_coord = 2;
+			return 2;
 	else
 		if (coord < HORIZONTAL_SCREEN_MIDWAY)
-			calc_coord = 3;
+			return 3;
 		else
-			calc_coord = 4;
-return calc_coord;
+			return 4;
+
 }
 
-/* init a new touch */
-static void new_touch(int x, int y) {
-	
-	x_pre[touch_nr] = 0;
-	y_pre[touch_nr] = 0;
-	x_pre[touch_nr] = x;
-	y_pre[touch_nr] = y;
-	pr_info("x axis : %d , y axis : %d for touch_nr = %d ",x, y,touch_nr);
-	touch_nr++;
-}
 
 /* tap2unlock main function */
-static void detect_tap2unlock(int x, int y, bool st)
+static void detect_tap2unlock(int x, int y)
 {
-        bool single_touch = st;
 #if t2u_DEBUG
-        pr_info(LOGTAG"x,y(%4d,%4d) single:%s\n",
-                x, y, (single_touch) ? "true" : "false");
+        pr_info(LOGTAG"x,y(%4d,%4d)",x, y);
 #endif
-	if ((single_touch) && (t2u_switch > 0) && (exec_count)  && (touch_cnt)) {
+	if ((t2u_switch > 0) && (touch_cnt)) {
+		
 		touch_cnt = false;
-		if (touch_nr == 0) {
-			new_touch(x, y);
-			if ((calc_feather(x_pre[0], y_pre[0]) == t2u_pattern[0])) {
-				tap_time_pre = ktime_to_ms(ktime_get());
-				
-			} else {
-				tap2unlock_reset();
-			}
-	
-		} else if (touch_nr == 1) {
-			new_touch(x, y);
-			if (!(calc_feather(x_pre[1], y_pre[1]) == t2u_pattern[1])) {
-				//tap_time_pre = ktime_to_ms(ktime_get());
-				tap2unlock_reset();
-			}
-		
-		} else if (touch_nr == 2) {
-			new_touch(x, y);
-			if (!(calc_feather(x_pre[2], y_pre[2]) == t2u_pattern[2])) {
-				//tap_time_pre = ktime_to_ms(ktime_get());
-				tap2unlock_reset();
-			}
-		} else if (touch_nr == 3) {
-			 new_touch(x, y);
-			pr_info("if ( %d && %d && %d ) ",calc_feather(x_pre[0], y_pre[0]), calc_feather(x_pre[1], y_pre[1]), calc_feather(x_pre[2], y_pre[2]));
-			 if ((calc_feather(x_pre[3], y_pre[3]) == t2u_pattern[3]) && 
-			    		((ktime_to_ms(ktime_get())-tap_time_pre) < t2u_TIME)) {
-				t2u_wake = true;
-				t2u_allow = true;
-			}
-			else {
-				tap2unlock_reset();
-			}
-		}
-		
-		if (t2u_wake) {
-			pr_info(LOGTAG"ON\n");
-			exec_count = false;
-			tap2unlock_pwrtrigger();
-			tap2unlock_reset();
+		//check if time gap between two touches is less than t2u_TIME 
+		if(touch_nr > 0 && (ktime_to_ms(ktime_get()) - tap_time_pre) > t2u_TIME)
+			touch_nr = 0;		
+
+		if (touch_nr < 3) {
 			
+			if (calc_feather(x, y) == t2u_pattern[touch_nr]) {
+				tap_time_pre = ktime_to_ms(ktime_get());
+				touch_nr++;
+			}
+			else
+				touch_nr = 0;
+		
+		} else  {//when touch_nr ==3 i.e on the 4 th knock , it wont be allowed any further than that
+			 
+			 if (calc_feather(x, y) == t2u_pattern[3]) {
+				t2u_allow = true;
+				pr_info(LOGTAG"T2U : ON\n");
+				tap2unlock_pwrtrigger();
+				touch_nr = 0;
+			}
+			else 
+				touch_nr = 0;
 		}
+		
 	}
 }
 
 static void t2u_input_callback(struct work_struct *unused) {
 
-	detect_tap2unlock(touch_x, touch_y, true);
+	detect_tap2unlock(touch_x, touch_y);
 
 	return;
 }
@@ -235,7 +193,7 @@ static void t2u_input_event(struct input_handle *handle, unsigned int type,
 		return;
 
 	if (code == ABS_MT_SLOT) {
-		tap2unlock_reset();
+		touch_nr = 0;
 		return;
 	}
 
