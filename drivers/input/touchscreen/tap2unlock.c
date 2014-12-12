@@ -59,18 +59,17 @@ MODULE_LICENSE("GPLv2");
 #define t2u_DEFAULT		1
 
 #define t2u_PWRKEY_DUR		20
-#define t2u_FEATHER		200
 #define t2u_TIME		600 //gap(in ms) allowed between 'each' touch (for 4 letter pattern - 4x600 =2400 ms)
 #define VERTICAL_SCREEN_MIDWAY  480 // Your device's vertical resolution / 2
 #define HORIZONTAL_SCREEN_MIDWAY  270 // Your device's horizontal resolution / 2
 
 /* Resources */
-int t2u_switch = t2u_DEFAULT;
+int t2u_switch = t2u_DEFAULT, i = 4;
 int t2u_pattern[4] = {1,2,3,4};
 bool t2u_scr_suspended = false;
 static cputime64_t tap_time_pre = 0;
 static int touch_x = 0, touch_y = 0, touch_nr = 0;
-static bool touch_x_called = false, touch_y_called = false, touch_cnt = false;
+static bool touch_x_called = false, touch_y_called = false, touch_cnt = false, pass = false;
 //#ifndef CONFIG_HAS_EARLYSUSPEND
 //#static struct notifier_block t2u_lcd_notif;
 //#endif
@@ -325,21 +324,27 @@ static ssize_t t2u_pattern_show(struct device *dev,
 {
 	size_t count = 0;
 
-	count += sprintf(buf, "%d%d%d%d\n", t2u_pattern[0], t2u_pattern[1], t2u_pattern[2], t2u_pattern[3]);
+	count += sprintf(buf, "%d\n", pass);
 
 	return count;
 }
 
 static ssize_t t2u_pattern_dump(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
-{
-	if (buf[0] >= '0') {
-                
-		  t2u_pattern[0] = buf[0] - '0';
-		  t2u_pattern[1] = buf[1] - '0';
-		  t2u_pattern[2] = buf[2] - '0';
-		  t2u_pattern[3] = buf[3] - '0';
+{	
+	if (t2u_pattern[0] == buf[0] - '0' && t2u_pattern[1] == buf[1] - '0' && 
+				t2u_pattern[2] == buf[2] - '0' && t2u_pattern[3] == buf[3] - '0' ) {
+		pass = true;
+		while ( i < 8 ) { 
+		        
+			  t2u_pattern[i - 4] = buf[i] - '0'; 
+			  i++;
+
+		}
+	
 	}
+	else
+		pass = false;
 
 	return count;
 }
