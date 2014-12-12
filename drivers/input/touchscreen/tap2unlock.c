@@ -65,7 +65,7 @@ MODULE_LICENSE("GPLv2");
 
 /* Resources */
 int t2u_switch = t2u_DEFAULT, i = 4;
-int t2u_pattern[4] = {1,2,3,4};
+int static t2u_pattern[4] = {1,2,3,4};
 bool t2u_scr_suspended = false;
 static cputime64_t tap_time_pre = 0;
 static int touch_x = 0, touch_y = 0, touch_nr = 0;
@@ -333,15 +333,14 @@ static ssize_t t2u_pattern_dump(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {	
 	if (t2u_pattern[0] == buf[0] - '0' && t2u_pattern[1] == buf[1] - '0' && 
-				t2u_pattern[2] == buf[2] - '0' && t2u_pattern[3] == buf[3] - '0' ) {
+				t2u_pattern[2] == buf[2] - '0' && t2u_pattern[3] == buf[3] - '0' ) 
+	{
 		pass = true;
-		while ( i < 8 ) { 
 		        
-			  t2u_pattern[i - 4] = buf[i] - '0'; 
-			  i++;
-
-		}
-	
+		t2u_pattern[0] = buf[4] - '0'; 
+		t2u_pattern[1] = buf[5] - '0'; 
+		t2u_pattern[2] = buf[6] - '0'; 
+		t2u_pattern[3] = buf[7] - '0'; 
 	}
 	else
 		pass = false;
