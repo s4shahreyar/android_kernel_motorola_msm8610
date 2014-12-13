@@ -46,7 +46,7 @@
 /* Version, author, desc, etc */
 #define DRIVER_AUTHOR "goutamniwas <goutamniwas@gmail.com>"
 #define DRIVER_DESCRIPTION "tap2unlock for almost any device"
-#define DRIVER_VERSION "1.0"
+#define DRIVER_VERSION "2.0"
 #define LOGTAG "[tap2unlock]: "
 
 MODULE_AUTHOR(DRIVER_AUTHOR);
