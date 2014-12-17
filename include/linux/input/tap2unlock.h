@@ -23,5 +23,5 @@
 extern bool t2u_scr_suspended;
 extern bool t2u_wake;
 extern int t2u_switch;
-extern bool t2u_allow;
+extern bool t2u_allow,incall_active;
 #endif /* _LINUX_DOUBLETAP2WAKE_H */
