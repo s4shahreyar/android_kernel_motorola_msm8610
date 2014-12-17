@@ -66,10 +66,10 @@ MODULE_LICENSE("GPLv2");
 /* Resources */
 int t2u_switch = t2u_DEFAULT, i = 4;
 int static t2u_pattern[4] = {1,2,3,4};
-bool t2u_scr_suspended = false;
+bool t2u_scr_suspended = false, pass = false;
 static cputime64_t tap_time_pre = 0;
 static int touch_x = 0, touch_y = 0, touch_nr = 0;
-static bool touch_x_called = false, touch_y_called = false, touch_cnt = false, pass = false;
+static bool touch_x_called = false, touch_y_called = false, touch_cnt = false;
 //#ifndef CONFIG_HAS_EARLYSUSPEND
 //#static struct notifier_block t2u_lcd_notif;
 //#endif
@@ -77,7 +77,9 @@ static struct input_dev * tap2unlock_pwrdev;
 static DEFINE_MUTEX(pwrkeyworklock);
 static struct workqueue_struct *t2u_input_wq;
 static struct work_struct t2u_input_work;
-bool t2u_allow = false;
+bool t2u_allow = false,incall_active = false;
+extern void touch_suspend(void);
+extern void touch_resume(void);
 
 /* Read cmdline for t2u */
 static int __init read_t2u_cmdline(char *t2u)
@@ -324,7 +326,7 @@ static ssize_t t2u_pattern_show(struct device *dev,
 {
 	size_t count = 0;
 
-	count += sprintf(buf, "%d\n", pass);
+	count += sprintf(buf, "%d", pass);
 
 	return count;
 }
@@ -369,6 +371,40 @@ static ssize_t t2u_version_dump(struct device *dev,
 
 static DEVICE_ATTR(tap2unlock_version, (S_IWUSR|S_IRUGO),
 	t2u_version_show, t2u_version_dump);
+
+static ssize_t t2u_allow_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	size_t count = 0;
+
+	count += sprintf(buf, "%d\n", t2u_allow);
+
+	return count;
+}
+
+static ssize_t t2u_allow_dump(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	if (t2u_pattern[0] == buf[0] - '0' && t2u_pattern[1] == buf[1] - '0' && 
+				t2u_pattern[2] == buf[2] - '0' && t2u_pattern[3] == buf[3] - '0') 
+	{	
+		if(buf[4] == '1') {
+			t2u_allow = true;
+			incall_active = true;
+			touch_resume();		
+		}
+		else if (buf[4] == '0') {
+			t2u_allow = false;
+			incall_active = false;
+			touch_suspend();
+		}
+	}
+		
+	return count;
+}
+
+static DEVICE_ATTR(t2u_allow, (S_IWUSR|S_IRUGO),
+	t2u_allow_show, t2u_allow_dump);
 
 /*
  * INIT / EXIT stuff below here
@@ -431,6 +467,11 @@ static int __init tap2unlock_init(void)
 	if (rc) {
 		pr_warn("%s: sysfs_create_file failed for tap2unlock_version\n", __func__);
 	}
+	rc = sysfs_create_file(android_touch_kobj, &dev_attr_t2u_allow.attr);
+	if (rc) {
+		pr_warn("%s: sysfs_create_file failed for t2u_allow\n", __func__);
+	}
+
 
 err_input_dev:
 	input_free_device(tap2unlock_pwrdev);

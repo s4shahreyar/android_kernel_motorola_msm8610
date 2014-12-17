@@ -597,12 +597,14 @@ static int mdss_dsi_panel_cont_splash_on(struct mdss_panel_data *pdata)
 
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 	extern bool dt2w_scr_suspended;
+	
+#endif
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
 	extern bool t2u_scr_suspended;
 	extern void touch_suspend(void);
 	extern void touch_resume(void);
 	extern bool prox_covered;
 #endif
-
 
 static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 {

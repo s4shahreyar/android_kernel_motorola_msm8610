@@ -3703,6 +3703,8 @@ static int synaptics_rmi4_suspend(struct device *dev)
 	const struct synaptics_dsx_platform_data *platform_data =
 			rmi4_data->board;
 #ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
+	if (incall_active == true && prox_covered == false)
+		return 0;
 pr_info("t2u :suspend called ,t2u_allow %d , t2u_scr_suspended %d ", t2u_allow, t2u_scr_suspended);
 	 if (t2u_switch > 0 && t2u_allow == false && t2u_scr_suspended == false) {
 		pr_info("t2u : going to t2u_force_suspend");
@@ -3769,7 +3771,7 @@ static int synaptics_rmi4_resume(struct device *dev)
 
 #ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
 pr_info("t2u :suspend called ,t2u_allow %d , t2u_scr_suspended %d ", t2u_allow, t2u_scr_suspended);
-	 if (t2u_switch > 0 && t2u_allow == false && t2u_scr_suspended == false) {
+	 if (t2u_switch > 0 && t2u_allow == false && t2u_scr_suspended == false && incall_active == false) {
 		pr_info("t2u : touch sensor awake blocked by t2u protect");
 		return 0;
 	}
