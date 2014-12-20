@@ -56,7 +56,7 @@ MODULE_LICENSE("GPLv2");
 
 /* Tuneables */
 #define t2u_DEBUG		0
-#define t2u_DEFAULT		1
+#define t2u_DEFAULT		0
 
 #define t2u_PWRKEY_DUR		20
 #define t2u_TIME		600 //gap(in ms) allowed between 'each' touch (for 4 letter pattern - 4x600 =2400 ms)
