@@ -56,7 +56,7 @@ MODULE_LICENSE("GPLv2");
 
 /* Tuneables */
 #define t2u_DEBUG		0
-#define t2u_DEFAULT		0
+
 
 #define t2u_PWRKEY_DUR		20
 #define t2u_TIME		600 //gap(in ms) allowed between 'each' touch (for 4 letter pattern - 4x600 =2400 ms)
@@ -64,7 +64,7 @@ MODULE_LICENSE("GPLv2");
 #define HORIZONTAL_SCREEN_MIDWAY  270 // Your device's horizontal resolution / 2
 
 /* Resources */
-int t2u_switch = t2u_DEFAULT, i = 4;
+int t2u_switch = 0;
 int static t2u_pattern[4] = {1,2,3,4};
 bool t2u_scr_suspended = false, pass = false;
 static cputime64_t tap_time_pre = 0;
