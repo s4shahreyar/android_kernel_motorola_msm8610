@@ -608,6 +608,7 @@ static int mdss_dsi_panel_cont_splash_on(struct mdss_panel_data *pdata)
 
 static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 {
+	
 	struct mipi_panel_info *mipi;
 	struct mdss_dsi_ctrl_pdata *ctrl = NULL;
 	u8 pwr_mode = 0;
@@ -683,6 +684,9 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 {
 	struct mipi_panel_info *mipi;
 	struct mdss_dsi_ctrl_pdata *ctrl = NULL;
+	
+	t2u_allow = false;
+	
 
 	if (pdata == NULL) {
 		pr_err("%s: Invalid input data\n", __func__);
@@ -718,12 +722,15 @@ disable_regs:
 #endif
 #ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
 	t2u_scr_suspended = true;
-	if(!prox_covered)
+	if(!prox_covered) {
 		t2u_allow = false;
+		
+	}
 	if (t2u_switch > 0)
 		touch_resume();
 #endif
-
+	
+	t2u_duplicate_allow = false;
 	return 0;
 }
 

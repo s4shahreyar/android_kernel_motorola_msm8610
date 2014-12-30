@@ -46,7 +46,7 @@
 /* Version, author, desc, etc */
 #define DRIVER_AUTHOR "goutamniwas <goutamniwas@gmail.com>"
 #define DRIVER_DESCRIPTION "tap2unlock for almost any device"
-#define DRIVER_VERSION "2.0"
+#define DRIVER_VERSION "3.0"
 #define LOGTAG "[tap2unlock]: "
 
 MODULE_AUTHOR(DRIVER_AUTHOR);
@@ -77,7 +77,7 @@ static struct input_dev * tap2unlock_pwrdev;
 static DEFINE_MUTEX(pwrkeyworklock);
 static struct workqueue_struct *t2u_input_wq;
 static struct work_struct t2u_input_work;
-bool t2u_allow = false,incall_active = false;
+bool t2u_allow = false,incall_active = false,touch_isactive = false,t2u_duplicate_allow = false;
 extern void touch_suspend(void);
 extern void touch_resume(void);
 
@@ -163,9 +163,10 @@ static void detect_tap2unlock(int x, int y)
 			 
 			 if (calc_feather(x, y) == t2u_pattern[3]) {
 				t2u_allow = true;
+				t2u_duplicate_allow = true;
 				pr_info(LOGTAG"T2U : ON\n");
-				tap2unlock_pwrtrigger();
 				touch_nr = 0;
+				tap2unlock_pwrtrigger();
 			}
 			else 
 				touch_nr = 0;
@@ -377,7 +378,7 @@ static ssize_t t2u_allow_show(struct device *dev,
 {
 	size_t count = 0;
 
-	count += sprintf(buf, "%d\n", t2u_allow);
+	count += sprintf(buf, "%d\n", t2u_duplicate_allow);
 
 	return count;
 }
@@ -385,18 +386,25 @@ static ssize_t t2u_allow_show(struct device *dev,
 static ssize_t t2u_allow_dump(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {
-	if (t2u_pattern[0] == buf[0] - '0' && t2u_pattern[1] == buf[1] - '0' && 
-				t2u_pattern[2] == buf[2] - '0' && t2u_pattern[3] == buf[3] - '0') 
-	{	
+	if (t2u_pattern[0] == buf[0] - '0' && t2u_pattern[1] == buf[1] - '0' && t2u_pattern[2] == buf[2] - '0' && t2u_pattern[3] == buf[3] - '0') 
+	{
+		
+	
 		if(buf[4] == '1') {
-			t2u_allow = true;
-			incall_active = true;
-			touch_resume();		
+			
+				t2u_allow = true;
+				incall_active = true;
+				touch_resume();	
+				//touch_isactive = true;
+				
 		}
 		else if (buf[4] == '0') {
-			t2u_allow = false;
-			incall_active = false;
-			touch_suspend();
+			
+				t2u_allow = false;
+				incall_active = false;
+				touch_suspend();
+				//touch_isactive = false;
+			
 		}
 	}
 		
