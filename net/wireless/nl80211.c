@@ -6710,9 +6710,11 @@ static int nl80211_vendor_cmd(struct sk_buff *skb, struct genl_info *info)
 			data = nla_data(info->attrs[NL80211_ATTR_VENDOR_DATA]);
 			len = nla_len(info->attrs[NL80211_ATTR_VENDOR_DATA]);
 		}
-
-		return rdev->wiphy.vendor_commands[i].doit(&rdev->wiphy, wdev,
+		rdev->cur_cmd_info = info;
+		err = rdev->wiphy.vendor_commands[i].doit(&rdev->wiphy, wdev,
 							   data, len);
+		rdev->cur_cmd_info = NULL;
+		return err;
 	}
 
 	return -EOPNOTSUPP;
@@ -7364,7 +7366,7 @@ static struct genl_ops nl80211_ops[] = {
 		.doit = nl80211_vendor_cmd,
 		.policy = nl80211_policy,
 		.flags = GENL_ADMIN_PERM,
-		.internal_flags = NL80211_FLAG_NEED_WIPHY |
+		.internal_flags = NL80211_FLAG_NEED_NETDEV |
 				  NL80211_FLAG_NEED_RTNL,
 	},
 };
