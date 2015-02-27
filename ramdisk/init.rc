@@ -420,6 +420,8 @@ on boot
     chown system system /sys/kernel/ipv4/tcp_rmem_min
     chown system system /sys/kernel/ipv4/tcp_rmem_def
     chown system system /sys/kernel/ipv4/tcp_rmem_max
+    chown system system /sys/class/input/event4/device/device/enable
+    
     chown root radio /proc/cmdline
 
     # Define default initial receive window size in segments.
