@@ -29,9 +29,6 @@
 #include <linux/slab.h>
 #include <linux/workqueue.h>
 #include <linux/input.h>
-#ifdef CONFIG_POWERSUSPEND
-#include <linux/powersuspend.h>
-#endif
 #include <linux/hrtimer.h>
 #include <asm-generic/cputime.h>
 
@@ -281,20 +278,7 @@ static struct input_handler t2u_input_handler = {
 	.id_table	= t2u_ids,
 };
 
-#ifdef CONFIG_POWERSUSPEND
-static void t2u_power_suspend(struct power_suspend *h) {
-	t2u_scr_suspended = true;
-}
 
-static void t2u_power_resume(struct power_suspend *h) {
-	t2u_scr_suspended = false;
-}
-
-static struct power_suspend t2u_power_suspend_handler = {
-	.suspend = t2u_power_suspend,
-	.resume = t2u_power_resume,
-};
-#endif
 
 /*
  * SYSFS stuff below here
@@ -453,9 +437,7 @@ static int __init tap2unlock_init(void)
 	if (rc)
 		pr_err("%s: Failed to register t2u_input_handler\n", __func__);
 
-#ifdef CONFIG_POWERSUSPEND
-	register_power_suspend(&t2u_power_suspend_handler);
-#endif
+
 
 #ifndef ANDROID_TOUCH_DECLARED
 	android_touch_kobj = kobject_create_and_add("tap2unlock", NULL) ;

@@ -3711,10 +3711,14 @@ pr_info("t2u :suspend called ,t2u_allow %d , t2u_scr_suspended %d ", t2u_allow, 
 		pr_info("t2u : going to t2u_force_suspend");
 		goto t2u_force_suspend;
 	}
-	 if (s2w_switch > 0 || dt2w_switch > 0 || t2u_switch > 0) {
+	 if ((s2w_switch > 0 || dt2w_switch > 0 || t2u_switch > 0) && (!prox_covered)) {
 
-	 if (prox_covered) {
-	 t2u_force_suspend:
+	pr_info("suspend avoided!\n");
+			return 0;
+
+	}
+	else {
+t2u_force_suspend:
 #endif
 
 	 synaptics_dsx_sensor_state(rmi4_data, STATE_SUSPEND);
@@ -3740,11 +3744,6 @@ pr_info("t2u :suspend called ,t2u_allow %d , t2u_scr_suspended %d ", t2u_allow, 
 	 }
 	
 #ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
-	} else {	
-			
-			pr_info("suspend avoided!\n");
-			return 0;
-	}
  	}
 #endif
 	
@@ -3754,7 +3753,8 @@ pr_info("t2u :suspend called ,t2u_allow %d , t2u_scr_suspended %d ", t2u_allow, 
 #ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
 void touch_suspend(void)
 {
- 	synaptics_rmi4_suspend(&(exp_fn_ctrl.rmi4_data_ptr->input_dev->dev));
+	//pr_info("We arent suspending the touch screen manually anymore");
+		synaptics_rmi4_suspend(&(exp_fn_ctrl.rmi4_data_ptr->input_dev->dev));
 }
 #endif
 
@@ -3773,7 +3773,7 @@ static int synaptics_rmi4_resume(struct device *dev)
 	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
 
 #ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
-pr_info("t2u :suspend called ,t2u_allow %d , t2u_scr_suspended %d ", t2u_allow, t2u_scr_suspended);
+pr_info("t2u :resume called ,t2u_allow %d , t2u_scr_suspended %d ", t2u_allow, t2u_scr_suspended);
 	 if (t2u_switch > 0 && t2u_allow == false && t2u_scr_suspended == false && incall_active == false) {
 		
 		pr_info("t2u : touch sensor awake blocked by t2u protect");

@@ -685,16 +685,16 @@ end:
 
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 	dt2w_scr_suspended = false;
-	t2u_scr_suspended = false;
+	
 #endif
 #ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
-	if ((t2u_switch > 0) && (t2u_allow == false))
+	t2u_scr_suspended = false;
+	/*if ((t2u_switch > 0) && (t2u_allow == false))
 	{
-		t2u_scr_suspended = false;
 		pr_info("t2u : calling to suspend touch ");
 		touch_suspend();
 
-	}
+	}*/
 #endif
 
 	return 0;
@@ -743,15 +743,11 @@ disable_regs:
 #endif
 #ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
 	t2u_scr_suspended = true;
-	if(!prox_covered) {
-		t2u_allow = false;
-		
-	}
-	if (t2u_switch > 0)
-		touch_resume();
+	t2u_duplicate_allow = false;
+
 #endif
 	
-	t2u_duplicate_allow = false;
+	
 	return 0;
 }
 
