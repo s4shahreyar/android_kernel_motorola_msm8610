@@ -1,0 +1,26 @@
+--- drivers/usb/dwc3/gadget.c
++++ drivers/usb/dwc3/gadget.c
+@@ -1086,6 +1085,14 @@
+ 	memset(&params, 0x00, sizeof(params));
+ 
+ 	if (value) {
++		if (!protocol && ((dep->direction && dep->flags & DWC3_EP_BUSY) ||
++				(!list_empty(&dep->req_queued) ||
++				 !list_empty(&dep->request_list)))) {
++			dev_dbg(dwc->dev, "%s: pending request, cannot halt\n",
++					dep->name);
++			return -EAGAIN;
++		}
++
+ 		if (dep->number == 0 || dep->number == 1) {
+ 			/*
+ 			 * Whenever EP0 is stalled, we will restart
+@@ -1134,7 +1141,7 @@
+ 		goto out;
+ 	}
+ 
+-	ret = __dwc3_gadget_ep_set_halt(dep, value);
++	ret = __dwc3_gadget_ep_set_halt(dep, value, false);
+ out:
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ 

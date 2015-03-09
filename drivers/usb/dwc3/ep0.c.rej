@@ -1,0 +1,20 @@
+--- drivers/usb/dwc3/ep0.c
++++ drivers/usb/dwc3/ep0.c
+@@ -209,7 +209,7 @@
+ 	struct dwc3_ep		*dep = dwc->eps[0];
+ 
+ 	/* stall is always issued on EP0 */
+-	__dwc3_gadget_ep_set_halt(dep, 1);
++	__dwc3_gadget_ep_set_halt(dep, 1, false);
+ 	dep->flags = DWC3_EP_ENABLED;
+ 	dwc->delayed_status = false;
+ 
+@@ -382,7 +382,7 @@
+ 				return -EINVAL;
+ 			if (set == 0 && (dep->flags & DWC3_EP_WEDGE))
+ 				break;
+-			ret = __dwc3_gadget_ep_set_halt(dep, set);
++			ret = __dwc3_gadget_ep_set_halt(dep, set, true);
+ 			if (ret)
+ 				return -EINVAL;
+ 			break;

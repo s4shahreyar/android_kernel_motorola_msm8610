@@ -1,0 +1,13 @@
+--- drivers/char/random.c
++++ drivers/char/random.c
+@@ -932,8 +932,8 @@
+ 	 * pool while mixing, and hash one final time.
+ 	 */
+ 	sha_transform(hash.w, extract, workspace);
+-	memset(extract, 0, sizeof(extract));
+-	memset(workspace, 0, sizeof(workspace));
++	memzero_explicit(extract, sizeof(extract));
++	memzero_explicit(workspace, sizeof(workspace));
+ 
+ 	/*
+ 	 * In case the hash function has some recognizable output
