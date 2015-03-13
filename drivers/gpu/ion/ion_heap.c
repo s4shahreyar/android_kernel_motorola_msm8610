@@ -141,6 +141,24 @@ int ion_heap_pages_zero(struct page **pages, int num_pages)
 		if (!ptr)
 			return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+		/*
+		 * We have to invalidate the cache here because there
+		 * might be dirty lines to these physical pages (which
+		 * we don't care about) that could get written out at
+		 * any moment.
+		 */
+		for (k = 0; k < npages_to_vmap; k++) {
+			void *p = kmap_atomic(pages[i + k]);
+			phys_addr_t phys = page_to_phys(
+				pages[i + k]);
+
+			dmac_inv_range(p, p + PAGE_SIZE);
+			outer_inv_range(phys, phys + PAGE_SIZE);
+			kunmap_atomic(p);
+		}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		memset(ptr, 0, npages_to_vmap * PAGE_SIZE);
 		vunmap(ptr);
 	}

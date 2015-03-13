@@ -53,7 +53,15 @@ Example:
 			interrupt-parent = <&pm8921_gpio>;
 			interrupts = <38 0>;
 			gpios = <&pm8921_gpio 38 0>;     /* IRQ */
+<<<<<<< HEAD
 			ti,tpa6165-always-on-micbias = <1>;
 			ti,tpa6165-jack-detect-config = <0xC0>;
+=======
+<<<<<<< HEAD
+=======
+			ti,tpa6165-always-on-micbias = <1>;
+			ti,tpa6165-jack-detect-config = <0xC0>;
+>>>>>>> 340af33... IKJBXLINE-13953 ASoC TPA6165: Add config for jack detect register
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		};
 	};

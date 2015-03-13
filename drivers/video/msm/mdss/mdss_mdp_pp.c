@@ -2335,10 +2335,14 @@ int mdss_mdp_igc_lut_config(struct mdp_igc_lut_data *config,
 			&mdss_pp_res->igc_lut_c0c1[disp_num][0];
 		local_cfg.c2_data =
 			&mdss_pp_res->igc_lut_c2[disp_num][0];
+<<<<<<< HEAD
 		if (mdata->has_no_lut_read)
 			pp_read_igc_lut_cached(&local_cfg);
 		else
 			pp_read_igc_lut(&local_cfg, igc_addr, dspp_num);
+=======
+		pp_read_igc_lut(&local_cfg, igc_addr, dspp_num);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (copy_to_user(config->c0_c1_data, local_cfg.c0_c1_data,
 			config->len * sizeof(u32))) {
 			ret = -EFAULT;

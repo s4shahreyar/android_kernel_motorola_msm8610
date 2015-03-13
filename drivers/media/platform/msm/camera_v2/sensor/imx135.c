@@ -20,8 +20,12 @@
 #include <linux/device.h>
 
 #define IMX135_SENSOR_NAME "imx135"
+<<<<<<< HEAD
 #define IMX135_PRIMARY_I2C_ADDRESS 0x34
 #define IMX135_SECONDARY_I2C_ADDRESS 0x20
+=======
+#define IMX135_SECONDARY_I2C_ADDRESS 0x34
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 DEFINE_MSM_MUTEX(imx135_mut);
 
 static struct msm_sensor_ctrl_t imx135_s_ctrl;
@@ -128,6 +132,7 @@ static int32_t imx135_platform_probe(struct platform_device *pdev)
 		rc = -EINVAL;
 	}
 
+<<<<<<< HEAD
 	return rc;
 }
 
@@ -286,6 +291,151 @@ static int32_t imx135_sensor_power_down_devboard(
 	return rc;
 }
 
+=======
+	return rc;
+}
+
+static void imx135_read_eeprom(struct msm_sensor_ctrl_t *s_ctrl)
+{
+	int32_t rc = 0;
+	int i;
+	uint16_t eeprom_slave_addr;
+	uint8_t *eeprom_ptr;
+	uint16_t cam_slave_addr =
+		s_ctrl->sensordata->slave_info->sensor_slave_addr;
+	int cam_addr_type = s_ctrl->sensor_i2c_client->addr_type;
+
+	if (eeprom_read)
+		return;
+
+	s_ctrl->sensor_i2c_client->addr_type = MSM_CAMERA_I2C_BYTE_ADDR;
+	eeprom_ptr = s_ctrl->sensor_otp.otp_info;
+
+	for (i = 0; i < IMX135_EEPROM_NUM_PAGES; i++) {
+		eeprom_slave_addr = IMX135_EEPROM_I2C_ADDR + i * 2;
+		s_ctrl->sensordata->slave_info->sensor_slave_addr =
+			eeprom_slave_addr;
+		s_ctrl->sensor_i2c_client->cci_client->sid =
+			(eeprom_slave_addr >> 1);
+
+		rc = s_ctrl->sensor_i2c_client->i2c_func_tbl->i2c_read_seq(
+				s_ctrl->sensor_i2c_client,
+				0x00,
+				eeprom_ptr,
+				IMX135_EEPROM_PAGE_SIZE);
+		if (rc < 0) {
+			pr_err("%s: Unable to read page: %d, status %d\n",
+					__func__, i, rc);
+			goto exit;
+		}
+		eeprom_ptr += IMX135_EEPROM_PAGE_SIZE;
+	}
+
+	eeprom_read = true;
+
+exit:
+	/* Restore sensor defaults */
+	s_ctrl->sensordata->slave_info->sensor_slave_addr = cam_slave_addr;
+	s_ctrl->sensor_i2c_client->cci_client->sid = (cam_slave_addr >> 1);
+	s_ctrl->sensor_i2c_client->addr_type = cam_addr_type;
+	return;
+}
+
+static int32_t imx135_sensor_match_id(struct msm_sensor_ctrl_t *s_ctrl)
+{
+	int32_t rc = 0;
+	uint16_t chipid = 0;
+
+	rc = s_ctrl->sensor_i2c_client->i2c_func_tbl->i2c_read(
+			s_ctrl->sensor_i2c_client,
+			s_ctrl->sensordata->slave_info->sensor_id_reg_addr,
+			&chipid,
+			MSM_CAMERA_I2C_WORD_DATA);
+	if (rc >= 0)
+		goto check_chipid;
+
+	s_ctrl->sensordata->slave_info->sensor_slave_addr =
+		IMX135_SECONDARY_I2C_ADDRESS;
+	s_ctrl->sensor_i2c_client->cci_client->sid =
+		(IMX135_SECONDARY_I2C_ADDRESS >> 1);
+	rc = s_ctrl->sensor_i2c_client->i2c_func_tbl->i2c_read(
+			s_ctrl->sensor_i2c_client,
+			s_ctrl->sensordata->slave_info->sensor_id_reg_addr,
+			&chipid,
+			MSM_CAMERA_I2C_WORD_DATA);
+	if (rc < 0) {
+		pr_err("%s: Unable to read chip id!\n", __func__);
+		return rc;
+	}
+
+check_chipid:
+	if (chipid != s_ctrl->sensordata->slave_info->sensor_id) {
+		pr_err("%s: chip id %x does not match expected %x\n", __func__,
+				chipid, s_ctrl->sensordata->
+				slave_info->sensor_id);
+		return -ENODEV;
+	}
+
+	imx135_read_eeprom(s_ctrl);
+	pr_info("%s: success with slave addr 0x%x!\n", __func__,
+			s_ctrl->sensor_i2c_client->cci_client->sid);
+	return rc;
+}
+
+static int32_t imx135_sensor_power_down_devboard(
+		struct msm_sensor_ctrl_t *s_ctrl)
+{
+	int32_t rc = 0;
+	struct msm_camera_sensor_board_info *info = s_ctrl->sensordata;
+	struct device *dev = s_ctrl->dev;
+
+	pr_debug("%s: Enter\n", __func__);
+
+	/* Disable MCLK */
+	msm_cam_clk_enable(dev, &s_ctrl->clk_info[0],
+			(struct clk **)&imx135_cam_mclk[0],
+			s_ctrl->clk_info_size, CLK_OFF);
+	usleep_range(500, 600);
+
+	/* Put into Reset State */
+	gpio_set_value_cansleep(info->gpio_conf->cam_gpio_req_tbl[2].gpio,
+			GPIO_OUT_LOW);
+	usleep_range(5000, 6000);
+
+	/* Disable VAF */
+	msm_camera_config_single_vreg(dev,
+			&info->cam_vreg[IMX135_CAM_VAF],
+			&imx135_cam_vaf, VREG_OFF);
+
+	/* Disable Avdd */
+	gpio_set_value_cansleep(info->gpio_conf->cam_gpio_req_tbl[1].gpio,
+			GPIO_OUT_LOW);
+	usleep_range(1000, 2000);
+
+	/* Disable VDIG */
+	msm_camera_config_single_vreg(dev,
+			&info->cam_vreg[IMX135_CAM_VDIG],
+			&imx135_cam_vdd, VREG_OFF);
+	usleep_range(1000, 2000);
+
+	/* Disable VDDIO */
+	gpio_set_value_cansleep(info->gpio_conf->cam_gpio_req_tbl[3].gpio,
+			GPIO_OUT_LOW);
+
+	msm_camera_config_single_vreg(dev,
+			&info->cam_vreg[IMX135_CAM_VIO],
+			&imx135_cam_vddio, VREG_OFF);
+	usleep_range(1000, 2000);
+
+	/* Disable GPIO's */
+	msm_camera_request_gpio_table(
+		info->gpio_conf->cam_gpio_req_tbl,
+		info->gpio_conf->cam_gpio_req_tbl_size, GPIO_REQUEST_NO_USE);
+
+	return rc;
+}
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int32_t imx135_sensor_power_down(struct msm_sensor_ctrl_t *s_ctrl)
 {
 	int32_t rc = 0;

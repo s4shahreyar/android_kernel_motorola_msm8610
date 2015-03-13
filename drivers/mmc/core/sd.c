@@ -699,6 +699,7 @@ out:
 
 static int mmc_sd_throttle_back(struct mmc_host *host)
 {
+<<<<<<< HEAD
 	struct sd_switch_caps *sw_caps;
 	char *speed = NULL;
 	int err = 0;
@@ -710,11 +711,21 @@ static int mmc_sd_throttle_back(struct mmc_host *host)
 		goto out;
 	}
 
+=======
+	struct sd_switch_caps *sw_caps = &host->card->sw_caps;
+	char *speed = NULL;
+
+	mmc_claim_host(host);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (host->ops->tune_drive_strength &&
 	    host->ops->tune_drive_strength(host) == 0)
 		goto out;
 
+<<<<<<< HEAD
 	sw_caps = &host->card->sw_caps;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (mmc_sd_card_uhs(host->card)) {
 		if (sw_caps->sd3_bus_mode & SD_MODE_UHS_SDR104) {
 			sw_caps->sd3_bus_mode &= ~SD_MODE_UHS_SDR104;
@@ -740,13 +751,21 @@ static int mmc_sd_throttle_back(struct mmc_host *host)
 	else {
 		pr_err("%s: unable to throttle back further\n",
 				mmc_hostname(host));
+<<<<<<< HEAD
 		err = -EINVAL;
+=======
+		return -EINVAL;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 out:
 	mmc_release_host(host);
 
+<<<<<<< HEAD
 	return err;
+=======
+	return 0;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 /*

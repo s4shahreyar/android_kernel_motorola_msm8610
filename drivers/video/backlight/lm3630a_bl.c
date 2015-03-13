@@ -45,9 +45,12 @@
 #define LM3630A_VDDIO_VOLT	1800000
 
 #define LM3630A_MAX_BRIGHTNESS		0xFF
+<<<<<<< HEAD
 #define LM3630A_HBM_OFF_BRIGHTNESS	(LM3630A_MAX_BRIGHTNESS + 1)
 #define LM3630A_HBM_ON_BRIGHTNESS	(LM3630A_HBM_OFF_BRIGHTNESS + 1)
 #define LM3630A_MAX_LOGIC_BRIGHTNESS	LM3630A_HBM_ON_BRIGHTNESS
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define LM3630A_MAX_CURRENT		0x1F
 #define LM3630A_BOOST_CTRL_DEFAULT	0x38
 #define LM3630A_FLT_STRENGTH_DEFAULT	0x03
@@ -492,6 +495,7 @@ static void lm3630a_led_set_func(struct work_struct *work)
 {
 	struct lm3630a_chip *pchip;
 	struct lm3630a_platform_data *pdata;
+<<<<<<< HEAD
 	int ret = 0, brt, ledval;
 	bool new_hbm = false;
 	static bool cur_hbm;
@@ -535,15 +539,38 @@ static void lm3630a_led_set_func(struct work_struct *work)
 			pdata->leda_max_hbm_cur : pdata->leda_max_cur);
 		ret |= lm3630a_write(pchip, REG_I_B, new_hbm ?
 			pdata->ledb_max_hbm_cur : pdata->ledb_max_cur);
+=======
+	int ret = 0, brt;
+	static bool is_sleep;
+
+	pchip = container_of(work, struct lm3630a_chip, ledwork);
+	pdata = pchip->pdata;
+
+	dev_dbg(pchip->dev, "led value = %d\n", pchip->ledval);
+	if (is_sleep) {
+		ret = lm3630a_chip_config(pchip);
+		if (ret < 0)
+			goto out;
+		else
+			is_sleep = false;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	if (pdata->leda_ctrl != LM3630A_LEDA_DISABLE) {
 		/* pwm control */
 		if ((pdata->pwm_ctrl & LM3630A_PWM_BANK_A) != 0)
+<<<<<<< HEAD
 			lm3630a_pwm_ctrl(pchip, ledval, pdata->leda_max_brt);
 		else {
 			brt = ledval > pdata->leda_max_brt ?
 				pdata->leda_max_brt : ledval;
+=======
+			lm3630a_pwm_ctrl(pchip, pchip->ledval,
+						pdata->leda_max_brt);
+		else {
+			brt = pchip->ledval > pdata->leda_max_brt ?
+				pdata->leda_max_brt : pchip->ledval;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			if (!brt)
 				ret = lm3630a_update(pchip, REG_CTRL,
 						LM3630A_LEDA_ENABLE, 0);
@@ -562,10 +589,18 @@ static void lm3630a_led_set_func(struct work_struct *work)
 	    (pdata->ledb_ctrl != LM3630A_LEDB_ON_A)) {
 		/* pwm control */
 		if ((pdata->pwm_ctrl & LM3630A_PWM_BANK_B) != 0)
+<<<<<<< HEAD
 			lm3630a_pwm_ctrl(pchip, ledval, pdata->ledb_max_brt);
 		else {
 			brt = ledval > pdata->ledb_max_brt ?
 				pdata->ledb_max_brt : ledval;
+=======
+			lm3630a_pwm_ctrl(pchip, pchip->ledval,
+						pdata->ledb_max_brt);
+		else {
+			brt = pchip->ledval > pdata->ledb_max_brt ?
+				pdata->ledb_max_brt : pchip->ledval;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			if (!brt)
 				ret = lm3630a_update(pchip, REG_CTRL,
 						LM3630A_LEDB_ENABLE, 0);
@@ -580,9 +615,18 @@ static void lm3630a_led_set_func(struct work_struct *work)
 		}
 	}
 
+<<<<<<< HEAD
 	if (!ledval)
 		ret = lm3630a_update(pchip, REG_CTRL, LM3630A_SLEEP_ENABLE,
 				LM3630A_SLEEP_ENABLE);
+=======
+	if (!pchip->ledval) {
+		ret = lm3630a_update(pchip, REG_CTRL, LM3630A_SLEEP_ENABLE,
+				LM3630A_SLEEP_ENABLE);
+		if (ret >= 0)
+			is_sleep = true;
+	}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 out:
 	if (ret < 0)
 		dev_err(pchip->dev, "fail to set brightness\n");
@@ -596,10 +640,16 @@ static void lm3630a_led_set(struct led_classdev *cdev,
 
 	pchip = container_of(cdev, struct lm3630a_chip, ledcdev);
 
+<<<<<<< HEAD
 	if (value > LM3630A_MAX_LOGIC_BRIGHTNESS) {
 		value = LM3630A_MAX_BRIGHTNESS;
 		dev_warn(pchip->dev,
 			"Force brightness to %d if it's invalid\n", value);
+=======
+	if (value < LED_OFF) {
+		dev_err(pchip->dev, "Invalid brightness value\n");
+		return;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	pchip->ledval = value;
@@ -610,7 +660,10 @@ static struct led_classdev lm3630a_led_cdev = {
 	.name = "lm3630a-backlight",
 	.default_trigger = "bkl-trigger",
 	.brightness_set = lm3630a_led_set,
+<<<<<<< HEAD
 	.max_brightness = LM3630A_MAX_LOGIC_BRIGHTNESS + 1,
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 static int lm3630a_parse_dt(struct device_node *np,
@@ -686,6 +739,7 @@ static int lm3630a_parse_dt(struct device_node *np,
 		dev_warn(pchip->dev, "ledb-max-cur not found in devtree\n");
 	pdata->ledb_max_cur = rc ? LM3630A_MAX_CURRENT : tmp;
 
+<<<<<<< HEAD
 	rc = of_property_read_u32(np, "ti,leda-max-hbm-cur", &tmp);
 	if (rc)
 		dev_warn(pchip->dev, "leda-max-hbm-cur not found in devtree\n");
@@ -696,6 +750,8 @@ static int lm3630a_parse_dt(struct device_node *np,
 		dev_warn(pchip->dev, "ledb-max-hbm-cur not found in devtree\n");
 	pdata->ledb_max_hbm_cur = rc ? LM3630A_MAX_CURRENT : tmp;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	rc = of_property_read_u32(np, "ti,boost-ctrl", &tmp);
 	if (rc)
 		dev_warn(pchip->dev, "boost-ctrl not found in devtree\n");

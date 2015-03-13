@@ -14,10 +14,14 @@
 #include <linux/backing-dev.h>
 #include <linux/sysctl.h>
 #include <linux/sysfs.h>
+<<<<<<< HEAD
 #include <linux/fb.h>
 #include <linux/kthread.h>
 #include <linux/freezer.h>
 #include <linux/module.h>
+=======
+#include <linux/earlysuspend.h>
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #include "internal.h"
 
 #ifdef CONFIG_COMPACTION
@@ -1071,6 +1075,7 @@ unsigned long try_to_compact_pages(struct zonelist *zonelist,
 	return rc;
 }
 
+<<<<<<< HEAD
 static struct compact_thread {
 	wait_queue_head_t waitqueue;
 	struct task_struct *task;
@@ -1142,6 +1147,36 @@ static struct notifier_block compact_notifier_block = {
 	.notifier_call = compact_notifier,
 	.priority = -1,
 };
+=======
+#ifdef CONFIG_HAS_EARLYSUSPEND
+static struct work_struct compactnodes_w;
+static int compact_nodes(void);
+static void compactnodes_work(struct work_struct *w)
+{
+	/* No point in being gun shy here since compact_zone()
+	 * will check suitability of compaction run per zone.
+	 * This takes about 150ms for 2GB memory configuration,
+	 * but the benefit is a better memory situation on wakeup.
+	 * The user isn't doing anything useful anyway, and the
+	 * screen is off so there's no perceived user impact.
+         */
+	compact_nodes();
+
+}
+
+
+static void compact_nodes_suspend(struct early_suspend *s)
+{
+	schedule_work(&compactnodes_w);
+}
+
+static struct early_suspend early_suspend_compaction_desc = {
+	.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN,
+	.suspend = compact_nodes_suspend,
+	.resume = NULL,
+};
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* Compact all zones within a node */
 static int __compact_pgdat(pg_data_t *pgdat, struct compact_control *cc)
@@ -1263,6 +1298,7 @@ void compaction_unregister_node(struct node *node)
 }
 #endif /* CONFIG_SYSFS && CONFIG_NUMA */
 
+<<<<<<< HEAD
 static int  __init mem_compaction_init(void)
 {
 	struct sched_param param = { .sched_priority = 0 };
@@ -1279,4 +1315,15 @@ static int  __init mem_compaction_init(void)
 	return 0;
 }
 late_initcall(mem_compaction_init);
+=======
+#ifdef CONFIG_HAS_EARLYSUSPEND
+static int  __init mem_compaction_init(void)
+{
+	INIT_WORK(&compactnodes_w, compactnodes_work);
+	register_early_suspend(&early_suspend_compaction_desc);
+	return 0;
+}
+late_initcall(mem_compaction_init);
+#endif /* CONFIG_HAS_EARLYSUSPEND */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #endif /* CONFIG_COMPACTION */

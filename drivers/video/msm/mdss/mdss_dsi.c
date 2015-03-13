@@ -49,6 +49,17 @@ static int mdss_dsi_hndl_enable_hbm(struct mdss_dsi_ctrl_pdata *ctrl,
 	return rc;
 }
 
+static int mdss_dsi_hndl_enable_te(struct mdss_dsi_ctrl_pdata *ctrl,
+				int enable)
+{
+	if (enable)
+		mdss_dsi_set_tear_on(ctrl);
+	else
+		mdss_dsi_set_tear_off(ctrl);
+
+	return 0;
+}
+
 static int mdss_dsi_regulator_init(struct platform_device *pdev)
 {
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
@@ -249,6 +260,8 @@ int mdss_dsi_get_dt_vreg_data(struct device *dev,
 			}
 			mp->vreg_config[i].post_off_sleep = (!rc ? tmp : 0);
 
+			mp->vreg_config[i].boot_on = mp->boot_on;
+
 			pr_debug("%s: %s min=%d, max=%d, enable=%d, disable=%d, preonsleep=%d, postonsleep=%d, preoffsleep=%d, postoffsleep=%d\n",
 				__func__,
 				mp->vreg_config[i].vreg_name,
@@ -306,6 +319,7 @@ static int mdss_dsi_ulps_config_sub(struct mdss_dsi_ctrl_pdata *ctrl_pdata,
 
 static int mdss_dsi_off(struct mdss_panel_data *pdata)
 {
+
 	int ret = 0;
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
 	struct mdss_panel_info *panel_info = NULL;
@@ -365,11 +379,19 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata)
 	pr_info("%s-:\n", __func__);
 
 	return ret;
+
 }
 
+<<<<<<< HEAD
 static void __mdss_dsi_ctrl_setup(struct mdss_panel_data *pdata)
 {
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
+=======
+int mdss_dsi_on(struct mdss_panel_data *pdata)
+{	
+	int ret = 0;
+	u32 clk_rate;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct mdss_panel_info *pinfo;
 	struct mipi_panel_info *mipi;
 	u32 clk_rate;
@@ -381,8 +403,38 @@ static void __mdss_dsi_ctrl_setup(struct mdss_panel_data *pdata)
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
+<<<<<<< HEAD
 	pinfo = &pdata->panel_info;
 
+=======
+	pr_info("%s+: ctrl=%p ndx=%d\n",
+				__func__, ctrl_pdata, ctrl_pdata->ndx);
+
+	pinfo = &pdata->panel_info;
+
+	ret = mdss_dsi_panel_power_on(pdata, 1);
+	if (ret) {
+		pr_err("%s: Panel power on failed\n", __func__);
+		return ret;
+	}
+
+	pdata->panel_info.panel_power_on = 1;
+
+	ret = mdss_dsi_bus_clk_start(ctrl_pdata);
+	if (ret) {
+		pr_err("%s: failed to enable bus clocks. rc=%d\n", __func__,
+			ret);
+		mdss_dsi_panel_power_on(pdata, 0);
+		return ret;
+	}
+
+	mdss_dsi_phy_sw_reset((ctrl_pdata->ctrl_base));
+	mdss_dsi_phy_init(pdata);
+	mdss_dsi_bus_clk_stop(ctrl_pdata);
+
+	mdss_dsi_clk_ctrl(ctrl_pdata, 1);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	clk_rate = pdata->panel_info.clk_rate;
 	clk_rate = min(clk_rate, pdata->panel_info.clk_max);
 
@@ -713,6 +765,7 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		mdss_dsi_host_init(pdata);
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Issue hardware reset line after enabling the DSI clocks and data
 	 * data lanes for LP11 init
@@ -723,6 +776,8 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 	if (mipi->init_delay)
 		usleep(mipi->init_delay);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (mipi->force_clk_lane_hs) {
 		u32 tmp;
 
@@ -737,6 +792,7 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 
 	pr_info("%s-:\n", __func__);
 	return 0;
+
 }
 
 static int mdss_dsi_unblank(struct mdss_panel_data *pdata)
@@ -835,8 +891,6 @@ static int mdss_dsi_blank(struct mdss_panel_data *pdata)
 
 int mdss_dsi_cont_splash_on(struct mdss_panel_data *pdata)
 {
-	int ret = 0;
-	struct mipi_panel_info *mipi;
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
 
 	pr_info("%s:%d DSI on for continuous splash.\n", __func__, __LINE__);
@@ -846,23 +900,23 @@ int mdss_dsi_cont_splash_on(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
-	mipi = &pdata->panel_info.mipi;
-
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
 	pr_debug("%s+: ctrl=%p ndx=%d\n", __func__,
 				ctrl_pdata, ctrl_pdata->ndx);
 
-	WARN((ctrl_pdata->ctrl_state & CTRL_STATE_PANEL_INIT),
-		"Incorrect Ctrl state=0x%x\n", ctrl_pdata->ctrl_state);
-
 	mdss_dsi_sw_reset(pdata);
+<<<<<<< HEAD
 	mdss_dsi_host_init(pdata);
 	mdss_dsi_op_mode_config(mipi->mode, pdata);
+=======
+	if (ctrl_pdata->cont_splash_on)
+		ctrl_pdata->cont_splash_on(pdata);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	pr_debug("%s-:End\n", __func__);
-	return ret;
+	return 0;
 }
 
 static int mdss_dsi_dfps_config(struct mdss_panel_data *pdata, int new_fps)
@@ -1065,6 +1119,7 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 	case MDSS_EVENT_ENABLE_PARTIAL_UPDATE:
 		rc = mdss_dsi_ctl_partial_update(pdata);
 		break;
+<<<<<<< HEAD
 	case MDSS_EVENT_DSI_ULPS_CTRL:
 		rc = mdss_dsi_ulps_config(ctrl_pdata, (int)arg);
 		break;
@@ -1082,6 +1137,11 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 	case MDSS_EVENT_ENABLE_HBM:
 		rc = mdss_dsi_hndl_enable_hbm(ctrl_pdata, (int) arg);
 		break;
+=======
+	case MDSS_EVENT_ENABLE_TE:
+		rc = mdss_dsi_hndl_enable_te(ctrl_pdata, (int) arg);
+		break;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	default:
 		pr_debug("%s: unhandled event=%d\n", __func__, event);
 		break;
@@ -1224,6 +1284,7 @@ int mdss_dsi_ioctl_handler(struct mdss_panel_data *pdata, u32 cmd, void *arg)
 		return -EPERM;
 	}
 
+<<<<<<< HEAD
 	switch (cmd) {
 	case MSMFB_REG_WRITE:
 	case MSMFB_REG_READ:
@@ -1247,6 +1308,22 @@ int mdss_dsi_ioctl_handler(struct mdss_panel_data *pdata, u32 cmd, void *arg)
 		rc = -EFAULT;
 		break;
 	}
+=======
+	if (copy_from_user(&reg_access, arg, sizeof(reg_access)))
+		return -EFAULT;
+
+	if (reg_access.use_hs_mode)
+		mode = DSI_MODE_BIT_HS;
+
+	old_tx_mode = mdss_get_tx_power_mode(pdata);
+	if (mode != old_tx_mode)
+		mdss_set_tx_power_mode(mode, pdata);
+
+	rc = mdss_dsi_panel_ioctl_handler(pdata, cmd, arg);
+
+	if (mode != old_tx_mode)
+		mdss_set_tx_power_mode(old_tx_mode, pdata);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return rc;
 }
@@ -1313,7 +1390,11 @@ static int __devinit mdss_dsi_ctrl_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev,
 			"%s: failed to add child nodes, rc=%d\n",
 			__func__, rc);
+<<<<<<< HEAD
 		goto error_no_mem;
+=======
+		goto error_ioremap;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	/* DSI panels can be different between controllers */
@@ -1338,6 +1419,11 @@ static int __devinit mdss_dsi_ctrl_probe(struct platform_device *pdev)
 		goto error_pan_node;
 	}
 
+<<<<<<< HEAD
+=======
+	mdss_panel_set_reg_boot_on(dsi_pan_node, ctrl_pdata);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* Parse the regulator information */
 	rc = mdss_dsi_get_dt_vreg_data(&pdev->dev,
 					&ctrl_pdata->power_data, NULL);

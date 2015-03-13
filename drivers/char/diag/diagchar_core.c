@@ -1003,6 +1003,11 @@ long diagchar_ioctl(struct file *filp,
 	struct diag_log_event_stats le_stats;
 	struct diagpkt_delay_params delay_params;
 	struct real_time_vote_t rt_vote;
+<<<<<<< HEAD
+=======
+	struct list_head *start, *req_temp;
+	struct dci_pkt_req_entry_t *req_entry = NULL;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct diag_smd_info *smd_info;
 
 	switch (iocmd) {
@@ -1516,11 +1521,19 @@ static int diagchar_write(struct file *file, const char __user *buf,
 		return -EBADMSG;
 	}
 #ifdef CONFIG_DIAG_OVER_USB
+<<<<<<< HEAD
 	if (driver->logging_mode == NO_LOGGING_MODE ||
 	    (!((pkt_type == DCI_DATA_TYPE) ||
 	       ((pkt_type & (DATA_TYPE_DCI_LOG | DATA_TYPE_DCI_EVENT)) == 0))
 		&& (driver->logging_mode == USB_MODE) &&
 		(!driver->usb_connected))) {
+=======
+	if (((pkt_type != DCI_DATA_TYPE) &&
+				(driver->logging_mode == USB_MODE ||
+				 driver->logging_mode == TTY_MODE)
+				&& (!driver->usb_connected)) ||
+				(driver->logging_mode == NO_LOGGING_MODE)) {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		/*Drop the diag payload */
 		return -EIO;
 	}
@@ -2147,6 +2160,7 @@ static int diagchar_setup_cdev(dev_t devno)
 {
 
 	int err;
+	struct device *dev;
 
 	cdev_init(driver->cdev, &diagcharfops);
 
@@ -2167,28 +2181,47 @@ static int diagchar_setup_cdev(dev_t devno)
 		return -1;
 	}
 
+<<<<<<< HEAD
 	driver->diag_dev = device_create(driver->diagchar_class, NULL, devno,
 					 (void *)driver, "diag");
 	if (driver->diag_dev)
 		err = device_create_file(driver->diag_dev, &dev_attr_logging_mode);
 
 	if (!driver->diag_dev || err) {
+=======
+	dev = device_create(driver->diagchar_class, NULL, devno,
+				  (void *)driver, "diag");
+	if (dev)
+		err = device_create_file(dev, &dev_attr_logging_mode);
+
+	if (!dev || err) {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		printk(KERN_ERR "Error creating diag sysfs\n");
 		return -1;
 	}
 
 #ifdef CONFIG_DIAG_OVER_TTY
+<<<<<<< HEAD
 	if (driver->diag_dev)
 		err = device_create_file(driver->diag_dev, &dev_attr_dbg_ftm);
 
 	if (!driver->diag_dev || err) {
+=======
+	if (dev)
+		err = device_create_file(dev, &dev_attr_dbg_ftm);
+
+	if (!dev || err) {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		printk(KERN_ERR "Error creating diag sysfs on dbg_ftm_mode\n");
 		return -ENXIO;
 	}
 #endif
+<<<<<<< HEAD
 
 	if (!driver->diag_dev)
 		return -EIO;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	driver->diag_dev->power.wakeup = wakeup_source_register("DIAG_WS");
 	return 0;

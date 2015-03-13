@@ -1,4 +1,4 @@
-/* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -270,6 +270,8 @@ static void mdss_mdp_cmd_readptr_done(void *arg)
 		return;
 	}
 
+	mdss_mdp_ctl_perf_taken(ctl);
+
 	vsync_time = ktime_get();
 	ctl->vsync_cnt++;
 
@@ -331,8 +333,12 @@ static void mdss_mdp_cmd_pingpong_done(void *arg)
 		return;
 	}
 
+<<<<<<< HEAD
 	mdss_mdp_ctl_perf_set_transaction_status(ctl,
 		PERF_HW_MDP_STATE, PERF_STATUS_DONE);
+=======
+	mdss_mdp_ctl_perf_done(ctl);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	spin_lock(&ctx->clk_lock);
 	list_for_each_entry(tmp, &ctx->vsync_handlers, list) {
@@ -488,6 +494,7 @@ int mdss_mdp_cmd_reconfigure_splash_done(struct mdss_mdp_ctl *ctl, bool handoff)
 	pdata = ctl->panel_data;
 
 	pdata->panel_info.cont_splash_enabled = 0;
+<<<<<<< HEAD
 	ret = mdss_mdp_ctl_intf_event(ctl, MDSS_EVENT_PANEL_CONT_SPLASH_FINISH,
 				NULL);
 	if (ret)
@@ -500,6 +507,14 @@ int mdss_mdp_cmd_reconfigure_splash_done(struct mdss_mdp_ctl *ctl, bool handoff)
 	memblock_free(mdp5_data->splash_mem_addr, mdp5_data->splash_mem_size);
 	free_bootmem_late(mdp5_data->splash_mem_addr,
 				 mdp5_data->splash_mem_size);
+=======
+
+	ret = mdss_mdp_ctl_intf_event(ctl, MDSS_EVENT_CONT_SPLASH_FINISH,
+			NULL);
+
+	mdss_mdp_ctl_intf_event(ctl, MDSS_EVENT_PANEL_CLK_CTRL, (void *)0);
+	mdss_mdp_clk_ctrl(MDP_BLOCK_POWER_OFF, false);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return ret;
 }
@@ -705,6 +720,7 @@ skip_wait:
 	memset(ctx, 0, sizeof(*ctx));
 	ctl->priv_data = NULL;
 
+<<<<<<< HEAD
 	if (turn_off_panel) {
 		mutex_lock(&ctl->offlock);
 		ret = mdss_mdp_ctl_intf_event(ctl, MDSS_EVENT_BLANK, NULL);
@@ -714,6 +730,15 @@ skip_wait:
 		WARN(ret, "intf %d unblank error (%d)\n", ctl->intf_num, ret);
 		mutex_unlock(&ctl->offlock);
 	}
+=======
+	mutex_lock(&ctl->offlock);
+	ret = mdss_mdp_ctl_intf_event(ctl, MDSS_EVENT_BLANK, NULL);
+	WARN(ret, "intf %d unblank error (%d)\n", ctl->intf_num, ret);
+
+	ret = mdss_mdp_ctl_intf_event(ctl, MDSS_EVENT_PANEL_OFF, NULL);
+	WARN(ret, "intf %d unblank error (%d)\n", ctl->intf_num, ret);
+	mutex_unlock(&ctl->offlock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	ctl->stop_fnc = NULL;
 	ctl->display_fnc = NULL;
@@ -808,8 +833,11 @@ int mdss_mdp_cmd_start(struct mdss_mdp_ctl *ctl)
 	ctl->remove_vsync_handler = mdss_mdp_cmd_remove_vsync_handler;
 	ctl->read_line_cnt_fnc = mdss_mdp_cmd_line_count;
 	ctl->ctx_dump_fnc = mdss_mdp_cmd_dump_ctx;
+<<<<<<< HEAD
 	ctl->panel_on_locked = mdss_mdp_cmd_panel_on_locked;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	pr_debug("%s:-\n", __func__);
 
 	return 0;

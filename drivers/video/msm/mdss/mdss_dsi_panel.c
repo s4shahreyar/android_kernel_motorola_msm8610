@@ -10,6 +10,11 @@
  * GNU General Public License for more details.
  */
 
+#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#endif
+#endif
 #include <linux/module.h>
 #include <linux/interrupt.h>
 #include <linux/of.h>
@@ -30,6 +35,7 @@
 #include <mach/mmi_panel_notifier.h>
 
 #include "mdss_dsi.h"
+<<<<<<< HEAD
 #include "mdss_fb.h"
 #include "dsi_v2.h"
 
@@ -42,6 +48,17 @@
 #define PWR_MODE_FAIL_DROPBOX_MSG "PWR_MODE read failure"
 #define PWR_MODE_INVALID_DROPBOX_MSG "PWR_MODE invalid mode detected"
 #define PWR_MODE_MISMATCH_DROPBOX_MSG "PWR_MODE mis-match sensorhub reported"
+=======
+#include "dsi_v2.h"
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+#include <linux/input/tap2unlock.h>
+#endif
+
+
+#define DT_CMD_HDR 6
+#define ESD_DROPBOX_MSG "ESD event detected"
+#define ESD_TE_DROPBOX_MSG "ESD TE event detected"
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /*
  * MDSS_PANEL_ESD_SELF_TRIGGER is triggered ESD recovery depending how many
@@ -57,6 +74,10 @@
 #define TE_PULSE_USEC  100
 
 #define PWR_MODE_DISON 0x4
+<<<<<<< HEAD
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 DEFINE_LED_TRIGGER(bl_led_trigger);
 
@@ -254,6 +275,7 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 	pinfo = &(ctrl_pdata->panel_data.panel_info);
 
 	if (enable) {
+<<<<<<< HEAD
 		rc = mdss_dsi_request_gpios(ctrl_pdata);
 		if (rc) {
 			pr_err("gpio request failed\n");
@@ -270,6 +292,17 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 					usleep_range(ctrl_pdata->rst_seq[i] * 1000,
 						ctrl_pdata->rst_seq[i] * 1000);
 			}
+=======
+		if (gpio_is_valid(ctrl_pdata->disp_en_gpio))
+			gpio_set_value((ctrl_pdata->disp_en_gpio), 1);
+
+		for (i = 0; i < ctrl_pdata->rst_seq_len; ++i) {
+			gpio_set_value((ctrl_pdata->rst_gpio),
+				ctrl_pdata->rst_seq[i]);
+			if (ctrl_pdata->rst_seq[++i])
+				usleep_range(ctrl_pdata->rst_seq[i] * 1000,
+						ctrl_pdata->rst_seq[i] * 1000);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		}
 
 		if (gpio_is_valid(ctrl_pdata->mode_gpio)) {
@@ -293,7 +326,11 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 				usleep_range(ctrl_pdata->dis_rst_seq[i] * 1000,
 					ctrl_pdata->dis_rst_seq[i] * 1000);
 		}
+<<<<<<< HEAD
 		if (gpio_is_valid(ctrl_pdata->disp_en_gpio)) {
+=======
+		if (gpio_is_valid(ctrl_pdata->disp_en_gpio))
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			gpio_set_value((ctrl_pdata->disp_en_gpio), 0);
 			gpio_free(ctrl_pdata->disp_en_gpio);
 		}
@@ -359,6 +396,17 @@ static int mdss_dsi_panel_partial_update(struct mdss_panel_data *pdata)
 	return rc;
 }
 
+static struct mdss_dsi_ctrl_pdata *get_rctrl_data(struct mdss_panel_data *pdata)
+{
+	if (!pdata || !pdata->next) {
+		pr_err("%s: Invalid panel data\n", __func__);
+		return NULL;
+	}
+
+	return container_of(pdata->next, struct mdss_dsi_ctrl_pdata,
+			panel_data);
+}
+
 static void mdss_dsi_panel_bl_ctrl(struct mdss_panel_data *pdata,
 							u32 bl_level)
 {
@@ -390,6 +438,7 @@ static void mdss_dsi_panel_bl_ctrl(struct mdss_panel_data *pdata,
 		break;
 	case BL_DCS_CMD:
 		mdss_dsi_panel_bklt_dcs(ctrl_pdata, bl_level);
+<<<<<<< HEAD
 		if (mdss_dsi_is_master_ctrl(ctrl_pdata)) {
 			struct mdss_dsi_ctrl_pdata *sctrl =
 				mdss_dsi_get_slave_ctrl();
@@ -399,6 +448,17 @@ static void mdss_dsi_panel_bl_ctrl(struct mdss_panel_data *pdata,
 				return;
 			}
 			mdss_dsi_panel_bklt_dcs(sctrl, bl_level);
+=======
+		if (ctrl_pdata->shared_pdata.broadcast_enable &&
+				ctrl_pdata->ndx == DSI_CTRL_0) {
+			struct mdss_dsi_ctrl_pdata *rctrl_pdata = NULL;
+			rctrl_pdata = get_rctrl_data(pdata);
+			if (!rctrl_pdata) {
+				pr_err("%s: Right ctrl data NULL\n", __func__);
+				return;
+			}
+			mdss_dsi_panel_bklt_dcs(rctrl_pdata, bl_level);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		}
 		break;
 	default:
@@ -594,10 +654,17 @@ int mdss_panel_check_status(struct mdss_dsi_ctrl_pdata *ctrl)
 #endif
 	if ((pwr_mode & esd_data->esd_pwr_mode_chk) !=
 					esd_data->esd_pwr_mode_chk) {
+<<<<<<< HEAD
 		pr_warn("%s: ESD detected pwr_mode =0x%x expected = 0x%x\n",
 			__func__, pwr_mode, esd_data->esd_pwr_mode_chk);
 		if (!dropbox_sent) {
 			dropbox_queue_event_text(DROPBOX_DISPLAY_ISSUE,
+=======
+		pr_warn("%s: Detected pwr_mode = 0x%x expected mask = 0x%x\n",
+			__func__, pwr_mode, esd_data->esd_pwr_mode_chk);
+		if (!dropbox_sent) {
+			dropbox_queue_event_text("display_issue",
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 				ESD_DROPBOX_MSG, strlen(ESD_DROPBOX_MSG));
 			dropbox_sent = true;
 		}
@@ -624,7 +691,11 @@ int mdss_panel_check_status(struct mdss_dsi_ctrl_pdata *ctrl)
 			pr_warn("%s: No TE sig for %d usec.\n",  __func__,
 							TE_MONITOR_TO);
 			if (!dropbox_sent) {
+<<<<<<< HEAD
 				dropbox_queue_event_text(DROPBOX_DISPLAY_ISSUE,
+=======
+				dropbox_queue_event_text("display_issue",
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 					ESD_TE_DROPBOX_MSG,
 					strlen(ESD_TE_DROPBOX_MSG));
 				dropbox_sent = true;
@@ -639,18 +710,22 @@ end:
 
 static int mdss_dsi_panel_cont_splash_on(struct mdss_panel_data *pdata)
 {
+<<<<<<< HEAD
 	mdss_dsi_panel_regulator_on(pdata, 1);
 
 	if (pdata->panel_info.type == MIPI_VIDEO_PANEL &&
 		pdata->panel_info.no_solid_fill)
 		mdss_dsi_sw_reset(pdata);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mmi_panel_notify(MMI_PANEL_EVENT_DISPLAY_ON, NULL);
 
 #ifndef CONFIG_FB_MSM_MDSS_MDP3
 	if (pdata->panel_info.hs_cmds_post_init)
 		mdss_set_tx_power_mode(DSI_MODE_BIT_HS, pdata);
 #endif
+<<<<<<< HEAD
 	pr_info("%s: Panel continuous splash finished\n", __func__);
 	return 0;
 }
@@ -735,15 +810,41 @@ static int mdss_dsi_quickdraw_check_panel_state(struct mdss_panel_data *pdata,
 
 	return ret;
 }
+=======
+
+	return 0;
+}
+
+#ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+	extern bool s2w_scr_suspended;
+#endif
+
+#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+	extern bool dt2w_scr_suspended;
+	
+#endif
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+	extern bool t2u_scr_suspended;
+	extern void touch_suspend(void);
+	extern void touch_resume(void);
+	extern bool prox_covered;
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 {
+	
 	struct mipi_panel_info *mipi;
 	struct mdss_dsi_ctrl_pdata *ctrl = NULL;
+<<<<<<< HEAD
 	struct msm_fb_data_type *mfd;
 	u8 pwr_mode = 0;
 	char *dropbox_issue = NULL;
 	static int dropbox_count;
+=======
+	u8 pwr_mode = 0;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (pdata == NULL) {
 		pr_err("%s: Invalid input data\n", __func__);
@@ -754,6 +855,7 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 				panel_data);
 	mipi  = &pdata->panel_info.mipi;
 
+<<<<<<< HEAD
 	mfd = pdata->mfd;
 	pr_info("%s+: ctrl=%p ndx=%d\n", __func__, ctrl, ctrl->ndx);
 
@@ -799,6 +901,19 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 			goto end;
 		}
 	}
+=======
+	pr_info("%s+: ctrl=%p ndx=%d\n", __func__, ctrl, ctrl->ndx);
+
+	mdss_dsi_panel_regulator_on(pdata, 1);
+
+	mdss_dsi_panel_reset(pdata, 1);
+
+	if (ctrl->panel_config.bare_board == true) {
+		mmi_panel_notify(MMI_PANEL_EVENT_DISPLAY_ON, NULL);
+		pr_warn("%s: This is bare_board configuration\n", __func__);
+		goto end;
+	}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (ctrl->on_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds);
@@ -806,26 +921,35 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 	/* Send display on notification.  This will need to be revisited once
 	   we implement command mode support the way we want, since display
 	   may not be made visible to user until a point later than this */
+<<<<<<< HEAD
 	if (!mfd->quickdraw_in_progress)
 		mmi_panel_notify(MMI_PANEL_EVENT_DISPLAY_ON, NULL);
+=======
+	mmi_panel_notify(MMI_PANEL_EVENT_DISPLAY_ON, NULL);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	mdss_dsi_get_pwr_mode(pdata, &pwr_mode);
 	/* validate screen is actually on */
 	if ((pwr_mode & 0x04) != 0x04) {
 		pr_err("%s: Display failure: DISON (0x04) bit not set\n",
 			__func__);
+<<<<<<< HEAD
 		dropbox_issue = PWR_MODE_BLACK_DROPBOX_MSG;
 
 		if (pdata->panel_info.panel_dead)
 			pr_err("%s: Panel recovery FAILED!!\n", __func__);
 
 		pdata->panel_info.panel_dead = true;
+=======
+		dropbox_queue_event_empty("display_issue");
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 #ifndef CONFIG_FB_MSM_MDSS_MDP3
 	if (pdata->panel_info.hs_cmds_post_init)
 		mdss_set_tx_power_mode(DSI_MODE_BIT_HS, pdata);
 #endif
+<<<<<<< HEAD
 	/* Default CABC mode is UI while turning on display */
 	if (pdata->panel_info.dynamic_cabc_enabled)
 		pdata->panel_info.cabc_mode = CABC_UI_MODE;
@@ -845,15 +969,44 @@ end:
 		dropbox_count = 0;
 
 	pr_info("%s-. Pwr_mode(0x0A) = 0x%x\n", __func__, pwr_mode);
+=======
+end:
+	pr_info("%s-. Pwr_mode(0x0A) = 0x%x\n", __func__, pwr_mode);
+
+#ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+	s2w_scr_suspended = false;
+#endif
+
+#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+	dt2w_scr_suspended = false;
+	
+#endif
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+	t2u_scr_suspended = false;
+	/*if ((t2u_switch > 0) && (t2u_allow == false))
+	{
+		pr_info("t2u : calling to suspend touch ");
+		touch_suspend();
+
+	}*/
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return 0;
+
 }
 
 static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 {
 	struct mipi_panel_info *mipi;
 	struct mdss_dsi_ctrl_pdata *ctrl = NULL;
+<<<<<<< HEAD
 	struct msm_fb_data_type *mfd;
+=======
+	
+	t2u_allow = false;
+	
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (pdata == NULL) {
 		pr_err("%s: Invalid input data\n", __func__);
@@ -863,10 +1016,17 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
+<<<<<<< HEAD
 	mfd = pdata->mfd;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	pr_info("%s+: ctrl=%p ndx=%d\n", __func__, ctrl, ctrl->ndx);
 
 	mipi  = &pdata->panel_info.mipi;
+	mmi_panel_notify(MMI_PANEL_EVENT_PRE_DISPLAY_OFF, NULL);
+
+	if (ctrl->panel_config.bare_board == true)
+		goto disable_regs;
 
 	if (!mfd->quickdraw_in_progress)
 		mmi_panel_notify(MMI_PANEL_EVENT_PRE_DISPLAY_OFF, NULL);
@@ -884,6 +1044,7 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->off_cmds);
 
 disable_regs:
+<<<<<<< HEAD
 	if (ctrl->partial_mode_enabled && !pdata->panel_info.panel_dead)
 		gpio_set_value(ctrl->mipi_d0_sel, 1);
 	else {
@@ -903,6 +1064,27 @@ disable_regs:
 
 	pr_info("%s-:\n", __func__);
 
+=======
+	mdss_dsi_panel_reset(pdata, 0);
+	mdss_dsi_panel_regulator_on(pdata, 0);
+
+	pr_info("%s-:\n", __func__);
+
+#ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+	s2w_scr_suspended = true;
+#endif
+
+#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+	dt2w_scr_suspended = true;
+#endif
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+	t2u_scr_suspended = true;
+	t2u_duplicate_allow = false;
+
+#endif
+	
+	
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 }
 
@@ -1242,6 +1424,16 @@ static int mdss_dsi_parse_reset_seq(struct device_node *np,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+void mdss_panel_set_reg_boot_on(struct device_node *node,
+				struct mdss_dsi_ctrl_pdata *ctrl_pdata)
+{
+	if (of_property_read_bool(node, "qcom,cont-splash-enabled"))
+		ctrl_pdata->panel_vregs.boot_on = true;
+}
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 int mdss_panel_parse_panel_config_dt(struct mdss_dsi_ctrl_pdata *ctrl_pdata)
 {
 	struct device_node *np;
@@ -1291,14 +1483,18 @@ int mdss_panel_parse_panel_config_dt(struct mdss_dsi_ctrl_pdata *ctrl_pdata)
 		ctrl_pdata->panel_config.panel_ver,
 		detect_status);
 
+<<<<<<< HEAD
 	panelinfo.panel_name = (char *) &ctrl_pdata->panel_config.panel_name;
 	panelinfo.panel_ver = &ctrl_pdata->panel_config.panel_ver;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	of_node_put(np);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mdss_dsi_parse_panel_features(struct device_node *np,
 	struct mdss_dsi_ctrl_pdata *ctrl)
 {
@@ -1329,6 +1525,8 @@ static int mdss_dsi_parse_panel_features(struct device_node *np,
 	return 0;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int mdss_dsi_panel_reg_read(struct mdss_panel_data *pdata,
 				u8 reg, size_t size, u8 *buffer)
 {
@@ -1432,6 +1630,7 @@ static int mdss_dsi_panel_reg_write(struct mdss_panel_data *pdata,
 
 	return ret;
 }
+<<<<<<< HEAD
 
 static int mdss_dsi_parse_optional_dcs_cmds(struct device_node *np,
 		struct dsi_panel_cmds *pcmds, char *cmd_key, char *link_key)
@@ -1525,6 +1724,8 @@ int mdss_dsi_panel_set_hbm(struct mdss_dsi_ctrl_pdata *ctrl, int state)
 
 	return rc;
 }
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 static int mdss_panel_parse_dt(struct device_node *np,
 			struct mdss_dsi_ctrl_pdata *ctrl_pdata)
@@ -1816,11 +2017,6 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	for (i = 0; i < len; i++)
 		pinfo->mipi.dsi_phy_db.timing[i] = data[i];
 
-	pinfo->mipi.lp11_init = of_property_read_bool(np,
-					"qcom,mdss-dsi-lp11-init");
-	rc = of_property_read_u32(np, "qcom,mdss-dsi-init-delay-us", &tmp);
-	pinfo->mipi.init_delay = (!rc ? tmp : 0);
-
 	mdss_dsi_parse_fbc_params(np, pinfo);
 
 	mdss_dsi_parse_trigger(np, &(pinfo->mipi.mdp_trigger),
@@ -1840,12 +2036,15 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	mdss_dsi_parse_dcs_cmds(np, &ctrl_pdata->off_cmds,
 		"qcom,mdss-dsi-off-command", "qcom,mdss-dsi-off-command-state");
 
+<<<<<<< HEAD
 	rc = mdss_dsi_parse_panel_features(np, ctrl_pdata);
 	if (rc) {
 		pr_err("%s: failed to parse panel features\n", __func__);
 		goto error;
 	}
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (ctrl_pdata->panel_config.bare_board == true ||
 			ctrl_pdata->panel_config.esd_disable_bl == true) {
 		ctrl_pdata->panel_config.esd_enable = false;
@@ -1870,6 +2069,12 @@ static int mdss_panel_parse_dt(struct device_node *np,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	pinfo->cont_splash_skip_ov_handoff = of_property_read_bool(np,
+		"qcom,mdss-dsi-cont-splash-skip-ov-handoff");
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mdss_panel_parse_reset_seq(np, "qcom,panel-en-reset-sequence",
 				ctrl_pdata->rst_seq,
 				&ctrl_pdata->rst_seq_len);
@@ -1884,6 +2089,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	pinfo->hs_cmds_post_init = of_property_read_bool(np,
 		"qcom,mdss-dsi-hs-cmds-post-init");
 
+<<<<<<< HEAD
 	pinfo->quickdraw_enabled = of_property_read_bool(np,
 						"mmi,quickdraw-enabled");
 	if (pinfo->quickdraw_enabled) {
@@ -1912,6 +2118,8 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	}
 	panelinfo.panel_supplier = pinfo->supplier;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 
 error:
@@ -1960,6 +2168,7 @@ bool mdss_dsi_match_chosen_panel(struct device_node *np,
 	return true;
 }
 
+<<<<<<< HEAD
 int mdss_dsi_panel_set_cabc(struct mdss_dsi_ctrl_pdata *ctrl, int mode)
 {
 	int rc = -EINVAL;
@@ -1998,6 +2207,8 @@ end:
 	return rc;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 int mdss_dsi_panel_ioctl_handler(struct mdss_panel_data *pdata,
 					u32 cmd, void *arg)
 {
@@ -2108,6 +2319,10 @@ int mdss_dsi_panel_init(struct device_node *node,
 	if (ctrl_pdata->panel_config.bare_board)
 		ctrl_pdata->panel_data.panel_info.cont_splash_enabled = 0;
 
+	/* If it is bare board, disable splash feature. */
+	if (ctrl_pdata->panel_config.bare_board)
+		ctrl_pdata->panel_data.panel_info.cont_splash_enabled = 0;
+
 	ctrl_pdata->on = mdss_dsi_panel_on;
 	ctrl_pdata->off = mdss_dsi_panel_off;
 	ctrl_pdata->panel_data.set_backlight = mdss_dsi_panel_bl_ctrl;
@@ -2115,8 +2330,11 @@ int mdss_dsi_panel_init(struct device_node *node,
 	ctrl_pdata->check_status_disabled =
 				!ctrl_pdata->panel_config.esd_enable;
 	ctrl_pdata->check_status = mdss_panel_check_status;
+<<<<<<< HEAD
 	ctrl_pdata->set_hbm = mdss_dsi_panel_set_hbm;
 	ctrl_pdata->set_cabc = mdss_dsi_panel_set_cabc;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return 0;
 }

@@ -45,7 +45,11 @@
 		"retcl",	/* 28 */
 		"tefla",	/* 29 */
 		"retla1st",	/* 30 */
+<<<<<<< HEAD
 		"tefunl",	/* 31 */
+=======
+		"undefined",	/* 31 */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		"undefined",	/* 32 */
 		"undefined",	/* 33 */
 		"undefined",	/* 34 */
@@ -94,9 +98,15 @@
 		"eegb",		/* 77 */
 		"tescogb",	/* 78 */
 		"yoigo",	/* 79 */
+<<<<<<< HEAD
 		"oraes",	/* 80 */
 		"retapac",	/* 81 */
 		"retmea",	/* 82 */
+=======
+		"undefined",	/* 80 */
+		"undefined",	/* 81 */
+		"undefined",	/* 82 */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		"undefined",	/* 83 */
 		"undefined",	/* 84 */
 		"undefined",	/* 85 */
@@ -152,7 +162,11 @@
 		"sprint",	/* 135 - Republic Wireless, use sprint string instead of repw */
 		"aio",		/* 136 */
 		"???",		/* 137 */
+<<<<<<< HEAD
 		"cc",		/* 138 */
+=======
+		"???",		/* 138 */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		"usc",		/* 139 */
 		"tracfone",	/* 140 */
 		"retus",	/* 141 */
@@ -206,7 +220,11 @@
 		"undefined",	/* 189 */
 		"undefined",	/* 190 */
 		"undefined",	/* 191 */
+<<<<<<< HEAD
 		"retin",	/* 192 - Asia & Oceania */
+=======
+		"undefined",	/* 192 - Asia & Oceania */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		"undefined",	/* 193 */
 		"undefined",	/* 194 */
 		"undefined",	/* 195 */

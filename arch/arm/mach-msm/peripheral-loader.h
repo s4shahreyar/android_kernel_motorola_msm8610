@@ -87,10 +87,15 @@ static inline int pil_do_ramdump(struct pil_desc *desc, void *ramdump_dev)
 
 #ifdef CONFIG_CYPRESS_CAPSENSE_PROGRAMMING
 extern int cycapsense_fw_update(void);
+<<<<<<< HEAD
 extern int cycapsense_reset(void);
 #else
 static inline int cycapsense_fw_update(void) { return 0; }
 static inline int cycapsense_reset(void) { return 0; }
+=======
+#else
+static inline int cycapsense_fw_update(void) { return 0; }
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #endif
 
 

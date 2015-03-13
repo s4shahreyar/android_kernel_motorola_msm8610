@@ -15,7 +15,11 @@
  * This file contains all function implementations for the BMA2X2 in linux
 */
 
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
+=======
+#ifdef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #undef CONFIG_HAS_EARLYSUSPEND
 #endif
 #include <linux/module.h>
@@ -54,8 +58,14 @@
 
 #define ACC_NAME  "ACC"
 #define BMA2X2_ENABLE_INT1
+<<<<<<< HEAD
 #define ENABLE_SCREEN_ROT
 #define DISABLE_FIFO_WM
+=======
+#define CONFIG_SIG_MOTION
+#define MOTO_REMOVE
+/*#define CONFIG_BMA_ENABLE_NEWDATA_INT 1*/
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define SENSOR_NAME                 "bma2x2"
 #define ABSMIN                      -512
@@ -1240,7 +1250,11 @@
 #define MAX_FIFO_F_BYTES 6
 #define BMA_MAX_RETRY_I2C_XFER (100)
 
+<<<<<<< HEAD
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define DEFAULT_TAP_JUDGE_PERIOD 1000    /* default judge in 1 second */
 #endif
 
@@ -1388,7 +1402,10 @@ struct bma2x2_data {
 	struct mutex value_mutex;
 	struct mutex enable_mutex;
 	struct mutex mode_mutex;
+<<<<<<< HEAD
 	struct workqueue_struct *work_queue;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct delayed_work work;
 	struct work_struct irq_work;
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -1400,7 +1417,11 @@ struct bma2x2_data {
 	int ref_count;
 	struct input_dev *dev_for_interrupt;
 
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
+=======
+#ifdef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct class *g_sensor_class;
 	struct device *g_sensor_dev;
 
@@ -1408,7 +1429,11 @@ struct bma2x2_data {
 	atomic_t en_sig_motion;
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct class *g_sensor_class_doubletap;
 	struct device *g_sensor_dev_doubletap;
 	atomic_t en_double_tap;
@@ -1417,6 +1442,7 @@ struct bma2x2_data {
 	struct timer_list	tap_timer;
 	int tap_time_period;
 #endif
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 	struct class *g_sensor_class_screenrot;
 	struct device *g_sensor_dev_screenrot;
@@ -1424,6 +1450,8 @@ struct bma2x2_data {
 	unsigned char orient_value;
 	unsigned char flip_value;
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	unsigned char calib_status;
 };
 
@@ -1516,10 +1544,15 @@ static int bma2x2_smbus_read_byte(struct i2c_client *client,
 {
 	s32 dummy;
 	dummy = i2c_smbus_read_byte_data(client, reg_addr);
+<<<<<<< HEAD
 	if (dummy < 0) {
 		*data = 0;
 		return -1;
 	}
+=======
+	if (dummy < 0)
+		return -1;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	*data = dummy & 0x000000ff;
 
 	return 0;
@@ -1583,7 +1616,11 @@ static int bma_i2c_burst_read(struct i2c_client *client, u8 reg_addr,
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef BMA_ENABLE_NEWDATA_INT
+=======
+#ifdef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int bma2x2_set_newdata(struct i2c_client *client,
 			unsigned char channel, unsigned char int_newdata)
 {
@@ -1616,7 +1653,11 @@ static int bma2x2_set_newdata(struct i2c_client *client,
 	return comres;
 
 }
+<<<<<<< HEAD
 #endif /* BMA_ENABLE_NEWDATA_INT */
+=======
+#endif /* CONFIG_BMA_ENABLE_NEWDATA_INT */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #ifdef BMA2X2_ENABLE_INT1
 static int bma2x2_set_int1_pad_sel(struct i2c_client *client, unsigned char
@@ -1942,7 +1983,11 @@ static int bma2x2_get_interruptstatus1(struct i2c_client *client, unsigned char
 	return comres;
 }
 
+<<<<<<< HEAD
 #ifndef DISABLE_FIFO_WM
+=======
+#ifndef MOTO_REMOVE
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int bma2x2_get_interruptstatus2(struct i2c_client *client, unsigned char
 		*intstatus)
 {
@@ -2002,7 +2047,11 @@ static int bma2x2_get_HIGH_sign(struct i2c_client *client, unsigned char
 	return comres;
 }
 
+<<<<<<< HEAD
 #ifndef ENABLE_SIG_MOTION
+=======
+#ifndef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int bma2x2_get_slope_first(struct i2c_client *client, unsigned char
 	param, unsigned char *intstatus)
 {
@@ -4763,7 +4812,11 @@ static int bma2x2_read_accel_xyz(struct i2c_client *client,
 	return comres;
 }
 
+<<<<<<< HEAD
 #ifndef BMA_ENABLE_NEWDATA_INT
+=======
+#ifndef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static void bma2x2_work_func(struct work_struct *work)
 {
 	struct bma2x2_data *bma2x2 = container_of((struct delayed_work *)work,
@@ -4773,16 +4826,26 @@ static void bma2x2_work_func(struct work_struct *work)
 
 	bma2x2_read_accel_xyz(bma2x2->bma2x2_client, bma2x2->sensor_type,
 									&acc);
+<<<<<<< HEAD
 	input_event(bma2x2->input, EV_MSC, MSC_SERIAL, acc.x);
 	input_event(bma2x2->input, EV_MSC, MSC_PULSELED, acc.y);
 	input_event(bma2x2->input, EV_MSC, MSC_GESTURE, acc.z);
 
+=======
+	input_report_abs(bma2x2->input, ABS_X, acc.x);
+	input_report_abs(bma2x2->input, ABS_Y, acc.y);
+	input_report_abs(bma2x2->input, ABS_Z, acc.z);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	input_sync(bma2x2->input);
 	mutex_lock(&bma2x2->value_mutex);
 	bma2x2->value = acc;
 	mutex_unlock(&bma2x2->value_mutex);
+<<<<<<< HEAD
 	queue_delayed_work(bma2x2->work_queue,
 		&bma2x2->work, delay);
+=======
+	schedule_delayed_work(&bma2x2->work, delay);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 #endif
 
@@ -5027,9 +5090,14 @@ static void bma2x2_set_enable(struct device *dev, int enable)
 		if (pre_enable == 0) {
 			bma2x2_set_mode(bma2x2->bma2x2_client,
 					BMA2X2_MODE_NORMAL);
+<<<<<<< HEAD
 #ifndef BMA_ENABLE_NEWDATA_INT
 			queue_delayed_work(bma2x2->work_queue,
 				&bma2x2->work,
+=======
+#ifndef CONFIG_BMA_ENABLE_NEWDATA_INT
+			schedule_delayed_work(&bma2x2->work,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 				msecs_to_jiffies(atomic_read(&bma2x2->delay)));
 #endif
 			atomic_set(&bma2x2->enable, 1);
@@ -5039,7 +5107,11 @@ static void bma2x2_set_enable(struct device *dev, int enable)
 		if (pre_enable == 1) {
 			bma2x2_set_mode(bma2x2->bma2x2_client,
 					BMA2X2_MODE_SUSPEND);
+<<<<<<< HEAD
 #ifndef BMA_ENABLE_NEWDATA_INT
+=======
+#ifndef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			cancel_delayed_work_sync(&bma2x2->work);
 #endif
 			atomic_set(&bma2x2->enable, 0);
@@ -5810,7 +5882,11 @@ static ssize_t bma2x2_offset_z_store(struct device *dev,
 	return count;
 }
 
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
+=======
+#ifdef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int bma2x2_set_en_slope_int(struct bma2x2_data *bma2x2,
 		int en)
 {
@@ -5896,6 +5972,7 @@ static ssize_t bma2x2_en_sig_motion_store(struct device *dev,
 }
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 static ssize_t bma2x2_en_disp_rotation_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
@@ -5960,6 +6037,9 @@ static ssize_t bma2x2_en_disp_rotation_store(struct device *dev,
 #endif
 
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int bma2x2_set_en_single_tap_int(struct bma2x2_data *bma2x2, int en)
 {
 	int err;
@@ -6185,20 +6265,31 @@ static DEVICE_ATTR(temperature, S_IRUGO,
 		bma2x2_temperature_show, NULL);
 static DEVICE_ATTR(place, S_IRUGO,
 		bma2x2_place_show, NULL);
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
 static DEVICE_ATTR(en_sig_motion, S_IRUGO|S_IWUSR|S_IWGRP,
 		bma2x2_en_sig_motion_show, bma2x2_en_sig_motion_store);
 #endif
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_SIG_MOTION
+static DEVICE_ATTR(en_sig_motion, S_IRUGO|S_IWUSR|S_IWGRP,
+		bma2x2_en_sig_motion_show, bma2x2_en_sig_motion_store);
+#endif
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static DEVICE_ATTR(tap_time_period, S_IRUGO|S_IWUSR|S_IWGRP,
 		bma2x2_tap_time_period_show, bma2x2_tap_time_period_store);
 static DEVICE_ATTR(en_double_tap, S_IRUGO|S_IWUSR|S_IWGRP,
 		bma2x2_en_double_tap_show, bma2x2_en_double_tap_store);
 #endif
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 static DEVICE_ATTR(en_disp_rotation, S_IRUGO|S_IWUSR|S_IWGRP,
 		bma2x2_en_disp_rotation_show, bma2x2_en_disp_rotation_store);
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 static struct attribute *bma2x2_attributes[] = {
 	&dev_attr_range.attr,
@@ -6249,6 +6340,7 @@ static struct attribute *bma2x2_attributes[] = {
 	&dev_attr_softreset.attr,
 	&dev_attr_temperature.attr,
 	&dev_attr_place.attr,
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
 	&dev_attr_en_sig_motion.attr,
 #endif
@@ -6258,6 +6350,14 @@ static struct attribute *bma2x2_attributes[] = {
 #ifdef ENABLE_SCREEN_ROT
 	&dev_attr_en_disp_rotation.attr,
 #endif
+=======
+#ifdef CONFIG_SIG_MOTION
+	&dev_attr_en_sig_motion.attr,
+#endif
+#ifdef CONFIG_DOUBLE_TAP
+	&dev_attr_en_double_tap.attr,
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	NULL
 };
@@ -6266,7 +6366,11 @@ static struct attribute_group bma2x2_attribute_group = {
 	.attrs = bma2x2_attributes
 };
 
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
+=======
+#ifdef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct attribute *bma2x2_sig_motion_attributes[] = {
 	&dev_attr_slope_duration.attr,
 	&dev_attr_slope_threshold.attr,
@@ -6278,7 +6382,11 @@ static struct attribute_group bma2x2_sig_motion_attribute_group = {
 };
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct attribute *bma2x2_double_tap_attributes[] = {
 	&dev_attr_tap_threshold.attr,
 	&dev_attr_tap_duration.attr,
@@ -6294,6 +6402,7 @@ static struct attribute_group bma2x2_double_tap_attribute_group = {
 };
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 static struct attribute *bma2x2_disp_rotation_attributes[] = {
 	&dev_attr_en_disp_rotation.attr,
@@ -6303,6 +6412,8 @@ static struct attribute_group bma2x2_disp_rotation_attribute_group = {
 	.attrs = bma2x2_disp_rotation_attributes
 };
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #if defined(BMA2X2_ENABLE_INT1) || defined(BMA2X2_ENABLE_INT2)
 unsigned char *orient[] = {"upward looking portrait upright",
@@ -6318,7 +6429,11 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 {
 	struct bma2x2_data *bma2x2 = container_of((struct work_struct *)work,
 			struct bma2x2_data, irq_work);
+<<<<<<< HEAD
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct i2c_client *client = bma2x2->bma2x2_client;
 #endif
 
@@ -6327,7 +6442,11 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 	unsigned char first_value = 0;
 	unsigned char sign_value = 0;
 
+<<<<<<< HEAD
 #ifdef BMA_ENABLE_NEWDATA_INT
+=======
+#ifdef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	static struct bma2x2acc acc;
 
 	bma2x2_get_interruptstatus2(bma2x2->bma2x2_client, &status);
@@ -6336,9 +6455,15 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 		/* printk(KERN_INFO "New data interrupt happened\n");*/
 		bma2x2_read_accel_xyz(bma2x2->bma2x2_client,
 					bma2x2->sensor_type, &acc);
+<<<<<<< HEAD
 		input_event(bma2x2->input, EV_MSC, MSC_SERIAL, acc.x);
 		input_event(bma2x2->input, EV_MSC, MSC_PULSELED, acc.y);
 		input_event(bma2x2->input, EV_MSC, MSC_GESTURE, acc.z);
+=======
+		input_report_abs(bma2x2->input, ABS_X, acc.x);
+		input_report_abs(bma2x2->input, ABS_Y, acc.y);
+		input_report_abs(bma2x2->input, ABS_Z, acc.z);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		input_sync(bma2x2->input);
 		mutex_lock(&bma2x2->value_mutex);
 		bma2x2->value = acc;
@@ -6352,7 +6477,11 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 	bma2x2_get_interruptstatus1(bma2x2->bma2x2_client, &status);
 	printk(KERN_INFO "bma2x2_irq_work_func, status = 0x%x\n", status);
 
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
+=======
+#ifdef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (status & 0x04)	{
 		if (atomic_read(&bma2x2->en_sig_motion) == 1) {
 			printk(KERN_INFO "Significant motion interrupt happened\n");
@@ -6367,7 +6496,11 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 	}
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (status & 0x20) {
 		if (atomic_read(&bma2x2->en_double_tap) == 1) {
 			printk(KERN_INFO "single tap interrupt happened\n");
@@ -6393,6 +6526,7 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 	}
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 	if (status & 0x40) {
 		bma2x2_get_orient_status(bma2x2->bma2x2_client,
@@ -6433,6 +6567,8 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 		}
 	}
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	switch (status) {
 
@@ -6509,7 +6645,11 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 		}
 		   break;
 
+<<<<<<< HEAD
 #ifndef ENABLE_SIG_MOTION
+=======
+#ifndef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	case 0x04:
 		for (i = 0; i < 3; i++) {
 			bma2x2_get_slope_first(bma2x2->bma2x2_client, i,
@@ -6585,7 +6725,11 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 			SLOW_NO_MOTION_INTERRUPT_HAPPENED);
 		break;
 
+<<<<<<< HEAD
 #ifndef ENABLE_DOUBLE_TAP
+=======
+#ifndef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	case 0x10:
 		printk(KERN_INFO "double tap interrupt happened\n");
 		input_report_rel(bma2x2->dev_for_interrupt,
@@ -6601,7 +6745,10 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 #endif
 
 	case 0x40:
+<<<<<<< HEAD
 #ifndef ENABLE_SCREEN_ROT
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		bma2x2_get_orient_status(bma2x2->bma2x2_client,
 				    &first_value);
 		printk(KERN_INFO "orient interrupt happened,%s\n",
@@ -6638,10 +6785,15 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 			input_report_abs(bma2x2->dev_for_interrupt,
 				ORIENT_INTERRUPT,
 				DOWNWARD_LANDSCAPE_RIGHT_INTERRUPT_HAPPENED);
+<<<<<<< HEAD
 #endif
 		break;
 	case 0x80:
 #ifndef ENABLE_SCREEN_ROT
+=======
+		break;
+	case 0x80:
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		bma2x2_get_orient_flat_status(bma2x2->bma2x2_client,
 				    &sign_value);
 		printk(KERN_INFO "flat interrupt happened,flat status is %d\n",
@@ -6655,14 +6807,21 @@ static void bma2x2_irq_work_func(struct work_struct *work)
 				FLAT_INTERRUPT,
 				FLAT_INTERRUPT_FALSE_HAPPENED);
 		}
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 
 	default:
 		break;
 	}
 
+<<<<<<< HEAD
 #ifndef DISABLE_FIFO_WM
+=======
+#ifndef MOTO_REMOVE
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	bma2x2_get_interruptstatus2(bma2x2->bma2x2_client, &status);
 	printk(KERN_INFO "bma2x2_irq_work_func, interruptstatus2 = 0x%x\n",
 			status);
@@ -6686,7 +6845,11 @@ static irqreturn_t bma2x2_irq_handler(int irq, void *handle)
 		return IRQ_HANDLED;
 	if (data->bma2x2_client == NULL)
 		return IRQ_HANDLED;
+<<<<<<< HEAD
 	queue_work(data->work_queue, &data->irq_work);
+=======
+	schedule_work(&data->irq_work);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return IRQ_HANDLED;
 }
@@ -6772,12 +6935,15 @@ static int bma2x2_probe(struct i2c_client *client,
 	mutex_init(&data->enable_mutex);
 	bma2x2_set_bandwidth(client, BMA2X2_BW_SET);
 	bma2x2_set_range(client, BMA2X2_RANGE_SET);
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 	bma2x2_set_theta_blocking(client, 31);
 	bma2x2_set_theta_flat(client, 31);
 	bma2x2_set_orient_blocking(client, 3);
 	bma2x2_set_orient_mode(client, 2);
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #if defined(BMA2X2_ENABLE_INT1) || defined(BMA2X2_ENABLE_INT2)
 
@@ -6802,7 +6968,11 @@ static int bma2x2_probe(struct i2c_client *client,
 	bma2x2_set_int1_pad_sel(client, PAD_SLOW_NO_MOTION);
 	bma2x2_set_int1_fwm(client, 1);
 	bma2x2_set_int2_fwm(client, 0);
+<<<<<<< HEAD
 #ifdef BMA_ENABLE_NEWDATA_INT
+=======
+#ifdef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	bma2x2_set_newdata(client, BMA2X2_INT1_NDATA, 1);
 	bma2x2_set_newdata(client, BMA2X2_INT2_NDATA, 0);
 #endif
@@ -6820,14 +6990,23 @@ static int bma2x2_probe(struct i2c_client *client,
 	bma2x2_set_int2_pad_sel(client, PAD_SLOW_NO_MOTION);
 	bma2x2_set_int1_fwm(client, 0);
 	bma2x2_set_int2_fwm(client, 1);
+<<<<<<< HEAD
 #ifdef BMA_ENABLE_NEWDATA_INT
+=======
+#ifdef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	bma2x2_set_newdata(client, BMA2X2_INT1_NDATA, 0);
 	bma2x2_set_newdata(client, BMA2X2_INT2_NDATA, 1);
 #endif
 #endif
 
+<<<<<<< HEAD
 /*	bma2x2_set_Int_Mode(client, 1); latch interrupt 250ms*/
 	bma2x2_set_Int_Mode(client, 7);/*latched*/
+=======
+	bma2x2_set_Int_Mode(client, 1);/*latch interrupt 250ms*/
+/*	bma2x2_set_Int_Mode(client, 7); latched*/
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/* do not open any interrupt here  */
 	/*10,orient
@@ -6835,11 +7014,19 @@ static int bma2x2_probe(struct i2c_client *client,
 	/* bma2x2_set_Int_Enable(client, 10, 1);	*/
 	/* bma2x2_set_Int_Enable(client, 11, 1); */
 
+<<<<<<< HEAD
 #ifdef BMA_ENABLE_NEWDATA_INT
 	/* enable new data interrupt */
 	bma2x2_set_Int_Enable(client, 4, 1);
 #endif
 #ifndef DISABLE_FIFO_WM
+=======
+#ifdef CONFIG_BMA_ENABLE_NEWDATA_INT
+	/* enable new data interrupt */
+	bma2x2_set_Int_Enable(client, 4, 1);
+#endif
+#ifndef MOTO_REMOVE
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	bma2x2_set_Int_Enable(client, 17, 1);
 #endif
 	if (client->dev.of_node) {
@@ -6850,17 +7037,28 @@ static int bma2x2_probe(struct i2c_client *client,
 	data->IRQ = client->irq;
 	err = request_irq(data->IRQ, bma2x2_irq_handler, IRQF_TRIGGER_RISING,
 			"bma2x2", data);
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
+=======
+#ifdef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	enable_irq_wake(data->IRQ);
 #endif
 	if (err)
 		printk(KERN_ERR "could not request irq\n");
 
+<<<<<<< HEAD
 	data->work_queue = create_singlethread_workqueue("bma2x2");
 	INIT_WORK(&data->irq_work, bma2x2_irq_work_func);
 #endif
 
 #ifndef BMA_ENABLE_NEWDATA_INT
+=======
+	INIT_WORK(&data->irq_work, bma2x2_irq_work_func);
+#endif
+
+#ifndef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	INIT_DELAYED_WORK(&data->work, bma2x2_work_func);
 #endif
 	atomic_set(&data->delay, BMA2X2_MAX_DELAY);
@@ -6881,10 +7079,16 @@ static int bma2x2_probe(struct i2c_client *client,
 	dev->name = SENSOR_NAME;
 	dev->id.bustype = BUS_I2C;
 	input_set_capability(dev, EV_ABS, ABS_MISC);
+<<<<<<< HEAD
 	input_set_capability(dev, EV_MSC, MSC_SERIAL);
 	input_set_capability(dev, EV_MSC, MSC_PULSELED);
 	input_set_capability(dev, EV_MSC, MSC_GESTURE);
 
+=======
+	input_set_abs_params(dev, ABS_X, ABSMIN, ABSMAX, 0, 0);
+	input_set_abs_params(dev, ABS_Y, ABSMIN, ABSMAX, 0, 0);
+	input_set_abs_params(dev, ABS_Z, ABSMIN, ABSMAX, 0, 0);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	input_set_capability(dev, EV_REL, BMA2X2_FAST_CALIB_DONE);
 	input_set_capability(dev, EV_REL, FIFO_WM_INTERRUPT);
 
@@ -6914,9 +7118,12 @@ static int bma2x2_probe(struct i2c_client *client,
 		ORIENT_INTERRUPT);
 	input_set_capability(dev_for_interrupt, EV_ABS,
 		FLAT_INTERRUPT);
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 	input_set_capability(dev_for_interrupt, EV_MSC, MSC_RAW);
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	input_set_drvdata(dev_for_interrupt, data);
 
 	err = input_register_device(dev_for_interrupt);
@@ -6926,7 +7133,11 @@ static int bma2x2_probe(struct i2c_client *client,
 	data->dev_for_interrupt = dev_for_interrupt;
 	data->input = dev;
 
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
+=======
+#ifdef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	data->g_sensor_class = class_create(THIS_MODULE, "sig_sensor");
 	if (IS_ERR(data->g_sensor_class)) {
 		err = PTR_ERR(data->g_sensor_class);
@@ -6953,7 +7164,11 @@ static int bma2x2_probe(struct i2c_client *client,
 		goto error_sysfs;
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	data->g_sensor_class_doubletap =
 		class_create(THIS_MODULE, "dtap_sensor");
 	if (IS_ERR(data->g_sensor_class_doubletap)) {
@@ -6982,6 +7197,7 @@ static int bma2x2_probe(struct i2c_client *client,
 		goto error_sysfs;
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 	data->g_sensor_class_screenrot =
 		class_create(THIS_MODULE, "srot_sensor");
@@ -7011,6 +7227,8 @@ static int bma2x2_probe(struct i2c_client *client,
 		goto error_sysfs;
 #endif
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	err = sysfs_create_group(&data->input->dev.kobj,
 			&bma2x2_attribute_group);
 	if (err < 0)
@@ -7070,10 +7288,17 @@ static int bma2x2_probe(struct i2c_client *client,
 	data->ref_count = 0;
 	data->fifo_datasel = 0;
 	data->fifo_count = 0;
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
 	atomic_set(&data->en_sig_motion, 0);
 #endif
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_SIG_MOTION
+	atomic_set(&data->en_sig_motion, 0);
+#endif
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	atomic_set(&data->en_double_tap, 0);
 	data->tap_times = 0;
 	data->tap_time_period = DEFAULT_TAP_JUDGE_PERIOD;
@@ -7081,9 +7306,12 @@ static int bma2x2_probe(struct i2c_client *client,
 	setup_timer(&data->tap_timer, bma2x2_tap_timeout_handle,
 			(unsigned long)data);
 #endif
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 	atomic_set(&data->en_disp_rotation, 0);
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	data->calib_status = 0;
 	printk(KERN_INFO "BMA2x2 driver probe successfully");
 
@@ -7098,16 +7326,25 @@ bst_free_acc_exit:
 error_sysfs:
 	input_unregister_device(data->input);
 
+<<<<<<< HEAD
 #ifdef ENABLE_DOUBLE_TAP
+=======
+#ifdef CONFIG_DOUBLE_TAP
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 err_create_g_sensor_device_double_tap:
 	class_destroy(data->g_sensor_class_doubletap);
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_SIG_MOTION
+=======
+#ifdef CONFIG_SIG_MOTION
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 err_create_g_sensor_device:
 	class_destroy(data->g_sensor_class);
 #endif
 
+<<<<<<< HEAD
 #ifdef ENABLE_SCREEN_ROT
 err_create_g_sensor_device_screen_rot:
 	class_destroy(data->g_sensor_class_screenrot);
@@ -7115,6 +7352,9 @@ err_create_g_sensor_device_screen_rot:
 
 #if defined(ENABLE_SIG_MOTION) || defined(ENABLE_DOUBLE_TAP) || \
 	defined(ENABLE_SCREEN_ROT)
+=======
+#if defined(CONFIG_SIG_MOTION) || defined(CONFIG_DOUBLE_TAP)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 err_create_class:
 	input_unregister_device(data->dev_for_interrupt);
 #endif
@@ -7145,7 +7385,11 @@ static void bma2x2_early_suspend(struct early_suspend *h)
 	mutex_lock(&data->enable_mutex);
 	if (atomic_read(&data->enable) == 1) {
 		bma2x2_set_mode(data->bma2x2_client, BMA2X2_MODE_SUSPEND);
+<<<<<<< HEAD
 #ifndef BMA_ENABLE_NEWDATA_INT
+=======
+#ifndef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		cancel_delayed_work_sync(&data->work);
 #endif
 	}
@@ -7160,8 +7404,13 @@ static void bma2x2_late_resume(struct early_suspend *h)
 	mutex_lock(&data->enable_mutex);
 	if (atomic_read(&data->enable) == 1) {
 		bma2x2_set_mode(data->bma2x2_client, BMA2X2_MODE_NORMAL);
+<<<<<<< HEAD
 #ifndef BMA_ENABLE_NEWDATA_INT
 		queue_delayed_work(data->work_queue, &data->work,
+=======
+#ifndef CONFIG_BMA_ENABLE_NEWDATA_INT
+		schedule_delayed_work(&data->work,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 				msecs_to_jiffies(atomic_read(&data->delay)));
 #endif
 	}
@@ -7177,7 +7426,10 @@ static int bma2x2_remove(struct i2c_client *client)
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&data->early_suspend);
 #endif
+<<<<<<< HEAD
 	destroy_workqueue(data->work_queue);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	sysfs_remove_group(&data->input->dev.kobj, &bma2x2_attribute_group);
 	input_unregister_device(data->input);
 
@@ -7208,7 +7460,11 @@ static int bma2x2_suspend(struct i2c_client *client, pm_message_t mesg)
 	mutex_lock(&data->enable_mutex);
 	if (atomic_read(&data->enable) == 1) {
 		bma2x2_set_mode(data->bma2x2_client, BMA2X2_MODE_SUSPEND);
+<<<<<<< HEAD
 #ifndef BMA_ENABLE_NEWDATA_INT
+=======
+#ifndef CONFIG_BMA_ENABLE_NEWDATA_INT
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		cancel_delayed_work_sync(&data->work);
 #endif
 	}
@@ -7224,8 +7480,13 @@ static int bma2x2_resume(struct i2c_client *client)
 	mutex_lock(&data->enable_mutex);
 	if (atomic_read(&data->enable) == 1) {
 		bma2x2_set_mode(data->bma2x2_client, BMA2X2_MODE_NORMAL);
+<<<<<<< HEAD
 #ifndef BMA_ENABLE_NEWDATA_INT
 		queue_delayed_work(data->work_queue, &data->work,
+=======
+#ifndef CONFIG_BMA_ENABLE_NEWDATA_INT
+		schedule_delayed_work(&data->work,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 				msecs_to_jiffies(atomic_read(&data->delay)));
 #endif
 	}

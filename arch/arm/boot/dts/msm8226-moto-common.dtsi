@@ -117,7 +117,10 @@
 
 	spi@f9923000 {
 		ethernet-switch@3 {
+<<<<<<< HEAD
 			status = "disabled";
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			compatible = "micrel,ks8851";
 			reg = <3>;
 			interrupt-parent = <&msmgpio>;
@@ -218,7 +221,11 @@
 
 		/include/ "batterydata-ed30-temp.dtsi"
 		/include/ "batterydata-ed30-sony.dtsi"
+<<<<<<< HEAD
 		/include/ "batterydata-ed30-sony-alt.dtsi"
+=======
+		/include/ "batterydata-ed30-lishen.dtsi"
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		/include/ "batterydata-ed30-lg.dtsi"
 	};
 };
@@ -245,7 +252,10 @@
 
 	qcom,bus-speed-mode = "HS200_1p8v", "DDR_1p8v";
 	qcom,nonremovable;
+<<<<<<< HEAD
 	qcom,emmc;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	status = "ok";
 };
@@ -276,7 +286,10 @@
 	qcom,batt-cold-percentage = <80>;
 	qcom,step-charge-voltage = <4200>;
 	qcom,step-charge-current = <1130>;
+<<<<<<< HEAD
 	qcom,float-charge-timer = <1800>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 &pm8226_bms {
@@ -847,5 +860,9 @@
 };
 
 &secure_mem {
+<<<<<<< HEAD
 	reg = <0 0x3C00000>;
+=======
+	reg = <0 0x4600000>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };

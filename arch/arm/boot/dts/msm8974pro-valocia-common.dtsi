@@ -95,8 +95,13 @@
 			<&msmgpio 145 0>,       /* RESET */
 			<&msmgpio 33 0>,        /* BSLEN */
 			<&msmgpio 95 0>;        /* WakeIRQ */
+<<<<<<< HEAD
 		lux_table = <6 70 86 1174 2800 8000>;
 		brightness_table = <12 20 25 55 80 111 165>;
+=======
+		lux_table = <5 50 100 1500 3000 8000>;
+		brightness_table = <9 14 18 46 67 93 140>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		bslen_pin_active_value = <1>;
 		ct406_detect_threshold = <0x006E>;
 		ct406_undetect_threshold = <0x0050>;
@@ -115,7 +120,10 @@
 		tfa_vdd-supply = <&pm8941_s3>;
 		nxp,tfa_max-vol-steps = <15>;
 		nxp,tfa-dev = "right";
+<<<<<<< HEAD
 		nxp,tfa9890_bin_path = "valocia";
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	};
 
 	tfa9890@35 {
@@ -124,7 +132,10 @@
 		tfa_vdd-supply = <&pm8941_s3>;
 		nxp,tfa_max-vol-steps = <15>;
 		nxp,tfa-dev = "left";
+<<<<<<< HEAD
 		nxp,tfa9890_bin_path = "valocia";
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	};
 
 };
@@ -141,7 +152,11 @@
 		qcom,tfa9890-left-dai-name = "TFA9890 Playback Left";
 		qcom,tfa9890-right-dai-name = "TFA9890 Playback Right";
 		qcom,tfa9890-earpiece-gpio = <&pm8941_gpios 6 0x0>;
+<<<<<<< HEAD
 		qcom,model = "msm8974-taiko-tfa9890_stereo_codec-snd-card";
+=======
+		qcom,model = "msm8974-taiko-tfa9890_codec-snd-card";
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,audio-routing =
 			"RX_BIAS", "MCLK",
 			"LDO_H", "MCLK",
@@ -203,7 +218,10 @@
 			<&msmgpio 57 0>;        /* RESET */
 		touch_vdd-supply = <&pm8941_s3>;
 		touch_avdd-supply = <&pm8941_l23>;
+<<<<<<< HEAD
 		atmel,suspend-method-lpm;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		atmel,cfg {
 			atmel,family-id = <0xa4>;
 			atmel,variant-id = <0x7>;
@@ -242,3 +260,43 @@
 		};
 	};
 };
+<<<<<<< HEAD
+=======
+
+&pm8941_vadc {
+	/delete-node/ chan@b3;
+	/delete-node/ chan@b4;
+	/delete-node/ chan@b7;
+	/delete-node/ chan@b8;
+
+	chan@b4 {
+		label = "pa_therm1";
+		reg = <0xb4>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <2>;
+		qcom,hw-settle-time = <2>;
+		qcom,fast-avg-setup = <0>;
+	};
+};
+
+&pm8941_adc_tm {
+	/delete-node/ chan@b3;
+	/delete-node/ chan@b4;
+	/delete-node/ chan@b7;
+
+	chan@b4 {
+		label = "pa_therm1";
+		reg = <0xb4>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <2>;
+		qcom,hw-settle-time = <2>;
+		qcom,fast-avg-setup = <3>;
+		qcom,btm-channel-number = <0x88>;
+		qcom,thermal-node;
+	};
+};
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

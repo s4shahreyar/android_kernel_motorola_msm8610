@@ -36,6 +36,7 @@
 #define QPNP_VADC_MAX_ADC_CODE			0xA800
 #define KELVINMIL_DEGMIL	273160
 
+<<<<<<< HEAD
 static const struct qpnp_vadc_map_pt adcmap_btm_threshold_mmi_neg20[] = {
 	{-400, 1725},
 	{-390, 1721},
@@ -177,6 +178,8 @@ static const struct qpnp_vadc_map_pt adcmap_btm_threshold_mmi_neg20[] = {
 	{1250, 273}
 };
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static const struct qpnp_vadc_map_pt adcmap_btm_threshold_mmi_neg10[] = {
 	{-400, 1713},
 	{-390, 1708},
@@ -971,6 +974,7 @@ int32_t qpnp_adc_scale_batt_therm(struct qpnp_vadc_chip *chip,
 	bat_voltage = qpnp_adc_scale_ratiometric_calib(adc_code,
 			adc_properties, chan_properties);
 
+<<<<<<< HEAD
 	if (qpnp_vadc_get_batt_therm_type(chip) == 2) {
 		rc = qpnp_adc_map_temp_voltage(
 				adcmap_btm_threshold_mmi_neg20,
@@ -978,6 +982,9 @@ int32_t qpnp_adc_scale_batt_therm(struct qpnp_vadc_chip *chip,
 				bat_voltage,
 				&adc_chan_result->physical);
 	} else if (qpnp_vadc_get_batt_therm_type(chip) == 1) {
+=======
+	if (qpnp_vadc_get_batt_therm_type(chip) == 1) {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		rc = qpnp_adc_map_temp_voltage(
 				adcmap_btm_threshold_mmi_neg10,
 				ARRAY_SIZE(adcmap_btm_threshold_mmi_neg10),
@@ -1301,6 +1308,7 @@ int32_t qpnp_adc_btm_scaler(struct qpnp_vadc_chip *chip,
 	pr_debug("warm_temp:%d and cool_temp:%d\n", param->high_temp,
 				param->low_temp);
 
+<<<<<<< HEAD
 	if (qpnp_adc_tm_get_batt_therm_type() == 2) {
 		rc = qpnp_adc_map_voltage_temp(
 				adcmap_btm_threshold_mmi_neg20,
@@ -1308,6 +1316,9 @@ int32_t qpnp_adc_btm_scaler(struct qpnp_vadc_chip *chip,
 				(param->low_temp),
 				&low_output);
 	} else if (qpnp_adc_tm_get_batt_therm_type() == 1) {
+=======
+	if (qpnp_adc_tm_get_batt_therm_type() == 1) {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		rc = qpnp_adc_map_voltage_temp(
 				adcmap_btm_threshold_mmi_neg10,
 				ARRAY_SIZE(adcmap_btm_threshold_mmi_neg10),
@@ -1330,6 +1341,7 @@ int32_t qpnp_adc_btm_scaler(struct qpnp_vadc_chip *chip,
 	do_div(low_output, btm_param.adc_vref);
 	low_output += btm_param.adc_gnd;
 
+<<<<<<< HEAD
 	if (qpnp_adc_tm_get_batt_therm_type() == 2) {
 		rc = qpnp_adc_map_voltage_temp(
 				adcmap_btm_threshold_mmi_neg20,
@@ -1337,6 +1349,9 @@ int32_t qpnp_adc_btm_scaler(struct qpnp_vadc_chip *chip,
 				(param->high_temp),
 				&high_output);
 	} else if (qpnp_adc_tm_get_batt_therm_type() == 1) {
+=======
+	if (qpnp_adc_tm_get_batt_therm_type() == 1) {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		rc = qpnp_adc_map_voltage_temp(
 				adcmap_btm_threshold_mmi_neg10,
 				ARRAY_SIZE(adcmap_btm_threshold_mmi_neg10),

@@ -11,6 +11,7 @@
  * GNU General Public License for more details.
  */
 
+<<<<<<< HEAD
 &i2c_6 {
 	status = "ok";
 
@@ -33,6 +34,8 @@
 	};
 };
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 &cci {
 	actuator0: qcom,actuator@79 {
 		cell-index = <1>;
@@ -41,6 +44,7 @@
 		qcom,cci-master = <0>;
 	};
 
+<<<<<<< HEAD
 	imx179: qcom,camera@79 {
 		compatible = "qcom,imx179";
 		reg = <0x79>;
@@ -48,6 +52,14 @@
 		qcom,csiphy-sd-index = <0>;
 		qcom,csid-sd-index = <0>;
 		qcom,led-flash-src = <&led_flash1>;
+=======
+	qcom,camera@79 {
+		compatible = "qcom,imx179";
+		reg = <0x79>;
+		qcom,slave-id = <0x20 0x0002 0x8179>;
+		qcom,csiphy-sd-index = <0>;
+		qcom,csid-sd-index = <0>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,mount-angle = <90>;
 		qcom,actuator-src = <&actuator0>;
 		qcom,sensor-name = "imx179";
@@ -80,7 +92,11 @@
 		status = "ok";
 		};
 
+<<<<<<< HEAD
 	imx132: qcom,camera@32 {
+=======
+	qcom,camera@32 {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		compatible = "qcom,imx132";
 		reg = <0x32>;
 		qcom,slave-id = <0x6c 0x0 0x0132>;

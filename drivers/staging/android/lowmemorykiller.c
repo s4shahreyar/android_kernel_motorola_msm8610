@@ -416,6 +416,14 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 					test_tsk_thread_flag(p, TIF_MEMDIE))) {
 			lowmem_print(2, "skip slow dying process %d\n", p->pid);
 			task_unlock(p);
+<<<<<<< HEAD
+=======
+			continue;
+		}
+		if (fatal_signal_pending(p)) {
+			lowmem_print(2, "skip slow dying process %d\n", p->pid);
+			task_unlock(p);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			continue;
 		}
 		tasksize = get_mm_rss(p->mm);

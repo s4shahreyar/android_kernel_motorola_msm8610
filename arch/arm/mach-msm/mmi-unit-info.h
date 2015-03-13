@@ -32,6 +32,7 @@ struct mmi_unit_info {
 	char baseband[BASEBAND_MAX_LEN];
 	char device[DEVICE_MAX_LEN];
 	uint32_t radio;
+<<<<<<< HEAD
 	uint32_t pureason;
 };
 
@@ -39,4 +40,7 @@ struct mmi_unit_info {
  * where mmi_unit_info is stored.
  */
 void mmi_set_pureason(uint32_t val);
+=======
+};
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #endif

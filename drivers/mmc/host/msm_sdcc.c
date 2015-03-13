@@ -4512,8 +4512,11 @@ msmsdcc_check_status(unsigned long data)
 					mmc_hostname(host->mmc),
 					host->oldstat, status);
 			host->mmc->card_bad = 0;
+<<<<<<< HEAD
 			host->mmc->requests = 0ULL;
 			host->mmc->request_errors = 0ULL;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			mmc_detect_change(host->mmc, 0);
 		}
 		host->oldstat = status;

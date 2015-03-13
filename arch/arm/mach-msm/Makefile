@@ -377,7 +377,7 @@ obj-$(CONFIG_MSM_DCVS) += msm_dcvs_scm.o msm_dcvs.o
 obj-$(CONFIG_MSM_SHOW_RESUME_IRQ) += msm_show_resume_irq.o
 obj-$(CONFIG_BT_MSM_PINTEST)  += btpintest.o
 obj-$(CONFIG_MSM_FAKE_BATTERY) += fish_battery.o
-obj-$(CONFIG_MSM_RPC_VIBRATOR) += msm_vibrator.o
+obj-$(CONFIG_MSM_QPNP_VIBRATOR) += msm_vibrator.o
 obj-$(CONFIG_MSM_NATIVE_RESTART) += restart.o
 obj-$(CONFIG_MSM_MODEM_RESTART) += restart_7k.o
 
@@ -435,4 +435,8 @@ obj-$(CONFIG_MMI_UNIT_INFO) += mmi-unit-info.o
 obj-$(CONFIG_MMI_SOC_INFO) += mmi_soc_info.o
 obj-$(CONFIG_MMI_MSM_PINMUX) += mmi-pinmux.o
 obj-$(CONFIG_PM_DEBUG) += pm_debug.o
+<<<<<<< HEAD
 obj-$(CONFIG_MMI_MSM_CLOCK) += mmi-clock.o
+=======
+obj-$(CONFIG_FORCE_FAST_CHARGE) += fastchg.o
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

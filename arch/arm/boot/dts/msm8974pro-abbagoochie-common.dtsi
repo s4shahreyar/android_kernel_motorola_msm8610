@@ -12,7 +12,10 @@
 
 /include/ "dsi-panel-mot-smd-720p-cmd.dtsi"
 /include/ "dsi-panel-mot-smd-720p-video.dtsi"
+<<<<<<< HEAD
 /include/ "dsi-panel-mot-smd-1080p-cmd.dtsi"
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 / {
 	model = "Motorola QC-MSM8974 Pro Abbagoochie";
@@ -37,6 +40,7 @@
 	qcom,cont-splash-enabled;
 };
 
+<<<<<<< HEAD
 &mot_smd_1080p_cmd_v1 {
 	qcom,cont-splash-enabled;
 	qcom,partial-update-enabled;
@@ -53,6 +57,9 @@
 
 &mdss_dsi0 {
 	mmi,mipi-d0-sel = <&msmgpio 129 0>;
+=======
+&mdss_dsi0 {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	vbat_disp-supply = <&vbat_disp_vreg>;
 	vdd_disp-supply = <&vdd_disp_vreg>;
 	vci_disp-supply = <&vci_disp_vreg>;
@@ -114,8 +121,13 @@
 			<&msmgpio 145 0>,       /* RESET */
 			<&msmgpio 33 0>,        /* BSLEN */
 			<&msmgpio 95 0>;        /* WakeIRQ */
+<<<<<<< HEAD
 		lux_table = <6 70 86 1174 2800 8000>;
 		brightness_table = <12 20 25 55 80 111 165>;
+=======
+		lux_table = <5 50 100 1500 3000 8000>;
+		brightness_table = <9 14 18 46 67 93 140>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		bslen_pin_active_value = <1>;
 		ct406_detect_threshold = <0x006E>;
 		ct406_undetect_threshold = <0x0050>;

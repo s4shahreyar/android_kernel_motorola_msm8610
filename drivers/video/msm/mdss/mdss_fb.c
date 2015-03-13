@@ -157,6 +157,7 @@ static int mdss_fb_notify_update(struct msm_fb_data_type *mfd,
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mdss_fb_splash_thread(void *data)
 {
 	struct msm_fb_data_type *mfd = data;
@@ -199,6 +200,8 @@ end:
 	return ret;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int lcd_backlight_registered;
 
 static void mdss_fb_set_bl_brightness(struct led_classdev *led_cdev,
@@ -313,6 +316,62 @@ static ssize_t mdss_mdp_show_blank_event(struct device *dev,
 		mfd->quickdraw_in_progress ? 0 : mfd->panel_power_on);
 	ret = scnprintf(buf, PAGE_SIZE, "panel_power_on = %d\n",
 		mfd->quickdraw_in_progress ? 0 : mfd->panel_power_on);
+
+	return ret;
+}
+
+static void __mdss_fb_idle_notify_work(struct work_struct *work)
+{
+	struct delayed_work *dw = to_delayed_work(work);
+	struct msm_fb_data_type *mfd = container_of(dw, struct msm_fb_data_type,
+		idle_notify_work);
+
+	/* Notify idle-ness here */
+	pr_debug("Idle timeout %dms expired!\n", mfd->idle_time);
+	sysfs_notify(&mfd->fbi->dev->kobj, NULL, "idle_notify");
+}
+
+static ssize_t mdss_fb_get_idle_time(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct fb_info *fbi = dev_get_drvdata(dev);
+	struct msm_fb_data_type *mfd = fbi->par;
+	int ret;
+
+	ret = scnprintf(buf, PAGE_SIZE, "%d", mfd->idle_time);
+
+	return ret;
+}
+
+static ssize_t mdss_fb_set_idle_time(struct device *dev,
+	struct device_attribute *attr, const char *buf, size_t count)
+{
+	struct fb_info *fbi = dev_get_drvdata(dev);
+	struct msm_fb_data_type *mfd = fbi->par;
+	int rc = 0;
+	int idle_time = 0;
+
+	rc = kstrtoint(buf, 10, &idle_time);
+	if (rc) {
+		pr_err("kstrtoint failed. rc=%d\n", rc);
+		return rc;
+	}
+
+	pr_debug("Idle time = %d\n", idle_time);
+	mfd->idle_time = idle_time;
+
+	return count;
+}
+
+static ssize_t mdss_fb_get_idle_notify(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct fb_info *fbi = dev_get_drvdata(dev);
+	struct msm_fb_data_type *mfd = fbi->par;
+	int ret;
+
+	ret = scnprintf(buf, PAGE_SIZE, "%s",
+		work_busy(&mfd->idle_notify_work.work) ? "no" : "yes");
 
 	return ret;
 }
@@ -488,9 +547,12 @@ static void mdss_fb_shutdown(struct platform_device *pdev)
 
 	mfd->shutdown_pending = true;
 	lock_fb_info(mfd->fbi);
+<<<<<<< HEAD
 	if (lcd_backlight_registered)
 		mdss_fb_set_bl_brightness(&backlight_led, 0);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mdss_fb_release_all(mfd->fbi, NULL);
 	unlock_fb_info(mfd->fbi);
 }
@@ -609,6 +671,7 @@ static int mdss_fb_probe(struct platform_device *pdev)
 		break;
 	}
 
+<<<<<<< HEAD
 	if (mfd->index == 0) {
 		mfd->splash_thread = kthread_run(mdss_fb_splash_thread, mfd,
 				"mdss_fb_splash");
@@ -618,6 +681,9 @@ static int mdss_fb_probe(struct platform_device *pdev)
 			mfd->splash_thread = NULL;
 		}
 	}
+=======
+	INIT_DELAYED_WORK(&mfd->idle_notify_work, __mdss_fb_idle_notify_work);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	INIT_DELAYED_WORK(&mfd->idle_notify_work, __mdss_fb_idle_notify_work);
 
@@ -994,6 +1060,8 @@ int mdss_fb_blank_sub(int blank_mode, struct fb_info *info, int op_enable)
 		}
 		break;
 	}
+	/* Notify listeners */
+	sysfs_notify(&mfd->fbi->dev->kobj, NULL, "show_blank_event");
 
 	if (!mfd->quickdraw_in_progress) {
 		/* Notify listeners */
@@ -1062,12 +1130,26 @@ static inline int mdss_fb_create_ion_client(struct msm_fb_data_type *mfd)
 	return 0;
 }
 
+<<<<<<< HEAD
 void mdss_fb_free_fb_ion_memory(struct msm_fb_data_type *mfd)
 {
 	if (!mfd) {
 		pr_err("no mfd\n");
 		return;
 	}
+=======
+static struct fb_ops mdss_fb_ops = {
+	.owner = THIS_MODULE,
+	.fb_open2 = mdss_fb_open,
+	.fb_release2 = mdss_fb_release,
+	.fb_check_var = mdss_fb_check_var,	/* vinfo check */
+	.fb_set_par = mdss_fb_set_par,	/* set the video mode */
+	.fb_blank = mdss_fb_blank,	/* blank display */
+	.fb_pan_display = mdss_fb_pan_display,	/* pan display */
+	.fb_ioctl = mdss_fb_ioctl,	/* perform fb specific ioctl */
+	.fb_mmap = mdss_fb_mmap,
+};
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (!mfd->fbi->screen_base)
 		return;
@@ -1570,6 +1652,7 @@ static int mdss_fb_open(struct fb_info *info, struct file *file, int user)
 	pinfo->ref_cnt++;
 	mfd->ref_cnt++;
 
+<<<<<<< HEAD
 	/* Stop the splash thread once userspace open the fb node */
 	if (mfd->splash_thread && mfd->ref_cnt > 1) {
 		kthread_stop(mfd->splash_thread);
@@ -1577,6 +1660,8 @@ static int mdss_fb_open(struct fb_info *info, struct file *file, int user)
 		mdss_fb_free_fb_ion_memory(mfd);
 	}
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 
 blank_error:
@@ -1601,9 +1686,12 @@ static int mdss_fb_release_all(struct fb_info *info, struct file *file)
 	struct mdss_fb_proc_info *release_pinfo = NULL;
 	int pid_ref_cnt = 0;
 	int ret = 0;
+<<<<<<< HEAD
 	int pid = current->tgid;
 	struct task_struct *task = current->group_leader;
 	struct mdss_panel_data *pdata;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (!mfd->ref_cnt) {
 		pr_info("try to close unopened fb %d!\n", mfd->index);
@@ -1986,7 +2074,7 @@ static int mdss_fb_pan_display_sub(struct fb_var_screeninfo *var,
 		(var->yoffset / info->fix.ypanstep) * info->fix.ypanstep;
 
 	if (mfd->mdp.dma_fnc)
-		mfd->mdp.dma_fnc(mfd, NULL, 0, NULL);
+		mfd->mdp.dma_fnc(mfd);
 	else
 		pr_warn("dma function not set for panel type=%d\n",
 				mfd->panel.type);
@@ -2347,7 +2435,11 @@ static int mdss_fb_set_lut(struct fb_info *info, void __user *p)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	mfd->mdp.lut_update(mfd, &cmap, NULL);
+=======
+	mfd->mdp.lut_update(mfd, &cmap, false);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 }
 

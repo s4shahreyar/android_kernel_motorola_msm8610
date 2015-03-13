@@ -47,6 +47,7 @@ config MMI_PANEL_NOTIFICATIONS
 	default n
 	---help---
 	MMI panel notifications framework
+<<<<<<< HEAD
 
 config MDSS_QUICKDRAW
 	select FB_QUICKDRAW
@@ -61,3 +62,5 @@ config FB_MSM_MDSS_MDP3_KCAL_CTRL
 	---help---
 	  Enable sysfs for rgb/lut control for mdp3 display controllers
 	  in MDSS.
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

@@ -799,9 +799,21 @@ int msm_cpu_pm_enter_sleep(enum msm_pm_sleep_mode mode, bool from_idle)
 		pr_info("CPU%u: %s mode:%d\n",
 			smp_processor_id(), __func__, mode);
 
+<<<<<<< HEAD
 	if (from_idle)
 		time = sched_clock();
 
+=======
+	/* enable clock debug for idle and suspend */
+	if (mode == MSM_PM_SLEEP_MODE_POWER_COLLAPSE) {
+		if (!from_idle)
+			clock_debug_print_enabled();
+		else if (MSM_PM_DEBUG_IDLE_CLK & msm_pm_debug_mask)
+			clock_debug_print_enabled();
+	}
+
+	time = sched_clock();
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (execute[mode])
 		exit_stat = execute[mode](from_idle);
 

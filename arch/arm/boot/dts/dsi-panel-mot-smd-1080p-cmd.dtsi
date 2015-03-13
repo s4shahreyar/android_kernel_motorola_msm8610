@@ -12,6 +12,7 @@
  */
 
 &mdss_mdp {
+<<<<<<< HEAD
 	mot_smd_1080p_cmd_v1: qcom,mdss_dsi_mot_smd_1080p_cmd_v1 {
 		compatible = "qcom,mdss-dsi-panel";
 
@@ -134,6 +135,8 @@
 		};
 	};
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mot_smd_1080p_cmd_v0: qcom,mdss_dsi_mot_smd_1080p_cmd_v0 {
 		compatible = "qcom,mdss-dsi-panel";
 
@@ -142,15 +145,25 @@
 		qcom,mdss-dsi-te-using-te-pin;
 		qcom,mdss-dsi-te-dcs-command = <1>;
 
+<<<<<<< HEAD
 		qcom,mdss-dsi-hs-cmds-post-init;
 		qcom,panel-esd-power-mode-chk = <0x94>;
+=======
+		/* Disable ESD for now, reading fails while in command mode */
+		qcom,panel-esd-detect-disable;
+		qcom,panel-esd-power-mode-chk = <0x94>;
+		qcom,mdss-dsi-cont-splash-skip-ov-handoff;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 		qcom,mdss-dsi-panel-name = "mipi_mot_cmd_smd_1080_v0";
 		qcom,mdss-dsi-panel-controller = <&mdss_dsi0>;
 		qcom,mdss-dsi-panel-type = "dsi_cmd_mode";
 		qcom,mdss-dsi-panel-destination = "display_1";
 		qcom,mdss-dsi-panel-framerate = <60>;
+<<<<<<< HEAD
 		qcom,mdss-dsi-panel-col-align = <8>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,mdss-dsi-virtual-channel-id = <0>;
 		qcom,mdss-dsi-stream = <0>;
 		qcom,mdss-dsi-panel-width = <1080>;
@@ -189,10 +202,13 @@
 				15 01 00 00 01 00 02 51 00	/* brightness_ctrl */
 				15 01 00 00 01 00 02 55 03	/* acl_enable_disable_settings */
 				15 01 00 00 01 00 02 53 20	/* disp_ctrl */
+<<<<<<< HEAD
 				39 01 00 00 00 00 05 2a 00 00 04 37 /* normal col */
 				39 01 00 00 00 00 05 2b 00 00 07 7f /* normal row */
 				39 01 00 00 00 00 05 30 00 00 07 7f /* viewable region */
 				05 01 00 00 00 00 01 13		/* normal mode */
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 				05 01 00 00 00 00 01 29];	/* display on */
 
 		qcom,mdss-dsi-off-command = [
@@ -210,7 +226,10 @@
 		qcom,mdss-dsi-lane-2-state;
 		qcom,mdss-dsi-lane-3-state;
 		qcom,mdss-dsi-tx-eot-append;
+<<<<<<< HEAD
 		qcom,mdss-dsi-panel-clockrate = <0>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,mdss-dsi-panel-timings = [b0 23 1b 00 94 93 1e 25 15 03 04 00];
 		qcom,mdss-dsi-t-clk-post = <0x04>;
 		qcom,mdss-dsi-t-clk-pre = <0x1b>;
@@ -220,11 +239,14 @@
 		qcom,mdss-dsi-mdp-trigger = "none";
 		qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
 
+<<<<<<< HEAD
 		qcom,mdss-dsi-hbm-on-command = [
 				15 01 00 00 00 00 02 53 e0];
 		qcom,mdss-dsi-hbm-off-command = [
 				15 01 00 00 00 00 02 53 20];
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,panel-en-reset-sequence = <1 11>;
 		qcom,panel-dis-reset-sequence = <0 1>;
 		qcom,platform-supply-entry1 {

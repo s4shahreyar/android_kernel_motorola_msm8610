@@ -189,7 +189,11 @@ struct mdss_mdp_ctl {
 	int force_screen_state;
 	struct mdss_mdp_perf_params cur_perf;
 	struct mdss_mdp_perf_params new_perf;
+<<<<<<< HEAD
 	u32 perf_transaction_status;
+=======
+	int perf_status;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	struct mdss_data_type *mdata;
 	struct msm_fb_data_type *mfd;
@@ -222,7 +226,10 @@ struct mdss_mdp_ctl {
 
 	struct blocking_notifier_head notifier_head;
 	void (*ctx_dump_fnc) (struct mdss_mdp_ctl *ctl);
+<<<<<<< HEAD
 	int (*panel_on_locked) (struct mdss_mdp_ctl *ctl);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	void *priv_data;
 	u32 wb_type;
@@ -487,7 +494,6 @@ static inline u32 mdss_mdp_pingpong_read(struct mdss_mdp_mixer *mixer, u32 reg)
 
 irqreturn_t mdss_mdp_isr(int irq, void *ptr);
 int mdss_iommu_attach(struct mdss_data_type *mdata);
-int mdss_iommu_dettach(struct mdss_data_type *mdata);
 int mdss_mdp_scan_cont_splash(void);
 void mdss_mdp_irq_clear(struct mdss_data_type *mdata,
 		u32 intr_type, u32 intf_num);
@@ -538,15 +544,19 @@ int mdss_mdp_ctl_setup(struct mdss_mdp_ctl *ctl);
 int mdss_mdp_ctl_split_display_setup(struct mdss_mdp_ctl *ctl,
 		struct mdss_panel_data *pdata);
 int mdss_mdp_ctl_destroy(struct mdss_mdp_ctl *ctl);
-int mdss_mdp_ctl_start(struct mdss_mdp_ctl *ctl, bool handoff);
+int mdss_mdp_ctl_start(struct mdss_mdp_ctl *ctl);
 int mdss_mdp_ctl_stop(struct mdss_mdp_ctl *ctl);
 int mdss_mdp_ctl_intf_event(struct mdss_mdp_ctl *ctl, int event, void *arg);
 int mdss_mdp_perf_bw_check(struct mdss_mdp_ctl *ctl,
 		struct mdss_mdp_pipe **left_plist, int left_cnt,
 		struct mdss_mdp_pipe **right_plist, int right_cnt);
 int mdss_mdp_perf_calc_pipe(struct mdss_mdp_pipe *pipe,
+<<<<<<< HEAD
 	struct mdss_mdp_perf_params *perf, struct mdss_mdp_img_rect *roi,
 	int tune);
+=======
+	struct mdss_mdp_perf_params *perf, struct mdss_mdp_img_rect *roi, int tune);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 int mdss_mdp_ctl_notify(struct mdss_mdp_ctl *ctl, int event);
 void mdss_mdp_ctl_notifier_register(struct mdss_mdp_ctl *ctl,
 	struct notifier_block *notifier);
@@ -558,8 +568,13 @@ int mdss_mdp_mixer_handoff(struct mdss_mdp_ctl *ctl, u32 num,
 
 int mdss_mdp_scan_pipes(void);
 
+<<<<<<< HEAD
 void mdss_mdp_ctl_perf_set_transaction_status(struct mdss_mdp_ctl *ctl,
 	enum mdss_mdp_perf_state_type component, bool new_status);
+=======
+void mdss_mdp_ctl_perf_taken(struct mdss_mdp_ctl *ctl);
+void mdss_mdp_ctl_perf_done(struct mdss_mdp_ctl *ctl);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 void mdss_mdp_ctl_perf_release_bw(struct mdss_mdp_ctl *ctl);
 
 struct mdss_mdp_mixer *mdss_mdp_wb_mixer_alloc(int rotator);

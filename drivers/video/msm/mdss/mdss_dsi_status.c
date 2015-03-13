@@ -90,6 +90,7 @@ static void check_dsi_ctrl_status(struct work_struct *work)
 	ret = ctrl_pdata->check_status(ctrl_pdata);
 	mutex_unlock(&mdp3_session->offlock);
 #else
+<<<<<<< HEAD
 
 	if (!pdata->panel_info.cont_splash_esd_rdy) {
 		pr_warn("%s: Splash not complete, reschedule check status\n",
@@ -99,6 +100,8 @@ static void check_dsi_ctrl_status(struct work_struct *work)
 		return;
 	}
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mdp5_data = mfd_to_mdp5_data(pdsi_status->mfd);
 	ctl = mfd_to_ctl(pdsi_status->mfd);
 	if (!ctl) {
@@ -106,6 +109,7 @@ static void check_dsi_ctrl_status(struct work_struct *work)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (!pdsi_status->mfd->panel_power_on) {
 		pr_err("%s: panel off\n", __func__);
 		return;
@@ -114,11 +118,38 @@ static void check_dsi_ctrl_status(struct work_struct *work)
 	mutex_lock(&ctl->offlock);
 	if (ctl->shared_lock)
 		mutex_lock(ctl->shared_lock);
+=======
+	mutex_lock(&ctl->offlock);
+	if (ctl->shared_lock)
+		mutex_lock(ctl->shared_lock);
+	if (ctl->wait_pingpong)
+		mutex_lock(&mdp5_data->ov_lock);
+
+	/*
+	 * For the command mode panels, we return pan display
+	 * IOCTL on vsync interrupt. So, after vsync interrupt comes
+	 * and when DMA_P is in progress, if the panel stops responding
+	 * and if we trigger BTA before DMA_P finishes, then the DSI
+	 * FIFO will not be cleared since the DSI data bus control
+	 * doesn't come back to the host after BTA. This may cause the
+	 * display reset not to be proper. Hence, wait for DMA_P done
+	 * for command mode panels before triggering BTA.
+	 */
+	if (ctl->wait_pingpong)
+		ctl->wait_pingpong(ctl, NULL);
+
+	pr_debug("%s: DSI ctrl wait for ping pong done\n", __func__);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	mdss_mdp_clk_ctrl(MDP_BLOCK_POWER_ON, false);
 	ret = ctrl_pdata->check_status(ctrl_pdata);
 	mdss_mdp_clk_ctrl(MDP_BLOCK_POWER_OFF, false);
 
+<<<<<<< HEAD
+=======
+	if (ctl->wait_pingpong)
+		mutex_unlock(&mdp5_data->ov_lock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (ctl->shared_lock)
 		mutex_unlock(ctl->shared_lock);
 	mutex_unlock(&ctl->offlock);

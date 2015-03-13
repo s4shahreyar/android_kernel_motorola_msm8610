@@ -143,8 +143,12 @@ struct mmc_host_ops {
 	/* The tuning command opcode value is different for SD and eMMC cards */
 	int	(*execute_tuning)(struct mmc_host *host, u32 opcode);
 	void	(*enable_preset_value)(struct mmc_host *host, bool enable);
+<<<<<<< HEAD
 	int	(*select_drive_strength)(struct mmc_host *host,
 					 int host_drv, int card_drv);
+=======
+	int	(*select_drive_strength)(unsigned int max_dtr, int host_drv, int card_drv);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	int	(*tune_drive_strength)(struct mmc_host *host);
 	void	(*hw_reset)(struct mmc_host *host);
 	unsigned long (*get_max_frequency)(struct mmc_host *host);
@@ -420,14 +424,22 @@ struct mmc_host {
 #define MMC_CMD_LOG_MODE_EN		(1 << 0)
 #define MMC_CMD_LOG_MODE_RESP		(1 << 1)
 #define MMC_CMD_LOG_MODE_TIME		(1 << 2)
+<<<<<<< HEAD
 #define MMC_CMD_LOG_MODE_LATENCY	(1 << 3)
+=======
+#define MMC_CMD_LOG_MODE_DELTA		(1 << 3)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define MMC_CMD_LOG_MODE_FORCE_DUMP	(1 << 7)
 
 	unsigned int		mmc_cmd_log_recsize;
 #define MMC_CMD_LOG_RECSIZE_BASE	2  /* base record size */
 #define MMC_CMD_LOG_RECSIZE_RESP	1  /* command responses */
+<<<<<<< HEAD
 #define MMC_CMD_LOG_RECSIZE_TIME	1  /* one time stamp */
 #define MMC_CMD_LOG_RECSIZE_LATENCY	1  /* a second time stamp */
+=======
+#define MMC_CMD_LOG_RECSIZE_TIME	1  /* time stamps */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	unsigned int		mmc_cmd_log_flags;
 #define MMC_CMD_LOG_FLAG_RESP		(1 << 0)  /* response is pending */
@@ -616,6 +628,7 @@ static inline int mmc_use_core_pm(struct mmc_host *host)
 }
 
 #ifdef CONFIG_MMC_CMD_LOG
+<<<<<<< HEAD
 int mmc_cmd_log_size(struct mmc_host *, unsigned int);
 int mmc_cmd_log_config(struct mmc_host *, unsigned int);
 void mmc_cmd_log_dump(struct mmc_host *);
@@ -650,10 +663,25 @@ static inline void mmc_cmd_log(struct mmc_host *host, u32 cmd, u32 arg)
 static inline void mmc_cmd_log_resp(struct mmc_host *host, u32 resp)
 {
 }
+=======
+void mmc_cmd_log(struct mmc_host *, u32, u32);
+void mmc_cmd_log_resp(struct mmc_host *, u32);
+void mmc_cmd_log_dump(struct mmc_host *);
+#else
+static inline void mmc_cmd_log(struct mmc_host *host, u32 cmd, u32 arg)
+{
+}
+
+static inline void mmc_cmd_log_resp(struct mmc_host *host, u32 resp)
+{
+}
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static inline void mmc_cmd_log_dump(struct mmc_host *host)
 {
 }
 #endif
+<<<<<<< HEAD
 static inline int mmc_cmd_log_init(struct mmc_host *host, unsigned int size,
 				   unsigned int config)
 {
@@ -666,4 +694,6 @@ static inline int mmc_cmd_log_init(struct mmc_host *host, unsigned int size,
 	return rc;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #endif /* LINUX_MMC_HOST_H */

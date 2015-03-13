@@ -380,7 +380,10 @@ struct mmc_card {
 #define MMC_QUIRK_BROKEN_DATA_TIMEOUT	(1<<12)
 
 #define MMC_QUIRK_CACHE_DISABLE (1 << 14)       /* prevent cache enable */
+<<<<<<< HEAD
 #define MMC_QUIRK_SLOW_HPI_RESPONSE (1 << 30)   /* wait between STOP and HPI */
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define MMC_QUIRK_RETRY_FLUSH_TIMEOUT (1 << 31) /* requeue flush command timeouts */
 
 	unsigned int		erase_size;	/* erase size in sectors */
@@ -424,12 +427,21 @@ struct mmc_card {
 	bool issue_long_pon;
 	u8 *cached_ext_csd;
 
+<<<<<<< HEAD
+=======
+	unsigned long long	requests;	/* cumulative number of requests */
+	unsigned long long	request_errors;	/* cumulative number of request errors */
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define MMC_ERROR_FAILURE_RATIO	10		/* give up on cards with too many failures/successes */
 #define MMC_ERROR_FORGIVE_RATIO	10		/* forgive cards with enough successes/failures */
 	unsigned int		failures;	/* number of recent request failures */
 	unsigned int		successes;	/* successful requests since 1st recorded failure  */
+<<<<<<< HEAD
 #define MMC_ERROR_MAX_TIME_MS	10000LL		/* give up after 10 seconds of trouble */
 	ktime_t			failure_time;	/* time of the first failure */
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define MMC_THROTTLE_BACK_THRESHOLD 2
 	unsigned int		crc_errors;	/* number of CRC errors seen at this speed */
 };

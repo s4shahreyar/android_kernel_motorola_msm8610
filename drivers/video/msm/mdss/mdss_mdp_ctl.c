@@ -32,10 +32,17 @@ static inline u64 fudge_factor(u64 val, u32 numer, u32 denom)
 
 #define AB_FUDGE_FACTOR(val)		fudge_factor((val),		\
 	(mdss_res->ab_factor.numer), (mdss_res->ab_factor.denom))
+<<<<<<< HEAD
 
 #define IB_FUDGE_FACTOR(val)		fudge_factor((val),		\
 	(mdss_res->ib_factor.numer), (mdss_res->ib_factor.denom))
 
+=======
+
+#define IB_FUDGE_FACTOR(val)		fudge_factor((val),		\
+	(mdss_res->ib_factor.numer), (mdss_res->ib_factor.denom))
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define CLK_FUDGE_FACTOR(val)		fudge_factor((val),		\
 	(mdss_res->clk_factor.numer), (mdss_res->clk_factor.denom))
 
@@ -136,6 +143,7 @@ static inline u32 mdss_mdp_calc_y_scaler_bytes(struct mdss_mdp_prefill_params
 
 	return y_scaler_bytes;
 }
+<<<<<<< HEAD
 
 static inline u32 mdss_mdp_calc_latency_buf_bytes(struct mdss_mdp_prefill_params
 	*params, struct mdss_prefill_data *prefill)
@@ -143,6 +151,15 @@ static inline u32 mdss_mdp_calc_latency_buf_bytes(struct mdss_mdp_prefill_params
 	struct mdss_data_type *mdata = mdss_mdp_get_mdata();
 	u32 latency_lines, latency_buf_bytes;
 
+=======
+
+static inline u32 mdss_mdp_calc_latency_buf_bytes(struct mdss_mdp_prefill_params
+	*params, struct mdss_prefill_data *prefill)
+{
+	struct mdss_data_type *mdata = mdss_mdp_get_mdata();
+	u32 latency_lines, latency_buf_bytes;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (params->is_yuv) {
 		if (params->is_bwc) {
 			latency_lines = 4;
@@ -310,8 +327,12 @@ static u32 mdss_mdp_perf_calc_pipe_prefill_cmd(struct mdss_mdp_prefill_params
  * (MDP clock requirement) based on frame size and scaling requirements.
  */
 int mdss_mdp_perf_calc_pipe(struct mdss_mdp_pipe *pipe,
+<<<<<<< HEAD
 	struct mdss_mdp_perf_params *perf, struct mdss_mdp_img_rect *roi,
 	int tune)
+=======
+	struct mdss_mdp_perf_params *perf, struct mdss_mdp_img_rect *roi, int tune)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 {
 	struct mdss_mdp_mixer *mixer;
 	int fps = DEFAULT_FRAME_RATE;
@@ -442,9 +463,15 @@ static void mdss_mdp_perf_calc_mixer(struct mdss_mdp_mixer *mixer,
 	u64 bw_overlap[MDSS_MDP_MAX_STAGE] = { 0 };
 	u32 v_region[MDSS_MDP_MAX_STAGE * 2] = { 0 };
 	u32 prefill_bytes = 0;
+<<<<<<< HEAD
 
 	BUG_ON(num_pipes > MDSS_MDP_MAX_STAGE);
 
+=======
+
+	BUG_ON(num_pipes > MDSS_MDP_MAX_STAGE);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	memset(perf, 0, sizeof(*perf));
 
 	if (!mixer->rotator_mode) {
@@ -668,6 +695,7 @@ static void mdss_mdp_perf_calc_ctl(struct mdss_mdp_ctl *ctl,
 
 	if (ctl->is_video_mode)
 		perf->bw_ctl = IB_FUDGE_FACTOR(perf->bw_ctl);
+<<<<<<< HEAD
 }
 
 int mdss_mdp_perf_bw_check(struct mdss_mdp_ctl *ctl,
@@ -752,10 +780,55 @@ void mdss_mdp_ctl_perf_set_transaction_status(struct mdss_mdp_ctl *ctl,
 	bool previous_status;
 	unsigned long flags;
 
+=======
+
+	pr_debug("ctl=%d clk_rate=%u\n", ctl->num, perf->mdp_clk_rate);
+	pr_debug("bw_overlap=%llu bw_prefill=%llu prefill_byptes=%d\n",
+		 perf->bw_overlap, perf->bw_prefill, perf->prefill_bytes);
+}
+
+static bool mdss_mdp_ctl_perf_bw_released(struct mdss_mdp_ctl *ctl)
+{
+	unsigned long flags;
+	bool released = false;
+
+	if (!ctl || !ctl->panel_data ||
+		(ctl->panel_data->panel_info.type != MIPI_CMD_PANEL))
+		return released;
+
+	spin_lock_irqsave(&ctl->spin_lock, flags);
+	if (ctl->perf_status == 0) {
+		released = true;
+		ctl->perf_status++;
+	} else if (ctl->perf_status <= 2) {
+		ctl->perf_status++;
+	} else {
+		pr_err("pervious commit was not done\n");
+	}
+
+	pr_debug("perf_status=%d\n", ctl->perf_status);
+	spin_unlock_irqrestore(&ctl->spin_lock, flags);
+
+	return released;
+}
+
+/**
+ * @mdss_mdp_ctl_perf_taken() - indicates a committed buffer is taken
+ *                              by h/w
+ * @ctl - pointer to ctl data structure
+ *
+ * A committed buffer to be displayed is taken at a vsync or reader
+ * pointer interrupt by h/w. This function must be called in vsync
+ * interrupt context to indicate the buf status is changed.
+ */
+void mdss_mdp_ctl_perf_taken(struct mdss_mdp_ctl *ctl)
+{
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (!ctl || !ctl->panel_data ||
 		(ctl->panel_data->panel_info.type != MIPI_CMD_PANEL))
 		return;
 
+<<<<<<< HEAD
 	spin_lock_irqsave(&ctl->spin_lock, flags);
 
 	previous_transaction = ctl->perf_transaction_status;
@@ -812,6 +885,41 @@ u32 mdss_mdp_ctl_perf_get_transaction_status(struct mdss_mdp_ctl *ctl)
 	spin_unlock_irqrestore(&ctl->spin_lock, flags);
 
 	return transaction_status;
+=======
+	spin_lock(&ctl->spin_lock);
+	if (ctl->perf_status)
+		ctl->perf_status++;
+	pr_debug("perf_status=%d\n", ctl->perf_status);
+	spin_unlock(&ctl->spin_lock);
+}
+
+/**
+ * @mdss_mdp_ctl_perf_done() - indicates a committed buffer is
+ *                             displayed, so resources such as
+ *                             bandwidth that are associated to this
+ *                             buffer can be released.
+ * @ctl - pointer to a ctl
+ *
+ * When pingping done interrupt is trigged, mdp finishes displaying a
+ * buffer which was committed by user and taken by h/w and calling
+ * this function to clear those two states. This function must be
+ * called in pinppong done interrupt context.
+ */
+void mdss_mdp_ctl_perf_done(struct mdss_mdp_ctl *ctl)
+{
+	if (!ctl || !ctl->panel_data ||
+		(ctl->panel_data->panel_info.type != MIPI_CMD_PANEL))
+		return;
+
+	spin_lock(&ctl->spin_lock);
+	if (ctl->perf_status) {
+		ctl->perf_status--;
+		if (ctl->perf_status)
+			ctl->perf_status--;
+	}
+	pr_debug("perf_status=%d\n", ctl->perf_status);
+	spin_unlock(&ctl->spin_lock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static inline void mdss_mdp_ctl_perf_update_bus(struct mdss_mdp_ctl *ctl)
@@ -845,12 +953,21 @@ static inline void mdss_mdp_ctl_perf_update_bus(struct mdss_mdp_ctl *ctl)
  * @ctl - pointer to a ctl
  *
  * Function checks a state variable for the ctl, if all pending commit
+<<<<<<< HEAD
  * requests are done, meaning no more bandwidth is needed, release
+=======
+ * requests are done, meanning no more bandwidth is needed, release
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
  * bandwidth request.
  */
 void mdss_mdp_ctl_perf_release_bw(struct mdss_mdp_ctl *ctl)
 {
+<<<<<<< HEAD
 	int transaction_status;
+=======
+	unsigned long flags;
+	int need_release = 0;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct mdss_data_type *mdata;
 	int i;
 
@@ -868,6 +985,7 @@ void mdss_mdp_ctl_perf_release_bw(struct mdss_mdp_ctl *ctl)
 	for (i = 0; i < mdata->nctl; i++) {
 		struct mdss_mdp_ctl *ctl = mdata->ctl_off + i;
 
+<<<<<<< HEAD
 		if (ctl->power_on && ctl->is_video_mode)
 			goto exit;
 	}
@@ -883,6 +1001,25 @@ void mdss_mdp_ctl_perf_release_bw(struct mdss_mdp_ctl *ctl)
 		mdss_mdp_ctl_perf_update_bus(ctl);
 	}
 exit:
+=======
+		if (ctl->power_on && ctl->is_video_mode) {
+			mutex_unlock(&mdss_mdp_ctl_lock);
+			return;
+		}
+	}
+
+	spin_lock_irqsave(&ctl->spin_lock, flags);
+	if (!ctl->perf_status)
+		need_release = 1;
+	pr_debug("need release=%d\n", need_release);
+	spin_unlock_irqrestore(&ctl->spin_lock, flags);
+
+	if (need_release) {
+		ctl->cur_perf.bw_ctl = 0;
+		ctl->new_perf.bw_ctl = 0;
+		mdss_mdp_ctl_perf_update_bus(ctl);
+	}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mutex_unlock(&mdss_mdp_ctl_lock);
 }
 
@@ -892,7 +1029,10 @@ static void mdss_mdp_ctl_perf_update(struct mdss_mdp_ctl *ctl,
 	struct mdss_mdp_perf_params *new, *old;
 	int update_bus = 0, update_clk = 0;
 	struct mdss_data_type *mdata;
+<<<<<<< HEAD
 	bool is_bw_released;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (!ctl || !ctl->mdata)
 		return;
@@ -903,6 +1043,7 @@ static void mdss_mdp_ctl_perf_update(struct mdss_mdp_ctl *ctl,
 	old = &ctl->cur_perf;
 	new = &ctl->new_perf;
 
+<<<<<<< HEAD
 	/*
 	 * We could have released the bandwidth if there were no transactions
 	 * pending, so we want to re-calculate the bandwidth in this situation
@@ -911,6 +1052,10 @@ static void mdss_mdp_ctl_perf_update(struct mdss_mdp_ctl *ctl,
 
 	if (ctl->power_on) {
 		if (is_bw_released || params_changed)
+=======
+	if (ctl->power_on) {
+		if (params_changed || mdss_mdp_ctl_perf_bw_released(ctl))
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			mdss_mdp_perf_calc_ctl(ctl, new);
 		/*
 		 * if params have just changed delay the update until
@@ -977,8 +1122,13 @@ static struct mdss_mdp_ctl *mdss_mdp_ctl_alloc(struct mdss_data_type *mdata,
 			ctl->ref_cnt++;
 			ctl->mdata = mdata;
 			mutex_init(&ctl->lock);
+<<<<<<< HEAD
 			spin_lock_init(&ctl->spin_lock);
 			mutex_init(&ctl->offlock);
+=======
+			mutex_init(&ctl->offlock);
+			spin_lock_init(&ctl->spin_lock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			BLOCKING_INIT_NOTIFIER_HEAD(&ctl->notifier_head);
 			pr_debug("alloc ctl_num=%d\n", ctl->num);
 			break;
@@ -1665,6 +1815,7 @@ int mdss_mdp_ctl_intf_event(struct mdss_mdp_ctl *ctl, int event, void *arg)
 	return rc;
 }
 
+<<<<<<< HEAD
 /*
  * mdss_mdp_ctl_restore() - restore mdp ctl path
  * @ctl: mdp controller.
@@ -1685,32 +1836,27 @@ void mdss_mdp_ctl_restore(struct mdss_mdp_ctl *ctl)
 }
 
 static int mdss_mdp_ctl_start_sub(struct mdss_mdp_ctl *ctl, bool handoff)
+=======
+static int mdss_mdp_ctl_start_sub(struct mdss_mdp_ctl *ctl)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 {
 	struct mdss_mdp_mixer *mixer;
 	u32 outsize, temp;
 	int ret = 0;
 	int i, nmixers;
 
-	pr_debug("ctl_num=%d\n", ctl->num);
+	if (ctl->start_fnc)
+		ret = ctl->start_fnc(ctl);
+	else
+		pr_warn("no start function for ctl=%d type=%d\n", ctl->num,
+				ctl->panel_data->panel_info.type);
 
-	/*
-	 * Need start_fnc in 2 cases:
-	 * (1) handoff
-	 * (2) continuous splash finished.
-	 */
-	if (handoff || !ctl->panel_data->panel_info.cont_splash_enabled) {
-		if (ctl->start_fnc)
-			ret = ctl->start_fnc(ctl);
-		else
-			pr_warn("no start function for ctl=%d type=%d\n",
-					ctl->num,
-					ctl->panel_data->panel_info.type);
-
-		if (ret) {
-			pr_err("unable to start intf\n");
-			return ret;
-		}
+	if (ret) {
+		pr_err("unable to start intf\n");
+		return ret;
 	}
+
+	pr_debug("ctl_num=%d\n", ctl->num);
 
 	if (!ctl->panel_data->panel_info.cont_splash_enabled) {
 		nmixers = MDSS_MDP_INTF_MAX_LAYERMIXER +
@@ -1738,7 +1884,7 @@ static int mdss_mdp_ctl_start_sub(struct mdss_mdp_ctl *ctl, bool handoff)
 	return ret;
 }
 
-int mdss_mdp_ctl_start(struct mdss_mdp_ctl *ctl, bool handoff)
+int mdss_mdp_ctl_start(struct mdss_mdp_ctl *ctl)
 {
 	struct mdss_mdp_ctl *sctl;
 	struct mdss_data_type *mdata = mdss_mdp_get_mdata();
@@ -1753,16 +1899,12 @@ int mdss_mdp_ctl_start(struct mdss_mdp_ctl *ctl, bool handoff)
 	if (ret)
 		return ret;
 
+
 	sctl = mdss_mdp_get_split_ctl(ctl);
 
 	mutex_lock(&ctl->lock);
 
-	/*
-	 * keep power_on false during handoff to avoid unexpected
-	 * operations to overlay.
-	 */
-	if (!handoff)
-		ctl->power_on = true;
+	ctl->power_on = true;
 
 	memset(&ctl->cur_perf, 0, sizeof(ctl->cur_perf));
 
@@ -1774,10 +1916,10 @@ int mdss_mdp_ctl_start(struct mdss_mdp_ctl *ctl, bool handoff)
 		goto error;
 	}
 
-	ret = mdss_mdp_ctl_start_sub(ctl, handoff);
+	ret = mdss_mdp_ctl_start_sub(ctl);
 	if (ret == 0) {
 		if (sctl) { /* split display is available */
-			ret = mdss_mdp_ctl_start_sub(sctl, handoff);
+			ret = mdss_mdp_ctl_start_sub(sctl);
 			if (!ret)
 				mdss_mdp_ctl_split_display_enable(1, ctl, sctl);
 		} else if (ctl->mixer_right) {
@@ -2477,7 +2619,10 @@ int mdss_mdp_display_commit(struct mdss_mdp_ctl *ctl, void *arg)
 	struct mdss_mdp_ctl *sctl = NULL;
 	int mixer1_changed, mixer2_changed;
 	int ret = 0;
+<<<<<<< HEAD
 	bool is_bw_released;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (!ctl) {
 		pr_err("display function not set\n");
@@ -2499,6 +2644,7 @@ int mdss_mdp_display_commit(struct mdss_mdp_ctl *ctl, void *arg)
 
 	mdss_mdp_clk_ctrl(MDP_BLOCK_POWER_ON, false);
 
+<<<<<<< HEAD
 	/*
 	 * We could have released the bandwidth if there were no transactions
 	 * pending, so we want to re-calculate the bandwidth in this situation
@@ -2508,6 +2654,9 @@ int mdss_mdp_display_commit(struct mdss_mdp_ctl *ctl, void *arg)
 		PERF_STATUS_BUSY);
 
 	if (is_bw_released || mixer1_changed || mixer2_changed
+=======
+	if (mixer1_changed || mixer2_changed
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			|| ctl->force_screen_state) {
 		if (ctl->prepare_fnc)
 			ret = ctl->prepare_fnc(ctl, arg);

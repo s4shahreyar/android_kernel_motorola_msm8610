@@ -91,4 +91,7 @@ obj-$(CONFIG_SENSORS_BMA2X2) += bstclass.o
 obj-$(CONFIG_SENSORS_BMA2X2) += bma2x2.o
 obj-$(CONFIG_SENSORS_BMG) += bmg160_driver.o bmg160.o
 obj-$(CONFIG_SENSORS_BMM050) += bmm050_driver.o bmm050.o
+<<<<<<< HEAD
 obj-$(CONFIG_SENSORS_STML0XX) += stml0xx/
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

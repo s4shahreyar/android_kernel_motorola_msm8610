@@ -51,9 +51,16 @@ enum {
 	Opt_disable_ext_identify,
 	Opt_inline_xattr,
 	Opt_inline_data,
+<<<<<<< HEAD
 	Opt_inline_dentry,
 	Opt_flush_merge,
 	Opt_nobarrier,
+=======
+	Opt_android_emu,
+	Opt_err_continue,
+	Opt_err_panic,
+	Opt_err_recover,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	Opt_err,
 };
 
@@ -70,9 +77,16 @@ static match_table_t f2fs_tokens = {
 	{Opt_disable_ext_identify, "disable_ext_identify"},
 	{Opt_inline_xattr, "inline_xattr"},
 	{Opt_inline_data, "inline_data"},
+<<<<<<< HEAD
 	{Opt_inline_dentry, "inline_dentry"},
 	{Opt_flush_merge, "flush_merge"},
 	{Opt_nobarrier, "nobarrier"},
+=======
+	{Opt_android_emu, "android_emu=%s"},
+	{Opt_err_continue, "errors=continue"},
+	{Opt_err_panic, "errors=panic"},
+	{Opt_err_recover, "errors=recover"},
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	{Opt_err, NULL},
 };
 
@@ -80,7 +94,10 @@ static match_table_t f2fs_tokens = {
 enum {
 	GC_THREAD,	/* struct f2fs_gc_thread */
 	SM_INFO,	/* struct f2fs_sm_info */
+<<<<<<< HEAD
 	NM_INFO,	/* struct f2fs_nm_info */
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	F2FS_SBI,	/* struct f2fs_sb_info */
 };
 
@@ -99,8 +116,11 @@ static unsigned char *__struct_ptr(struct f2fs_sb_info *sbi, int struct_type)
 		return (unsigned char *)sbi->gc_thread;
 	else if (struct_type == SM_INFO)
 		return (unsigned char *)SM_I(sbi);
+<<<<<<< HEAD
 	else if (struct_type == NM_INFO)
 		return (unsigned char *)NM_I(sbi);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	else if (struct_type == F2FS_SBI)
 		return (unsigned char *)sbi;
 	return NULL;
@@ -192,10 +212,14 @@ F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, reclaim_segments, rec_prefree_segments);
 F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, max_small_discards, max_discards);
 F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, ipu_policy, ipu_policy);
 F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, min_ipu_util, min_ipu_util);
+<<<<<<< HEAD
 F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, min_fsync_blocks, min_fsync_blocks);
 F2FS_RW_ATTR(NM_INFO, f2fs_nm_info, ram_thresh, ram_thresh);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, max_victim_search, max_victim_search);
 F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, dir_level, dir_level);
+=======
+F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, max_victim_search, max_victim_search);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define ATTR_LIST(name) (&f2fs_attr_##name.attr)
 static struct attribute *f2fs_attrs[] = {
@@ -207,10 +231,14 @@ static struct attribute *f2fs_attrs[] = {
 	ATTR_LIST(max_small_discards),
 	ATTR_LIST(ipu_policy),
 	ATTR_LIST(min_ipu_util),
+<<<<<<< HEAD
 	ATTR_LIST(min_fsync_blocks),
 	ATTR_LIST(max_victim_search),
 	ATTR_LIST(dir_level),
 	ATTR_LIST(ram_thresh),
+=======
+	ATTR_LIST(max_victim_search),
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	NULL,
 };
 
@@ -244,6 +272,43 @@ static void init_once(void *foo)
 	inode_init_once(&fi->vfs_inode);
 }
 
+<<<<<<< HEAD
+=======
+static int parse_android_emu(struct f2fs_sb_info *sbi, char *args)
+{
+	char *sep = args;
+	char *sepres;
+	int ret;
+
+	if (!sep)
+		return -EINVAL;
+
+	sepres = strsep(&sep, ":");
+	if (!sep)
+		return -EINVAL;
+	ret = kstrtou32(sepres, 0, &sbi->android_emu_uid);
+	if (ret)
+		return ret;
+
+	sepres = strsep(&sep, ":");
+	if (!sep)
+		return -EINVAL;
+	ret = kstrtou32(sepres, 0, &sbi->android_emu_gid);
+	if (ret)
+		return ret;
+
+	sepres = strsep(&sep, ":");
+	ret = kstrtou16(sepres, 8, &sbi->android_emu_mode);
+	if (ret)
+		return ret;
+
+	if (sep && strstr(sep, "nocase"))
+		sbi->android_emu_flags = F2FS_ANDROID_EMU_NOCASE;
+
+	return 0;
+}
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int parse_options(struct super_block *sb, char *options)
 {
 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
@@ -271,9 +336,15 @@ static int parse_options(struct super_block *sb, char *options)
 
 			if (!name)
 				return -ENOMEM;
+<<<<<<< HEAD
 			if (strlen(name) == 2 && !strncmp(name, "on", 2))
 				set_opt(sbi, BG_GC);
 			else if (strlen(name) == 3 && !strncmp(name, "off", 3))
+=======
+			if (!strncmp(name, "on", 2))
+				set_opt(sbi, BG_GC);
+			else if (!strncmp(name, "off", 3))
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 				clear_opt(sbi, BG_GC);
 			else {
 				kfree(name);
@@ -342,6 +413,7 @@ static int parse_options(struct super_block *sb, char *options)
 		case Opt_inline_data:
 			set_opt(sbi, INLINE_DATA);
 			break;
+<<<<<<< HEAD
 		case Opt_inline_dentry:
 			set_opt(sbi, INLINE_DENTRY);
 			break;
@@ -351,6 +423,36 @@ static int parse_options(struct super_block *sb, char *options)
 		case Opt_nobarrier:
 			set_opt(sbi, NOBARRIER);
 			break;
+=======
+		case Opt_err_continue:
+			clear_opt(sbi, ERRORS_RECOVER);
+			clear_opt(sbi, ERRORS_PANIC);
+			break;
+		case Opt_err_panic:
+			set_opt(sbi, ERRORS_PANIC);
+			clear_opt(sbi, ERRORS_RECOVER);
+			break;
+		case Opt_err_recover:
+			set_opt(sbi, ERRORS_RECOVER);
+			clear_opt(sbi, ERRORS_PANIC);
+			break;
+		case Opt_android_emu:
+			if (args->from) {
+				int ret;
+				char *perms = match_strdup(args);
+
+				ret = parse_android_emu(sbi, perms);
+				kfree(perms);
+
+				if (ret)
+					return -EINVAL;
+
+				set_opt(sbi, ANDROID_EMU);
+			} else
+				return -EINVAL;
+			break;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		default:
 			f2fs_msg(sb, KERN_ERR,
 				"Unrecognized mount option \"%s\" or missing value",
@@ -373,6 +475,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
 
 	/* Initialize f2fs-specific inode info */
 	fi->vfs_inode.i_version = 1;
+<<<<<<< HEAD
 	atomic_set(&fi->dirty_pages, 0);
 	fi->i_current_depth = 1;
 	fi->i_advise = 0;
@@ -381,15 +484,24 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
 	INIT_RADIX_TREE(&fi->inmem_root, GFP_NOFS);
 	INIT_LIST_HEAD(&fi->inmem_pages);
 	mutex_init(&fi->inmem_lock);
+=======
+	atomic_set(&fi->dirty_dents, 0);
+	fi->i_current_depth = 1;
+	fi->i_advise = 0;
+	rwlock_init(&fi->ext.ext_lock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	set_inode_flag(fi, FI_NEW_INODE);
 
 	if (test_opt(F2FS_SB(sb), INLINE_XATTR))
 		set_inode_flag(fi, FI_INLINE_XATTR);
 
+<<<<<<< HEAD
 	/* Will be used by directory only */
 	fi->i_dir_level = F2FS_SB(sb)->dir_level;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return &fi->vfs_inode;
 }
 
@@ -442,6 +554,7 @@ static void f2fs_put_super(struct super_block *sb)
 	stop_gc_thread(sbi);
 
 	/* We don't need to do checkpoint when it's clean */
+<<<<<<< HEAD
 	if (sbi->s_dirty) {
 		struct cp_control cpc = {
 			.reason = CP_UMOUNT,
@@ -455,6 +568,10 @@ static void f2fs_put_super(struct super_block *sb)
 	 */
 	release_dirty_inode(sbi);
 	release_discard_addrs(sbi);
+=======
+	if (sbi->s_dirty && get_pages(sbi, F2FS_DIRTY_NODES))
+		write_checkpoint(sbi, true);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	iput(sbi->node_inode);
 	iput(sbi->meta_inode);
@@ -478,12 +595,21 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
 
 	trace_f2fs_sync_fs(sb, sync);
 
+<<<<<<< HEAD
 	if (sync) {
 		struct cp_control cpc = {
 			.reason = CP_SYNC,
 		};
 		mutex_lock(&sbi->gc_mutex);
 		write_checkpoint(sbi, &cpc);
+=======
+	if (!sbi->s_dirty && !get_pages(sbi, F2FS_DIRTY_NODES))
+		return 0;
+
+	if (sync) {
+		mutex_lock(&sbi->gc_mutex);
+		write_checkpoint(sbi, false);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		mutex_unlock(&sbi->gc_mutex);
 	} else {
 		f2fs_balance_fs(sbi);
@@ -492,6 +618,7 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int f2fs_freeze(struct super_block *sb)
 {
 	int err;
@@ -508,6 +635,8 @@ static int f2fs_unfreeze(struct super_block *sb)
 	return 0;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
 {
 	struct super_block *sb = dentry->d_sb;
@@ -526,8 +655,13 @@ static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
 	buf->f_bfree = buf->f_blocks - valid_user_blocks(sbi) - ovp_count;
 	buf->f_bavail = user_block_count - valid_user_blocks(sbi);
 
+<<<<<<< HEAD
 	buf->f_files = sbi->total_node_count - F2FS_RESERVED_NODE_NUM;
 	buf->f_ffree = buf->f_files - valid_inode_count(sbi);
+=======
+	buf->f_files = sbi->total_node_count;
+	buf->f_ffree = sbi->total_node_count - valid_inode_count(sbi);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	buf->f_namelen = F2FS_NAME_LEN;
 	buf->f_fsid.val[0] = (u32)id;
@@ -540,7 +674,11 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
 {
 	struct f2fs_sb_info *sbi = F2FS_SB(root->d_sb);
 
+<<<<<<< HEAD
 	if (!f2fs_readonly(sbi->sb) && test_opt(sbi, BG_GC))
+=======
+	if (!(root->d_sb->s_flags & MS_RDONLY) && test_opt(sbi, BG_GC))
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		seq_printf(seq, ",background_gc=%s", "on");
 	else
 		seq_printf(seq, ",background_gc=%s", "off");
@@ -564,16 +702,37 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
 	else
 		seq_puts(seq, ",noacl");
 #endif
+<<<<<<< HEAD
+=======
+	if (test_opt(sbi, ERRORS_PANIC))
+		seq_puts(seq, ",errors=panic");
+	else if (test_opt(sbi, ERRORS_RECOVER))
+		seq_puts(seq, ",errors=recover");
+	else
+		seq_puts(seq, ",errors=continue");
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (test_opt(sbi, DISABLE_EXT_IDENTIFY))
 		seq_puts(seq, ",disable_ext_identify");
 	if (test_opt(sbi, INLINE_DATA))
 		seq_puts(seq, ",inline_data");
+<<<<<<< HEAD
 	if (test_opt(sbi, INLINE_DENTRY))
 		seq_puts(seq, ",inline_dentry");
 	if (!f2fs_readonly(sbi->sb) && test_opt(sbi, FLUSH_MERGE))
 		seq_puts(seq, ",flush_merge");
 	if (test_opt(sbi, NOBARRIER))
 		seq_puts(seq, ",nobarrier");
+=======
+	if (test_opt(sbi, ANDROID_EMU))
+		seq_printf(seq, ",android_emu=%u:%u:%ho%s",
+				sbi->android_emu_uid,
+				sbi->android_emu_gid,
+				sbi->android_emu_mode,
+				(sbi->android_emu_flags &
+					F2FS_ANDROID_EMU_NOCASE) ?
+						":nocase" : "");
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	seq_printf(seq, ",active_logs=%u", sbi->active_logs);
 
 	return 0;
@@ -587,6 +746,7 @@ static int segment_info_seq_show(struct seq_file *seq, void *offset)
 			le32_to_cpu(sbi->raw_super->segment_count_main);
 	int i;
 
+<<<<<<< HEAD
 	seq_puts(seq, "format: segment_type|valid_blocks\n"
 		"segment_type(0:HD, 1:WD, 2:CD, 3:HN, 4:WN, 5:CN)\n");
 
@@ -603,12 +763,26 @@ static int segment_info_seq_show(struct seq_file *seq, void *offset)
 			seq_putc(seq, ' ');
 	}
 
+=======
+	for (i = 0; i < total_segs; i++) {
+		seq_printf(seq, "%u", get_valid_blocks(sbi, i, 1));
+		if (i != 0 && (i % 10) == 0)
+			seq_puts(seq, "\n");
+		else
+			seq_puts(seq, " ");
+	}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 }
 
 static int segment_info_open_fs(struct inode *inode, struct file *file)
 {
+<<<<<<< HEAD
 	return single_open(file, segment_info_seq_show, PDE(inode)->data);
+=======
+	return single_open(file, segment_info_seq_show,
+					PROC_I(inode)->pde->data);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static const struct file_operations f2fs_seq_segment_info_fops = {
@@ -624,10 +798,13 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
 	struct f2fs_mount_info org_mount_opt;
 	int err, active_logs;
+<<<<<<< HEAD
 	bool need_restart_gc = false;
 	bool need_stop_gc = false;
 
 	sync_filesystem(sb);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/*
 	 * Save the old mount options in case we
@@ -636,9 +813,12 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
 	org_mount_opt = sbi->mount_opt;
 	active_logs = sbi->active_logs;
 
+<<<<<<< HEAD
 	sbi->mount_opt.opt = 0;
 	sbi->active_logs = NR_CURSEG_TYPE;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* parse mount options */
 	err = parse_options(sb, data);
 	if (err)
@@ -646,9 +826,15 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
 
 	/*
 	 * Previous and new state of filesystem is RO,
+<<<<<<< HEAD
 	 * so skip checking GC and FLUSH_MERGE conditions.
 	 */
 	if (f2fs_readonly(sb) && (*flags & MS_RDONLY))
+=======
+	 * so no point in checking GC conditions.
+	 */
+	if ((sb->s_flags & MS_RDONLY) && (*flags & MS_RDONLY))
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		goto skip;
 
 	/*
@@ -660,6 +846,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
 		if (sbi->gc_thread) {
 			stop_gc_thread(sbi);
 			f2fs_sync_fs(sb, 1);
+<<<<<<< HEAD
 			need_restart_gc = true;
 		}
 	} else if (!sbi->gc_thread) {
@@ -679,12 +866,20 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
 		err = create_flush_cmd_control(sbi);
 		if (err)
 			goto restore_gc;
+=======
+		}
+	} else if (test_opt(sbi, BG_GC) && !sbi->gc_thread) {
+		err = start_gc_thread(sbi);
+		if (err)
+			goto restore_opts;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 skip:
 	/* Update the POSIXACL Flag */
 	 sb->s_flags = (sb->s_flags & ~MS_POSIXACL) |
 		(test_opt(sbi, POSIX_ACL) ? MS_POSIXACL : 0);
 	return 0;
+<<<<<<< HEAD
 restore_gc:
 	if (need_restart_gc) {
 		if (start_gc_thread(sbi))
@@ -693,6 +888,9 @@ restore_gc:
 	} else if (need_stop_gc) {
 		stop_gc_thread(sbi);
 	}
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 restore_opts:
 	sbi->mount_opt = org_mount_opt;
 	sbi->active_logs = active_logs;
@@ -709,8 +907,11 @@ static struct super_operations f2fs_sops = {
 	.evict_inode	= f2fs_evict_inode,
 	.put_super	= f2fs_put_super,
 	.sync_fs	= f2fs_sync_fs,
+<<<<<<< HEAD
 	.freeze_fs	= f2fs_freeze,
 	.unfreeze_fs	= f2fs_unfreeze,
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	.statfs		= f2fs_statfs,
 	.remount_fs	= f2fs_remount,
 };
@@ -721,7 +922,11 @@ static struct inode *f2fs_nfs_get_inode(struct super_block *sb,
 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
 	struct inode *inode;
 
+<<<<<<< HEAD
 	if (check_nid_range(sbi, ino))
+=======
+	if (unlikely(ino < F2FS_ROOT_INO(sbi)))
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		return ERR_PTR(-ESTALE);
 
 	/*
@@ -809,6 +1014,7 @@ static int sanity_check_raw_super(struct super_block *sb,
 		return 1;
 	}
 
+<<<<<<< HEAD
 	/* Currently, support 512/1024/2048/4096 bytes sector size */
 	if (le32_to_cpu(raw_super->log_sectorsize) >
 				F2FS_MAX_LOG_SECTOR_SIZE ||
@@ -825,6 +1031,16 @@ static int sanity_check_raw_super(struct super_block *sb,
 			"Invalid log sectors per block(%u) log sectorsize(%u)",
 			le32_to_cpu(raw_super->log_sectors_per_block),
 			le32_to_cpu(raw_super->log_sectorsize));
+=======
+	if (le32_to_cpu(raw_super->log_sectorsize) !=
+					F2FS_LOG_SECTOR_SIZE) {
+		f2fs_msg(sb, KERN_INFO, "Invalid log sectorsize");
+		return 1;
+	}
+	if (le32_to_cpu(raw_super->log_sectors_per_block) !=
+					F2FS_LOG_SECTORS_PER_BLOCK) {
+		f2fs_msg(sb, KERN_INFO, "Invalid log sectors per block");
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		return 1;
 	}
 	return 0;
@@ -846,7 +1062,11 @@ static int sanity_check_ckpt(struct f2fs_sb_info *sbi)
 	if (unlikely(fsmeta >= total))
 		return 1;
 
+<<<<<<< HEAD
 	if (unlikely(f2fs_cp_error(sbi))) {
+=======
+	if (unlikely(is_set_ckpt_flags(ckpt, CP_ERROR_FLAG))) {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		f2fs_msg(sbi->sb, KERN_ERR, "A bug case: need to run fsck");
 		return 1;
 	}
@@ -878,9 +1098,12 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
 
 	for (i = 0; i < NR_COUNT_TYPE; i++)
 		atomic_set(&sbi->nr_pages[i], 0);
+<<<<<<< HEAD
 
 	sbi->dir_level = DEF_DIR_LEVEL;
 	sbi->need_fsck = false;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 /*
@@ -930,6 +1153,7 @@ retry:
 static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
 {
 	struct f2fs_sb_info *sbi;
+<<<<<<< HEAD
 	struct f2fs_super_block *raw_super = NULL;
 	struct buffer_head *raw_super_buf;
 	struct inode *root;
@@ -938,6 +1162,16 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
 	int i;
 
 try_onemore:
+=======
+	struct f2fs_super_block *raw_super;
+	struct buffer_head *raw_super_buf;
+	struct inode *root;
+	long err = -EINVAL;
+	const char *descr = "";
+	int i;
+
+	f2fs_msg(sb, KERN_INFO, "mounting..");
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* allocate memory for f2fs-specific super block info */
 	sbi = kzalloc(sizeof(struct f2fs_sb_info), GFP_KERNEL);
 	if (!sbi)
@@ -990,6 +1224,7 @@ try_onemore:
 	mutex_init(&sbi->gc_mutex);
 	mutex_init(&sbi->writepages);
 	mutex_init(&sbi->cp_mutex);
+<<<<<<< HEAD
 	init_rwsem(&sbi->node_write);
 	sbi->por_doing = false;
 	spin_lock_init(&sbi->stat_lock);
@@ -999,6 +1234,17 @@ try_onemore:
 	sbi->read_io.bio = NULL;
 	for (i = 0; i < NR_PAGE_TYPE; i++) {
 		init_rwsem(&sbi->write_io[i].io_rwsem);
+=======
+	mutex_init(&sbi->node_write);
+	sbi->por_doing = false;
+	spin_lock_init(&sbi->stat_lock);
+
+	mutex_init(&sbi->read_io.io_mutex);
+	sbi->read_io.sbi = sbi;
+	sbi->read_io.bio = NULL;
+	for (i = 0; i < NR_PAGE_TYPE; i++) {
+		mutex_init(&sbi->write_io[i].io_mutex);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		sbi->write_io[i].sbi = sbi;
 		sbi->write_io[i].bio = NULL;
 	}
@@ -1015,6 +1261,10 @@ try_onemore:
 		goto free_sb_buf;
 	}
 
+<<<<<<< HEAD
+=======
+get_cp:
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	err = get_valid_checkpoint(sbi);
 	if (err) {
 		f2fs_msg(sb, KERN_ERR, "Failed to get valid F2FS checkpoint");
@@ -1040,7 +1290,11 @@ try_onemore:
 	INIT_LIST_HEAD(&sbi->dir_inode_list);
 	spin_lock_init(&sbi->dir_inode_lock);
 
+<<<<<<< HEAD
 	init_ino_entry_info(sbi);
+=======
+	init_orphan_info(sbi);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/* setup f2fs internal modules */
 	err = build_segment_manager(sbi);
@@ -1077,9 +1331,14 @@ try_onemore:
 		goto free_node_inode;
 	}
 	if (!S_ISDIR(root->i_mode) || !root->i_blocks || !root->i_size) {
+<<<<<<< HEAD
 		iput(root);
 		err = -EINVAL;
 		goto free_node_inode;
+=======
+		err = -EINVAL;
+		goto free_root_inode;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	sb->s_root = d_make_root(root); /* allocate root dentry */
@@ -1088,9 +1347,44 @@ try_onemore:
 		goto free_root_inode;
 	}
 
+<<<<<<< HEAD
 	err = f2fs_build_stats(sbi);
 	if (err)
 		goto free_root_inode;
+=======
+	/* recover fsynced data */
+	if (!test_opt(sbi, DISABLE_ROLL_FORWARD)) {
+		err = recover_fsync_data(sbi);
+		if (err) {
+			if (f2fs_handle_error(sbi)) {
+				set_opt(sbi, DISABLE_ROLL_FORWARD);
+				kfree(sbi->ckpt);
+				f2fs_msg(sb, KERN_ERR,
+					"reloading last checkpoint");
+				goto get_cp;
+			}
+			f2fs_msg(sb, KERN_ERR,
+				"cannot recover all fsync data errno=%ld", err);
+			/* checkpoint what we have */
+			write_checkpoint(sbi, false);
+		}
+	}
+
+	/*
+	 * If filesystem is not mounted as read-only then
+	 * do start the gc_thread.
+	 */
+	if (!(sb->s_flags & MS_RDONLY)) {
+		/* After POR, we can run background GC thread.*/
+		err = start_gc_thread(sbi);
+		if (err)
+			goto free_gc;
+	}
+
+	err = f2fs_build_stats(sbi);
+	if (err)
+		goto free_gc;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (f2fs_proc_root)
 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
@@ -1107,11 +1401,19 @@ try_onemore:
 					"the device does not support discard");
 	}
 
+<<<<<<< HEAD
+=======
+	if (test_opt(sbi, ANDROID_EMU))
+		descr = " with android sdcard emulation";
+	f2fs_msg(sb, KERN_INFO, "mounted filesystem%s", descr);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	sbi->s_kobj.kset = f2fs_kset;
 	init_completion(&sbi->s_kobj_unregister);
 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_ktype, NULL,
 							"%s", sb->s_id);
 	if (err)
+<<<<<<< HEAD
 		goto free_proc;
 
 	if (!retry)
@@ -1142,11 +1444,22 @@ try_onemore:
 free_kobj:
 	kobject_del(&sbi->s_kobj);
 free_proc:
+=======
+		goto fail;
+
+	return 0;
+fail:
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (sbi->s_proc) {
 		remove_proc_entry("segment_info", sbi->s_proc);
 		remove_proc_entry(sb->s_id, f2fs_proc_root);
 	}
 	f2fs_destroy_stats(sbi);
+<<<<<<< HEAD
+=======
+free_gc:
+	stop_gc_thread(sbi);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 free_root_inode:
 	dput(sb->s_root);
 	sb->s_root = NULL;
@@ -1165,6 +1478,7 @@ free_sb_buf:
 	brelse(raw_super_buf);
 free_sbi:
 	kfree(sbi);
+<<<<<<< HEAD
 
 	/* give only one another chance */
 	if (retry) {
@@ -1172,6 +1486,9 @@ free_sbi:
 		shrink_dcache_sb(sb);
 		goto try_onemore;
 	}
+=======
+	f2fs_msg(sb, KERN_ERR, "mount failed");
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return err;
 }
 
@@ -1192,7 +1509,11 @@ static struct file_system_type f2fs_fs_type = {
 static int __init init_inodecache(void)
 {
 	f2fs_inode_cachep = f2fs_kmem_cache_create("f2fs_inode_cache",
+<<<<<<< HEAD
 			sizeof(struct f2fs_inode_info));
+=======
+			sizeof(struct f2fs_inode_info), NULL);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (!f2fs_inode_cachep)
 		return -ENOMEM;
 	return 0;

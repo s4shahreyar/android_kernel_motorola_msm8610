@@ -25,6 +25,7 @@ struct mxt_info {
 	u8 object_num;
 };
 
+<<<<<<< HEAD
 struct mxt_panel_resolution {
 	u16	x_max, y_max;
 };
@@ -33,6 +34,11 @@ struct mxt_panel_resolution {
 struct mxt_platform_data {
 	struct mxt_info dt_info;
 	struct mxt_panel_resolution res;
+=======
+/* The platform data for the Atmel maXTouch touchscreen driver */
+struct mxt_platform_data {
+	struct mxt_info dt_info;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	unsigned long irqflags;
 	u8 t19_num_keys;
 	unsigned int *t19_keymap;

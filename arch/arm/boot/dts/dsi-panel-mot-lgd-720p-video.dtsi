@@ -47,13 +47,20 @@
 		qcom,mdss-dsi-bpp = <24>;
 		qcom,mdss-dsi-underflow-color = <0xff>;
 		qcom,mdss-dsi-border-color = <0>;
+<<<<<<< HEAD
 		qcom,splash-no-solid-fill;
+=======
+		qcom,mdss-dsi-cont-splash-skip-ov-handoff;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 		qcom,mdss-dsi-on-command = [
 			29 01 00 00 78 00 02 11 00      /* exit sleep */
 			29 01 00 00 00 00 02 b0 ac
 			29 01 00 00 00 00 06 b5 47 00 80 ff ff
+<<<<<<< HEAD
 			39 01 00 00 00 00 09 b1 10 14 04 16 22 31 10 10
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			29 01 00 00 00 00 02 51 ff      /* led_pwm1 */
 			29 01 00 00 00 00 02 53 2c      /* led_pwm2 */
 			29 01 00 00 00 00 02 55 00      /* led_pwm3 */

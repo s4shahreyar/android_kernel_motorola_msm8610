@@ -3408,8 +3408,11 @@ static int ci13xxx_vbus_enable_charge(struct usb_gadget *_gadget, int is_on)
 
 	spin_lock_irqsave(udc->lock, flags);
 	udc->charge_enabled = is_on;
+<<<<<<< HEAD
 	if (udc->vbus_active && udc->charge_enabled)
 		ci13xxx_vbus_draw(_gadget, 500);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	spin_unlock_irqrestore(udc->lock, flags);
 
 	return 0;

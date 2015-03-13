@@ -2639,8 +2639,11 @@ static int sdhci_msm_tune_drive_strength(struct sdhci_host *host)
 	struct sdhci_msm_pad_drv_data *drv =
 			msm_host->pdata->pin_data->pad_data->drv;
 
+<<<<<<< HEAD
 	if (drv->tune_size == 0)
 		return -ENOSYS;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	drv->tune_index++;
 	if (drv->tune_index >= drv->tune_size) {
 		pr_info("%s: no other drive strength tuning settings\n",
@@ -2725,6 +2728,7 @@ out:
 	mutex_unlock(&vreg_data->lock);
 }
 
+<<<<<<< HEAD
 static int sdhci_msm_select_drive_strength(struct sdhci_host *host,
 		int host_drv, int card_drv)
 {
@@ -2751,6 +2755,8 @@ static int sdhci_msm_select_drive_strength(struct sdhci_host *host,
 	return MMC_SET_DRIVER_TYPE_B;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 /*
  * sdhci_msm_disable_data_xfer - disable undergoing AHB bus data transfer
  *
@@ -2813,7 +2819,10 @@ static struct sdhci_ops sdhci_msm_ops = {
 	.get_max_clock = sdhci_msm_get_max_clock,
 	.tune_drive_strength = sdhci_msm_tune_drive_strength,
 	.hw_reset = sdhci_msm_hw_reset,
+<<<<<<< HEAD
 	.select_drive_strength = sdhci_msm_select_drive_strength,
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	.disable_data_xfer = sdhci_msm_disable_data_xfer,
 	.enable_controller_clock = sdhci_msm_enable_controller_clock,
 };
@@ -3106,9 +3115,12 @@ static int __devinit sdhci_msm_probe(struct platform_device *pdev)
 	if (msm_host->pdata->nonremovable)
 		msm_host->mmc->caps |= MMC_CAP_NONREMOVABLE;
 
+<<<<<<< HEAD
 	if (msm_host->pdata->is_emmc)
 		msm_host->mmc->caps2 |= MMC_CAP2_MMC_ONLY;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (mmc_host_uhs(msm_host->mmc)) {
 		sdhci_caps = readl_relaxed(host->ioaddr + SDHCI_CAPABILITIES_1);
 

@@ -1114,10 +1114,17 @@ static void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
 		else
 			timeout = SDHCI_REQUEST_TIMEOUT * MSEC_PER_SEC;
 	}
+<<<<<<< HEAD
 
 	if (timeout < cmd->cmd_timeout_ms * 2)
 		timeout = cmd->cmd_timeout_ms * 2;
 
+=======
+
+	if (timeout < cmd->cmd_timeout_ms * 2)
+		timeout = cmd->cmd_timeout_ms * 2;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mod_timer(&host->timer, jiffies + msecs_to_jiffies(timeout));
 
 	host->cmd = cmd;

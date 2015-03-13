@@ -470,6 +470,7 @@ static void subsystem_powerup(struct subsys_device *dev, void *data)
 
 	pr_info("[%p]: Powering up %s\n", current, name);
 	init_completion(&dev->err_ready);
+<<<<<<< HEAD
 
 	if (dev->desc->powerup(dev->desc) < 0) {
 		notify_each_subsys_device(&dev, 1, SUBSYS_POWERUP_FAILURE,
@@ -486,6 +487,13 @@ static void subsystem_powerup(struct subsys_device *dev, void *data)
 	if (ret) {
 		notify_each_subsys_device(&dev, 1, SUBSYS_POWERUP_FAILURE,
 								NULL);
+=======
+	if (dev->desc->powerup(dev->desc) < 0)
+		PR_BUG("[%p]: Powerup error: %s!", current, name);
+
+	ret = wait_for_err_ready(dev);
+	if (ret)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		PR_BUG("[%p]: Timed out waiting for error ready: %s!",
 			current, name);
 	}

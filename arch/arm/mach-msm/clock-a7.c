@@ -243,6 +243,10 @@ static void get_speed_bin(struct platform_device *pdev, int *bin, int *version)
 
 	if (redundant_sel == 1)
 		*bin = (pte_efuse >> 27) & 0x7;
+#ifdef CONFIG_CPU_OVERCLOCK
+	dev_info(&pdev->dev, "Speed bin being set to 1 for overclock!\n");
+	*bin = 1;
+#else
 
 	if (!valid) {
 		dev_info(&pdev->dev, "Speed bin not set. Defaulting to 0!\n");
@@ -250,6 +254,7 @@ static void get_speed_bin(struct platform_device *pdev, int *bin, int *version)
 	} else {
 		dev_info(&pdev->dev, "Speed bin: %d\n", *bin);
 	}
+#endif
 
 	dev_info(&pdev->dev, "PVS version: %d\n", *version);
 
@@ -325,9 +330,10 @@ static int clock_a7_probe(struct platform_device *pdev)
 
 	snprintf(prop_name, ARRAY_SIZE(prop_name),
 			"qcom,speed%d-bin-v%d", speed_bin, version);
+
 	rc = of_get_fmax_vdd_class(pdev, &a7ssmux.c, prop_name);
 	if (rc) {
-		/* Fall back to most conservative PVS table */
+		// Fall back to most conservative PVS table 
 		dev_err(&pdev->dev, "Unable to load voltage plan %s!\n",
 								prop_name);
 		rc = of_get_fmax_vdd_class(pdev, &a7ssmux.c,

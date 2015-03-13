@@ -223,7 +223,11 @@ void mmc_request_done(struct mmc_host *host, struct mmc_request *mrq)
 	if (host->card) {
 		mmc_update_clk_scaling(host);
 		if (err || (mrq->data && mrq->data->error)) {
+<<<<<<< HEAD
 			host->request_errors++;
+=======
+			host->card->request_errors++;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			if (err == -EILSEQ ||
 			    (mrq->data && mrq->data->error == -EILSEQ))
 				host->card->crc_errors++;
@@ -375,7 +379,11 @@ mmc_start_request(struct mmc_host *host, struct mmc_request *mrq)
 	}
 
 	if (host->card)
+<<<<<<< HEAD
 		host->requests++;
+=======
+		host->card->requests++;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	host->ops->request(host, mrq);
 }
@@ -3699,12 +3707,20 @@ int mmc_pm_notify(struct notifier_block *notify_block,
 		/* Guard against races with the detect wakeup source. */
 		if (!(host->caps & MMC_CAP_NEEDS_POLL) &&
 		    work_busy(&host->detect.work)) {
+<<<<<<< HEAD
 			pr_debug("%s: card detection in progress\n",
+=======
+			pr_err("%s: card detection in progress\n",
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 				mmc_hostname(host));
 			spin_lock_irqsave(&host->lock, flags);
 			host->rescan_disable = 0;
 			spin_unlock_irqrestore(&host->lock, flags);
+<<<<<<< HEAD
 			return notifier_from_errno(-EAGAIN);
+=======
+			return -EAGAIN;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		}
 
 		if (!host->bus_ops || host->bus_ops->suspend)

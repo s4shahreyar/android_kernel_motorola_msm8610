@@ -18,6 +18,7 @@
 / {
 	qcom,msm-id = <217 0x4D 0x81B0>;
 };
+<<<<<<< HEAD
 
 &sdhc_1 {
 	qcom,bus-speed-mode = "HS200_1p8v", "DDR_1p8v";
@@ -42,3 +43,5 @@
 			<&msmgpio 32 0x0>; /* REG_PU */
 	};
 };
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

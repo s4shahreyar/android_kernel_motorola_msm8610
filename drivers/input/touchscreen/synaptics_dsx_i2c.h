@@ -85,6 +85,10 @@
 #define MASK_2BIT 0x03
 #define MASK_1BIT 0x01
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define MAX_NUMBER_TRACKED_RESUMES 10
 /*
  * struct synaptics_rmi4_resume_info - information about a resume

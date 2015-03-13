@@ -229,7 +229,11 @@ static void qpnp_blink_enable_leds(void)
 	struct pwm_config_data *pwm;
 	struct qpnp_led_data *led;
 	u8 lpg_map = 0;
+<<<<<<< HEAD
 	struct spmi_device *spmi_dev = 0;
+=======
+	struct spmi_device *spmi_dev;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	for (i = 0; i < blink_cnt; i++) {
 		led = blink_array[i].led;

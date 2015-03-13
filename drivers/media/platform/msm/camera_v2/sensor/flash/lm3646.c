@@ -12,7 +12,10 @@
  */
 #include <linux/module.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/gpio.h>
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #include "msm_led_flash.h"
 
 #define FLASH_NAME "qcom,lm3646"
@@ -21,6 +24,7 @@ static struct msm_led_flash_ctrl_t fctrl;
 static struct i2c_driver lm3646_i2c_driver;
 
 static struct msm_camera_i2c_reg_array lm3646_init_array[] = {
+<<<<<<< HEAD
 	{0x01, 0xA8},
 	{0x02, 0x24},
 	{0x03, 0x20},
@@ -28,10 +32,20 @@ static struct msm_camera_i2c_reg_array lm3646_init_array[] = {
 	{0x05, 0x5F},
 	{0x06, 0xBF},
 	{0x07, 0xAF},
+=======
+	{0x01, 0xE0},
+	{0x02, 0xA4},
+	{0x03, 0x20},
+	{0x04, 0x42},
+	{0x05, 0x5A},
+	{0x06, 0x2F},
+	{0x07, 0x3F},
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	{0x08, 0x00},
 	{0x09, 0x30},
 };
 
+<<<<<<< HEAD
 static struct msm_camera_i2c_reg_array lm3646_release_array[] = {
 	{0x01, 0xA8},
 	{0x06, 0x3F},
@@ -40,6 +54,22 @@ static struct msm_camera_i2c_reg_array lm3646_release_array[] = {
 
 static struct msm_camera_i2c_reg_array lm3646_high_array[] = {
 	{0x01, 0xAB},
+=======
+static struct msm_camera_i2c_reg_array lm3646_off_array[] = {
+	{0x01, 0x00},
+};
+
+static struct msm_camera_i2c_reg_array lm3646_release_array[] = {
+	{0x0f, 0x00},
+};
+
+static struct msm_camera_i2c_reg_array lm3646_low_array[] = {
+	{0x01, 0xE2},
+};
+
+static struct msm_camera_i2c_reg_array lm3646_high_array[] = {
+	{0x01, 0xE3},
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 static void __exit msm_flash_lm3646_i2c_remove(void)
@@ -106,6 +136,7 @@ static int32_t msm_flash_lm3646_platform_probe(struct platform_device *pdev)
 	return rc;
 }
 
+<<<<<<< HEAD
 static int lm3646_led_off(struct msm_led_flash_ctrl_t *fctrl)
 {
 	if (!fctrl->torch_gpio_support) {
@@ -130,6 +161,8 @@ static int lm3646_led_low(struct msm_led_flash_ctrl_t *fctrl)
 	return 0;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct msm_camera_i2c_client lm3646_i2c_client = {
 	.addr_type = MSM_CAMERA_I2C_BYTE_ADDR,
 };
@@ -142,6 +175,17 @@ static struct msm_camera_i2c_reg_setting lm3646_init_setting = {
 	.delay = 0,
 };
 
+<<<<<<< HEAD
+=======
+static struct msm_camera_i2c_reg_setting lm3646_off_setting = {
+	.reg_setting = lm3646_off_array,
+	.size = ARRAY_SIZE(lm3646_off_array),
+	.addr_type = MSM_CAMERA_I2C_BYTE_ADDR,
+	.data_type = MSM_CAMERA_I2C_BYTE_DATA,
+	.delay = 0,
+};
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct msm_camera_i2c_reg_setting lm3646_release_setting = {
 	.reg_setting = lm3646_release_array,
 	.size = ARRAY_SIZE(lm3646_release_array),
@@ -150,6 +194,17 @@ static struct msm_camera_i2c_reg_setting lm3646_release_setting = {
 	.delay = 0,
 };
 
+<<<<<<< HEAD
+=======
+static struct msm_camera_i2c_reg_setting lm3646_low_setting = {
+	.reg_setting = lm3646_low_array,
+	.size = ARRAY_SIZE(lm3646_low_array),
+	.addr_type = MSM_CAMERA_I2C_BYTE_ADDR,
+	.data_type = MSM_CAMERA_I2C_BYTE_DATA,
+	.delay = 0,
+};
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct msm_camera_i2c_reg_setting lm3646_high_setting = {
 	.reg_setting = lm3646_high_array,
 	.size = ARRAY_SIZE(lm3646_high_array),
@@ -159,19 +214,35 @@ static struct msm_camera_i2c_reg_setting lm3646_high_setting = {
 };
 
 static struct msm_led_flash_reg_t lm3646_regs = {
+<<<<<<< HEAD
 	.init_setting    = &lm3646_init_setting,
 	.high_setting    = &lm3646_high_setting,
+=======
+	.init_setting = &lm3646_init_setting,
+	.off_setting = &lm3646_off_setting,
+	.low_setting = &lm3646_low_setting,
+	.high_setting = &lm3646_high_setting,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	.release_setting = &lm3646_release_setting,
 };
 
 static struct msm_flash_fn_t lm3646_func_tbl = {
 	.flash_get_subdev_id = msm_led_i2c_trigger_get_subdev_id,
+<<<<<<< HEAD
 	.flash_led_config    = msm_led_i2c_trigger_config,
 	.flash_led_init      = msm_flash_led_init,
 	.flash_led_release   = msm_flash_led_release,
 	.flash_led_off       = lm3646_led_off,
 	.flash_led_low       = lm3646_led_low,
 	.flash_led_high      = msm_flash_led_high,
+=======
+	.flash_led_config = msm_led_i2c_trigger_config,
+	.flash_led_init = msm_flash_led_init,
+	.flash_led_release = msm_flash_led_release,
+	.flash_led_off = msm_flash_led_off,
+	.flash_led_low = msm_flash_led_low,
+	.flash_led_high = msm_flash_led_high,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 static struct msm_led_flash_ctrl_t fctrl = {

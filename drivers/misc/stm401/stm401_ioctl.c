@@ -49,8 +49,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 {
 	void __user *argp = (void __user *)arg;
 	static int brightness_table_loaded;
+<<<<<<< HEAD
 	static int lowpower_mode = 1;
 	int err = 0;
+=======
+	int err = -ENOTTY;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	unsigned int addr = 0;
 	unsigned int data_size = 0;
 	unsigned char rw_bytes[4];
@@ -59,6 +63,7 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 	unsigned char bytes[3];
 	unsigned short delay;
 	unsigned long current_posix_time;
+<<<<<<< HEAD
 	unsigned int handle;
 	struct timespec current_time;
 
@@ -67,6 +72,11 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 
 	stm401_wake(ps_stm401);
 
+=======
+	struct timespec current_time;
+
+	mutex_lock(&ps_stm401->lock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	switch (cmd) {
 	case STM401_IOCTL_BOOTLOADERMODE:
 		dev_dbg(&ps_stm401->client->dev,
@@ -113,6 +123,7 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		else
 			err = 0;
 		break;
+<<<<<<< HEAD
 	case STM401_IOCTL_GET_BOOTED:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_BOOTED");
 		byte = stm401_g_booted;
@@ -127,6 +138,25 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			err = stm401_get_version(ps_stm401);
 		else
 			err = -EBUSY;
+=======
+	default:
+		if (ps_stm401->mode == BOOTMODE) {
+			dev_err(&ps_stm401->client->dev,
+				"Attempted normal mode ioctl in boot\n");
+			mutex_unlock(&ps_stm401->lock);
+			return -EPERM;
+		}
+		if (ps_stm401->stm401_hub_fail) {
+			mutex_unlock(&ps_stm401->lock);
+			return -EPERM;
+		}
+	}
+
+	switch (cmd) {
+	case STM401_IOCTL_GET_VERSION:
+		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_VERSION");
+		err = stm401_get_version(ps_stm401);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 	case STM401_IOCTL_SET_ACC_DELAY:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_SET_ACC_DELAY");
@@ -140,8 +170,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[0] = ACCEL_UPDATE_RATE;
 		stm401_cmdbuff[1] = delay;
 		stm401_g_acc_delay = delay;
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 
 	case STM401_IOCTL_SET_MAG_DELAY:
@@ -156,8 +190,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[0] = MAG_UPDATE_RATE;
 		stm401_cmdbuff[1] = delay;
 		stm401_g_mag_delay = delay;
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 	case STM401_IOCTL_SET_GYRO_DELAY:
 		dev_dbg(&ps_stm401->client->dev,
@@ -172,8 +210,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[0] = GYRO_UPDATE_RATE;
 		stm401_cmdbuff[1] = delay;
 		stm401_g_gyro_delay = delay;
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 	case STM401_IOCTL_SET_STEP_COUNTER_DELAY:
 		delay = 0;
@@ -202,8 +244,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[0] = PRESSURE_UPDATE_RATE;
 		stm401_cmdbuff[1] = delay;
 		stm401_g_baro_delay = delay;
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 	case STM401_IOCTL_SET_SENSORS:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_SET_SENSORS");
@@ -216,8 +262,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 
 		if ((brightness_table_loaded == 0)
 				&& (bytes[1] & (M_DISP_BRIGHTNESS >> 8))) {
+<<<<<<< HEAD
 			err = stm401_load_brightness_table(ps_stm401,
 					stm401_cmdbuff);
+=======
+			err = stm401_load_brightness_table(ps_stm401);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			if (err) {
 				dev_err(&ps_stm401->client->dev,
 					"Loading brightness failed\n");
@@ -232,13 +282,18 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[3] = bytes[2];
 		stm401_g_nonwake_sensor_state = (stm401_cmdbuff[3] << 16)
 			| (stm401_cmdbuff[2] << 8) | stm401_cmdbuff[1];
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 4);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 4);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		dev_dbg(&ps_stm401->client->dev, "Sensor enable = 0x%lx\n",
 			stm401_g_nonwake_sensor_state);
 		break;
 	case STM401_IOCTL_GET_SENSORS:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_SENSORS");
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE) {
 			stm401_cmdbuff[0] = NONWAKESENSOR_CONFIG;
 			err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff,
@@ -256,6 +311,18 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			bytes[1] = (stm401_g_nonwake_sensor_state >> 8) & 0xFF;
 			bytes[2] = (stm401_g_nonwake_sensor_state >> 16) & 0xFF;
 		}
+=======
+		stm401_cmdbuff[0] = NONWAKESENSOR_CONFIG;
+		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 3);
+		if (err < 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Reading get sensors failed\n");
+			break;
+		}
+		bytes[0] = stm401_readbuff[0];
+		bytes[1] = stm401_readbuff[1];
+		bytes[2] = stm401_readbuff[2];
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (copy_to_user(argp, bytes, 3 * sizeof(unsigned char)))
 			err = -EFAULT;
 		break;
@@ -273,14 +340,19 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[2] = bytes[1];
 		stm401_g_wake_sensor_state =  (stm401_cmdbuff[2] << 8)
 			| stm401_cmdbuff[1];
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 3);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 3);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		dev_dbg(&ps_stm401->client->dev, "Sensor enable = 0x%02X\n",
 			stm401_g_wake_sensor_state);
 		break;
 	case STM401_IOCTL_GET_WAKESENSORS:
 		dev_dbg(&ps_stm401->client->dev,
 			"STM401_IOCTL_GET_WAKESENSORS");
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE) {
 			stm401_cmdbuff[0] = WAKESENSOR_CONFIG;
 			err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff,
@@ -296,6 +368,17 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			bytes[0] = stm401_g_wake_sensor_state & 0xFF;
 			bytes[1] = (stm401_g_wake_sensor_state >> 8) & 0xFF;
 		}
+=======
+		stm401_cmdbuff[0] = WAKESENSOR_CONFIG;
+		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 2);
+		if (err < 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Reading get sensors failed\n");
+			break;
+		}
+		bytes[0] = stm401_readbuff[0];
+		bytes[1] = stm401_readbuff[1];
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (copy_to_user(argp, bytes, 2 * sizeof(unsigned char)))
 			err = -EFAULT;
 		break;
@@ -314,6 +397,7 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[2] = bytes[1];
 		stm401_g_algo_state = (stm401_cmdbuff[2] << 8)
 			| stm401_cmdbuff[1];
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 3);
 		break;
@@ -334,11 +418,44 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			bytes[0] = stm401_g_algo_state & 0xFF;
 			bytes[1] = (stm401_g_algo_state >> 8) & 0xFF;
 		}
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 3);
+		break;
+	case STM401_IOCTL_GET_ALGOS:
+		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_ALGOS");
+		stm401_cmdbuff[0] = ALGO_CONFIG;
+		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 2);
+		if (err < 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Reading get algos failed\n");
+			break;
+		}
+		bytes[0] = stm401_readbuff[0];
+		bytes[1] = stm401_readbuff[1];
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		dev_info(&ps_stm401->client->dev,
 			"Get algos config: 0x%x", (bytes[1] << 8) | bytes[0]);
 		if (copy_to_user(argp, bytes, 2 * sizeof(unsigned char)))
 			err = -EFAULT;
 		break;
+<<<<<<< HEAD
+=======
+	case STM401_IOCTL_GET_MAG_CAL:
+		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_MAG_CAL");
+		stm401_cmdbuff[0] = MAG_CAL;
+		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1,
+			STM401_MAG_CAL_SIZE);
+		if (err < 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Reading get mag cal failed\n");
+			break;
+		}
+		if (copy_to_user(argp, &stm401_readbuff[0],
+				STM401_MAG_CAL_SIZE))
+			err = -EFAULT;
+
+		break;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	case STM401_IOCTL_SET_MAG_CAL:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_SET_MAG_CAL");
 		if (copy_from_user(&stm401_cmdbuff[1], argp,
@@ -351,6 +468,7 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		memcpy(stm401_g_mag_cal, &stm401_cmdbuff[1],
 			STM401_MAG_CAL_SIZE);
 		stm401_cmdbuff[0] = MAG_CAL;
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff,
 				(STM401_MAG_CAL_SIZE + 1));
@@ -373,6 +491,10 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		if (copy_to_user(argp, &stm401_readbuff[0],
 				STM401_MAG_CAL_SIZE))
 			err = -EFAULT;
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff,
+			(STM401_MAG_CAL_SIZE + 1));
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 	case STM401_IOCTL_SET_MOTION_DUR:
 		dev_dbg(&ps_stm401->client->dev,
@@ -386,8 +508,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[0] = MOTION_DUR;
 		stm401_cmdbuff[1] = addr & 0xFF;
 		stm401_g_motion_dur =  stm401_cmdbuff[1];
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 	case STM401_IOCTL_SET_ZRMOTION_DUR:
 		dev_dbg(&ps_stm401->client->dev,
@@ -401,23 +527,33 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_cmdbuff[0] = ZRMOTION_DUR;
 		stm401_cmdbuff[1] = addr & 0xFF;
 		stm401_g_zmotion_dur =  stm401_cmdbuff[1];
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 2);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 	case STM401_IOCTL_GET_DOCK_STATUS:
 		dev_dbg(&ps_stm401->client->dev,
 			"STM401_IOCTL_GET_DOCK_STATUS");
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE) {
 			err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff,
 				1, 1);
 			byte = stm401_readbuff[0];
 		} else
 			byte = 0;
+=======
+		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 1);
+		byte = stm401_readbuff[0];
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (copy_to_user(argp, &byte, sizeof(byte)))
 			err = -EFAULT;
 		break;
 	case STM401_IOCTL_TEST_READ:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_TEST_READ");
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE) {
 			err = stm401_i2c_read(ps_stm401, &byte, 1);
 			/* stm401 will return num of bytes read or error */
@@ -429,6 +565,15 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_TEST_WRITE");
 		if (ps_stm401->mode == BOOTMODE)
 			break;
+=======
+		err = stm401_i2c_read(ps_stm401, &byte, 1);
+		/* stm401 will return num of bytes read or error */
+		if (err > 0)
+			err = byte;
+		break;
+	case STM401_IOCTL_TEST_WRITE:
+		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_TEST_WRITE");
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (copy_from_user(&byte, argp, sizeof(unsigned char))) {
 			dev_err(&ps_stm401->client->dev,
 				"Copy test write returned error\n");
@@ -440,8 +585,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 	case STM401_IOCTL_SET_POSIX_TIME:
 		dev_dbg(&ps_stm401->client->dev,
 			"STM401_IOCTL_SET_POSIX_TIME");
+<<<<<<< HEAD
 		if (ps_stm401->mode == BOOTMODE)
 			break;
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (copy_from_user(&current_posix_time, argp,
 			 sizeof(current_posix_time))) {
 			dev_err(&ps_stm401->client->dev,
@@ -461,6 +610,86 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			& 0xff);
 		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 5);
 		break;
+<<<<<<< HEAD
+=======
+	case STM401_IOCTL_SET_CONTROL_REG:
+		dev_dbg(&ps_stm401->client->dev,
+			"STM401_IOCTL_SET_CONTROL_REG");
+		if (brightness_table_loaded == 0) {
+			err = stm401_load_brightness_table(ps_stm401);
+			if (err) {
+				dev_err(&ps_stm401->client->dev,
+					"Loading brightness failed\n");
+				break;
+			}
+			brightness_table_loaded = 1;
+		}
+		stm401_cmdbuff[0] = STM401_CONTROL_REG;
+		if (copy_from_user(&stm401_cmdbuff[1], argp,
+			 STM401_CONTROL_REG_SIZE)) {
+			dev_err(&ps_stm401->client->dev,
+				"Copy from user returned error\n");
+			err = -EFAULT;
+			break;
+		}
+		stm401_g_control_reg_restore = 1;
+		memcpy(stm401_g_control_reg, &stm401_cmdbuff[1],
+			STM401_CONTROL_REG_SIZE);
+
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff,
+			(STM401_CONTROL_REG_SIZE + 1));
+		if (err < 0)
+			dev_err(&stm401_misc_data->client->dev,
+				"unable to write control reg %d\n", err);
+		else
+			ps_stm401->ap_stm401_handoff_enable = true;
+
+		break;
+	case STM401_IOCTL_GET_AOD_INSTRUMENTATION_REG:
+		dev_dbg(&ps_stm401->client->dev,
+			"STM401_IOCTL_GET_AOD_INTRUMENTATION_REG");
+		stm401_cmdbuff[0] = STM_AOD_INSTRUMENTATION_REG;
+		err = stm401_i2c_write_read(ps_stm401,
+			stm401_cmdbuff, 1, STM_AOD_INSTRUMENTATION_REG_SIZE);
+		if (err < 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Get AOD instrumentation reg failed\n");
+			break;
+		}
+		if (copy_to_user(argp, stm401_readbuff,
+				STM_AOD_INSTRUMENTATION_REG_SIZE))
+			err = -EFAULT;
+		break;
+	case STM401_IOCTL_GET_STATUS_REG:
+		dev_dbg(&ps_stm401->client->dev,
+			"STM401_IOCTL_GET_STATUS_REG");
+		stm401_cmdbuff[0] = STM401_STATUS_REG;
+		err = stm401_i2c_write_read(ps_stm401,
+			 stm401_cmdbuff, 1, STM401_STATUS_REG_SIZE);
+		if (err < 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Get status reg failed\n");
+			break;
+		}
+
+		if (copy_to_user(argp, stm401_readbuff, STM401_STATUS_REG_SIZE))
+			err = -EFAULT;
+		break;
+	case STM401_IOCTL_GET_TOUCH_REG:
+		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_TOUCH_REG");
+		stm401_cmdbuff[0] = STM401_TOUCH_REG;
+		err = stm401_i2c_write_read(ps_stm401,
+			 stm401_cmdbuff, 1, STM401_TOUCH_REG_SIZE);
+		if (err < 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Get touch reg failed\n");
+			break;
+		}
+
+		if (copy_to_user(argp, stm401_readbuff, STM401_TOUCH_REG_SIZE))
+			err = -EFAULT;
+		break;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	case STM401_IOCTL_SET_ALGO_REQ:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_SET_ALGO_REQ");
 		/* copy algo into bytes[2] */
@@ -492,12 +721,15 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			err = -EFAULT;
 			break;
 		}
+<<<<<<< HEAD
 		if (byte > ALGO_RQST_DATA_SIZE) {
 			dev_err(&ps_stm401->client->dev,
 				"Set algo req invalid size arg\n");
 			err = -EFAULT;
 			break;
 		}
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (copy_from_user(&stm401_cmdbuff[1],
 			argp + 2 * sizeof(unsigned char)
 			+ sizeof(byte), byte)) {
@@ -509,6 +741,7 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		stm401_g_algo_requst[addr].size = byte;
 		memcpy(stm401_g_algo_requst[addr].data,
 			&stm401_cmdbuff[1], byte);
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff,
 				1 + byte);
@@ -519,6 +752,12 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			err = -EFAULT;
 			break;
 		}
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff, 1 + byte);
+		break;
+	case STM401_IOCTL_GET_ALGO_EVT:
+		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_ALGO_EVT");
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		/* copy algo into bytes[2] */
 		if (copy_from_user(&bytes, argp, 2 * sizeof(unsigned char))) {
 			dev_err(&ps_stm401->client->dev,
@@ -551,6 +790,7 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			stm401_readbuff, stm401_algo_info[addr].evt_size))
 			err = -EFAULT;
 		break;
+<<<<<<< HEAD
 	case STM401_IOCTL_WRITE_REG:
 		dev_dbg(&ps_stm401->client->dev,
 			"STM401_IOCTL_WRITE_REG");
@@ -640,6 +880,109 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			err = -EFAULT;
 			break;
 		}
+=======
+		case STM401_IOCTL_WRITE_REG:
+			dev_dbg(&ps_stm401->client->dev,
+				"STM401_IOCTL_WRITE_REG");
+
+			/* copy addr and size */
+			if (copy_from_user(&rw_bytes, argp, sizeof(rw_bytes))) {
+				dev_err(&ps_stm401->client->dev,
+					"Write Reg, copy bytes returned error\n");
+				err = -EFAULT;
+				break;
+			}
+			addr = (rw_bytes[0] << 8) | rw_bytes[1];
+			data_size = (rw_bytes[2] << 8) | rw_bytes[3];
+
+			/* fail if the write size is too large */
+			if (data_size > 512 - 1) {
+				err = -EFAULT;
+				dev_err(&ps_stm401->client->dev,
+					"Write Reg, data_size > %d\n",
+					512 - 1);
+				break;
+			}
+
+			/* copy in the data */
+			if (copy_from_user(&stm401_cmdbuff[1], argp +
+				sizeof(rw_bytes), data_size)) {
+				dev_err(&ps_stm401->client->dev,
+					"Write Reg copy from user returned error\n");
+				err = -EFAULT;
+				break;
+			}
+
+			/* setup the address */
+			stm401_cmdbuff[0] = addr;
+
+			/* + 1 for the address in [0] */
+			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff,
+				data_size + 1);
+
+			if (err < 0)
+				dev_err(&stm401_misc_data->client->dev,
+					"Write Reg unable to write to direct reg %d\n",
+					err);
+			break;
+		case STM401_IOCTL_READ_REG:
+			dev_dbg(&ps_stm401->client->dev,
+				"STM401_IOCTL_READ_REG");
+
+			/* copy addr and size */
+			if (copy_from_user(&rw_bytes, argp, sizeof(rw_bytes))) {
+				dev_err(&ps_stm401->client->dev,
+				    "Read Reg, copy bytes returned error\n");
+				err = -EFAULT;
+				break;
+			}
+			addr = (rw_bytes[0] << 8) | rw_bytes[1];
+			data_size = (rw_bytes[2] << 8) | rw_bytes[3];
+
+			/* setup the address */
+			stm401_cmdbuff[0] = addr;
+			err = stm401_i2c_write_read(ps_stm401,
+				stm401_cmdbuff, 1, data_size);
+
+			if (err < 0)
+				dev_err(&stm401_misc_data->client->dev,
+					"Read Reg, unable to read from direct reg %d\n",
+					err);
+
+			if (copy_to_user(argp, stm401_readbuff, data_size)) {
+				dev_err(&ps_stm401->client->dev,
+					"Read Reg error copying to user\n");
+				err = -EFAULT;
+				break;
+			}
+			break;
+	case STM401_IOCTL_GET_IR_CONFIG:
+		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_IR_CONFIG");
+		if (copy_from_user(&byte, argp, 1)) {
+			dev_err(&ps_stm401->client->dev,
+				"Copy size from user returned error\n");
+			err = -EFAULT;
+			break;
+		}
+		if (byte > sizeof(stm401_g_ir_config_reg)) {
+			dev_err(&ps_stm401->client->dev,
+				"IR Config too big: %d > %d\n", byte,
+				sizeof(stm401_g_ir_config_reg));
+			err = -EINVAL;
+			break;
+		}
+
+		stm401_cmdbuff[0] = IR_CONFIG;
+		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, byte);
+		if (err < 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Get IR config failed: %d\n", err);
+			break;
+		}
+		if (copy_to_user(argp, stm401_readbuff, byte))
+			err = -EFAULT;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		break;
 	case STM401_IOCTL_SET_IR_CONFIG:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_SET_IR_CONFIG");
@@ -669,9 +1012,14 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 		memcpy(stm401_g_ir_config_reg, &stm401_cmdbuff[1],
 			stm401_cmdbuff[1]);
 
+<<<<<<< HEAD
 		if (ps_stm401->mode != BOOTMODE)
 			err = stm401_i2c_write(ps_stm401, stm401_cmdbuff,
 					stm401_cmdbuff[1] + 1);
+=======
+		err = stm401_i2c_write(ps_stm401, stm401_cmdbuff,
+				stm401_cmdbuff[1] + 1);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		dev_dbg(&stm401_misc_data->client->dev,
 			"SET_IR_CONFIG: Writing %d bytes (err=%d)\n",
 			stm401_cmdbuff[1] + 1, err);
@@ -679,6 +1027,7 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 			dev_err(&stm401_misc_data->client->dev,
 				"Unable to write IR config reg %d\n", err);
 		break;
+<<<<<<< HEAD
 	case STM401_IOCTL_GET_IR_CONFIG:
 		dev_dbg(&ps_stm401->client->dev, "STM401_IOCTL_GET_IR_CONFIG");
 		if (copy_from_user(&byte, argp, 1)) {
@@ -806,6 +1155,13 @@ long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 	}
 
 	stm401_sleep(ps_stm401);
+=======
+
+	/* No default here since previous switch could have
+	   handled the command and cannot over write that */
+	}
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mutex_unlock(&ps_stm401->lock);
 	return err;
 }

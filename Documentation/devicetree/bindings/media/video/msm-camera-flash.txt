@@ -18,7 +18,10 @@ Required properties:
     qcom,gpio-req-tbl-num property (in the same order)
 - qcom,gpio-flash-en : should contain index to gpio used by flash's "flash enable" pin.
 - qcom,gpio-flash-now : should contain index to gpio used by flash's "flash now" pin.
+<<<<<<< HEAD
 - qcom,gpio-torch-idx : should contain index to gpio used by flash's "torch enable" pin.
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 - qcom,flash-name : should contain unique flash name to differentiate from
     other flash
     - "adp1660"
@@ -63,4 +66,8 @@ qcom,led-flash@60 {
 		qcom,gpio-req-tbl-flags = <0 0>;
 		qcom,gpio-req-tbl-label = "FLASH_EN",
 			"FLASH_NOW";
+<<<<<<< HEAD
 	};
+=======
+	};
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

@@ -113,7 +113,11 @@ EXPORT_SYMBOL(bi_powerup_reason);
  * bi_mbm_version()                -- returns the MBM version
  */
 #ifdef CONFIG_OF
+<<<<<<< HEAD
 static void of_mbmver(u32 *ver)
+=======
+static void __init of_mbmver(u32 *ver)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 {
 	struct device_node *n = of_find_node_by_path("/chosen");
 
@@ -175,7 +179,11 @@ static void convert_to_upper(char *str)
 #define ECC_BLOCK_SIZE	128
 
 #define BOOTINFO_BCK_BUF_ALIGN	ECC_BLOCK_SIZE
+<<<<<<< HEAD
 #define BOOTINFO_BCK_MAGIC	0x626f6f74696e666f	/* bootinfo */
+=======
+#define BOOTINFO_BCK_MAGIC	0x626f6f74696e666fULL	/* bootinfo */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define BOOTINFO_LKMSG(fmt, args...) do {		\
 	persistent_ram_ext_oldbuf_print(fmt, ##args);	\
 } while (0)
@@ -418,7 +426,11 @@ void bi_add_bl_build_sig(char *bld_sig)
 }
 
 #ifdef CONFIG_OF
+<<<<<<< HEAD
 static void of_blsig(void)
+=======
+static void __init of_blsig(void)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 {
 	struct property *p;
 	struct device_node *n;

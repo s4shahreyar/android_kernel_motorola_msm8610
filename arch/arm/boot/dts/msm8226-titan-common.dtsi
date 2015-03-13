@@ -16,6 +16,10 @@
 /include/ "dsi-panel-mot-dummy-qhd-video.dtsi"
 /include/ "dsi-panel-mot-inx-720p-video.dtsi"
 /include/ "dsi-panel-mot-jdi-720p-video.dtsi"
+<<<<<<< HEAD
+=======
+/include/ "msm8226-camera-sensor-titan.dtsi"
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 / {
 	model = "Motorola QC-MSM8226 Titan";
@@ -36,6 +40,7 @@
 			debounce-interval = <15>;
 		};
 
+<<<<<<< HEAD
 		lid-sw {
 			label = "lid-switch";
 			gpios = <&msmgpio 109 0x1>;
@@ -44,6 +49,8 @@
 			gpio-key,wakeup;
 			debounce-interval = <15>;
 		};
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	};
 
 	i2c@f9923000 {
@@ -83,10 +90,15 @@
 			ti,ledb-max-brt = <0xff>;
 			ti,leda-init-brt = <0xff>;
 			ti,ledb-init-brt = <0xff>;
+<<<<<<< HEAD
 			ti,leda-max-cur = <0x14>;
 			ti,ledb-max-cur = <0x14>;
 			ti,leda-max-hbm-cur = <0x1C>;
 			ti,ledb-max-hbm-cur = <0x1C>;
+=======
+			ti,leda-max-cur = <0x11>;
+			ti,ledb-max-cur = <0x11>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			ti,boost-ctrl = <0x20>;
 			ti,config = <0x09>;
 			ti,irq-gpio = <&msmgpio 4 0>;
@@ -103,9 +115,12 @@
 
 		synaptics_dsx_i2c@20 {
 			touch_vdd-supply = <&vdd_touch_vreg>;
+<<<<<<< HEAD
 			synaptics,reset-on-resume;
 			synaptics,hw-reset;
 			/delete-property/ synaptics,normal-mode;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		};
 
 		cyttsp3_i2c@3b {
@@ -118,6 +133,7 @@
 
 	};
 
+<<<<<<< HEAD
 	i2c_6: i2c@f9928000 { /* BLSP-1 QUP-6 */
 		cell-index = <6>;
 		compatible = "qcom,i2c-qup";
@@ -131,6 +147,9 @@
 		qcom,scl-gpio = <&msmgpio 23 0>;
 		qcom,extended-recovery = <3>;
 		qcom,master-id = <86>;
+=======
+	i2c@f9928000 {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		status = "disabled";
 	};
 
@@ -196,11 +215,19 @@
 		status = "ok";
 	};
 
+<<<<<<< HEAD
 	qcom,msm-mem-hole {
                 compatible = "qcom,msm-mem-hole";
                 qcom,memblock-remove = <0x08400000 0x4000000
                                         0x0d200000 0x2400000
                                         0x0fa00000 0x500000>; /* Address and Size of Hole */
+=======
+
+	qcom,msm-mem-hole {
+		compatible = "qcom,msm-mem-hole";
+		qcom,memblock-remove = <0x07300000 0x8300000
+					0x0fa00000 0x500000>; /* Address and size of the hole */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	};
 
 	usr_reset_warning {
@@ -225,9 +252,12 @@
 		mmi,ed30-sony-batterydata {
 			qcom,batt-id-range = <403046 448366>;
 		};
+<<<<<<< HEAD
 		mmi,ed30-sony-batterydata-alt {
 			qcom,batt-id-range = <670241 729130>;
 		};
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		mmi,ed30-lg-batterydata {
 			qcom,batt-id-range = <977044 1039064>;
 		};
@@ -275,7 +305,10 @@
 	qcom,clk-rates = <400000 25000000 50000000 100000000>;
 	qcom,bus-speed-mode = "DDR50", "DDR_1p8v";
 	qcom,nonremovable;
+<<<<<<< HEAD
 	qcom,emmc;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	status = "ok";
 };
@@ -296,11 +329,18 @@
 
 	qcom,pad-pull-on = <0x0 0x3 0x3>; /* no-pull, pull-up, pull-up */
 	qcom,pad-pull-off = <0x0 0x3 0x3>; /* no-pull, pull-up, pull-up */
+<<<<<<< HEAD
 	qcom,pad-drv-on = <0x2 0x3 0x3>; /* 6mA, 8mA, 8mA */
 	qcom,pad-drv-off = <0x0 0x0 0x0>; /* 2mA, 2mA, 2mA */
 
 	qcom,clk-rates = <400000 23076923 50000000 100000000 120000000>;
 	qcom,bus-speed-mode = "SDR12_1p8v", "SDR25_1p8v", "SDR50_1p8v", "DDR_1p8v", "SDR104_1p8v";
+=======
+	qcom,pad-drv-on = <0x4 0x4 0x4>; /* 10mA, 10mA, 10mA */
+	qcom,pad-drv-off = <0x0 0x0 0x0>; /* 2mA, 2mA, 2mA */
+
+	qcom,clk-rates = <400000 25000000 50000000 100000000 200000000>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	#address-cells = <0>;
 	interrupt-parent = <&sdhc_2>;
@@ -399,10 +439,13 @@
 };
 
 &pm8226_mpps {
+<<<<<<< HEAD
 	mpp@a000 { /* MPP 1 */
 		status = "disabled";
 	};
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mpp@a400 { /* MPP 5 */
 		/* PA_THERM0 config */
 		qcom,mode = <4>; /* AIN input */
@@ -437,7 +480,10 @@
 };
 
 &pm8226_vadc {
+<<<<<<< HEAD
 	qcom,adc-batt-therm-type = <2>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	chan@14 {
 		label = "pa_therm0";
 		reg = <0x14>;
@@ -464,7 +510,10 @@
 
 &pm8226_adc_tm {
 
+<<<<<<< HEAD
 	qcom,adc-batt-therm-type = <2>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/delete-node/ chan@17;
 };
 
@@ -553,19 +602,27 @@
 	qcom,cont-splash-enabled;
 };
 
+<<<<<<< HEAD
 &mot_jdi_720p_vid_v1 {
 	qcom,cont-splash-enabled;
 };
 
 &mdss_dsi0 {
 	qcom,dsi-pref-prim-pan = <&mot_jdi_720p_vid_v1>;
+=======
+&mdss_dsi0 {
+	qcom,dsi-pref-prim-pan = <&mot_jdi_720p_vid_v0>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	vddio_disp-supply = <&vddio_disp_vreg>;
 	lcdbias-supply = <&tps65132>;
 };
 
 &i2c_2 {
+<<<<<<< HEAD
 	qcom,extended-recovery = <3>;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
         bma2x2@11 {
                 compatible = "bosch,bma2x2";
                 reg = <0x11>;
@@ -598,6 +655,7 @@
                 stk,irq-gpio = <&msmgpio 65 0x0>;
                 stk,transmittance = <500>;
                 stk,state-reg = <0x00>;
+<<<<<<< HEAD
                 stk,psctrl-reg = <0x31>;
                 stk,alsctrl-reg = <0x38>;
                 stk,ledctrl-reg = <0xFF>;
@@ -606,6 +664,16 @@
 		stk,covered_thresh = <0x0066>;
 		stk,uncovered_thresh = <0x003E>;
 		stk,recal_thresh = <0x0016>;
+=======
+                stk,psctrl-reg = <0x71>;
+                stk,alsctrl-reg = <0x39>;
+                stk,ledctrl-reg = <0xFF>;
+                stk,wait-reg = <0x07>;
+		stk,als_thresh_pct = <5>;
+		stk,covered_thresh = <0x0096>;
+		stk,uncovered_thresh = <0x006E>;
+		stk,recal_thresh = <0x0046>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		stk,max_noise_fl = <0x0F00>;
         };
 };
@@ -616,5 +684,8 @@
 
 	};
 };
+<<<<<<< HEAD
 
 /include/ "msm8226-camera-sensor-titan.dtsi"
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

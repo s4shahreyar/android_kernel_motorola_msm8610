@@ -1,4 +1,3 @@
-#
 # Makefile for the touchscreen drivers.
 #
 
@@ -6,6 +5,12 @@
 
 wm97xx-ts-y := wm97xx-core.o
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 obj-$(CONFIG_TOUCHSCREEN_SY3200)	+= sy3200.o
 obj-$(CONFIG_TOUCHSCREEN_SY3400)	+= sy3400.o
 obj-$(CONFIG_TOUCHSCREEN_88PM860X)	+= 88pm860x-ts.o
@@ -96,4 +101,12 @@ obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_I2C) += synaptics_dsx_i2c.o
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_RMI_DEV) += synaptics_dsx_rmi_dev.o
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_TEST_REPORTING) += synaptics_dsx_test_reporting.o
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_FW_UPDATE_MMI) += synaptics_dsx_fw_update.o
+<<<<<<< HEAD
 obj-$(CONFIG_TOUCHSCREEN_TOUCHX)        += touchx.o
+=======
+# for sweep2wake, leave 1st to avoid merge issues at the end of the file
+obj-$(CONFIG_TOUCHSCREEN_SWEEP2WAKE) += sweep2wake.o
+# for doubletap2wake, leave 1st to avoid merge issues at the end of the file
+obj-$(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE) += doubletap2wake.o
+obj-$(CONFIG_TOUCHSCREEN_TAP2UNLOCK) += tap2unlock.o
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

@@ -62,6 +62,12 @@
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	usb@f9a55000 {
+		otg,id_gnd_gpio = <&msmgpio 76 0x0>;
+	};
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/delete-node/ vsp_disp_vreg;
 };

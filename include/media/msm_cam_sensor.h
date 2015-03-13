@@ -144,8 +144,11 @@ struct otp_info_t {
 	uint8_t asic_rev;
 	uint16_t sn[4];
 	uint16_t cal_ver;
+<<<<<<< HEAD
 	uint8_t otp_read;
 	uint8_t otp_crc_pass;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 /* NOTE: Careful when adding params below,

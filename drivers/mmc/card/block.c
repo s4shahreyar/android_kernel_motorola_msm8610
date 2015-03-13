@@ -493,6 +493,37 @@ exit:
 }
 
 static ssize_t
+<<<<<<< HEAD
+=======
+total_requests_show(struct device *dev, struct device_attribute *attr,
+		    char *buf)
+{
+	struct mmc_blk_data *md = mmc_blk_get(dev_to_disk(dev));
+	struct mmc_card *card = md->queue.card;
+	int ret;
+
+	ret = snprintf(buf, PAGE_SIZE, "%llu\n", card->requests);
+
+	mmc_blk_put(md);
+	return ret;
+}
+
+static ssize_t
+total_request_errors_show(struct device *dev, struct device_attribute *attr,
+			  char *buf)
+{
+	struct mmc_blk_data *md = mmc_blk_get(dev_to_disk(dev));
+	struct mmc_card *card = md->queue.card;
+	int ret;
+
+	ret = snprintf(buf, PAGE_SIZE, "%llu\n", card->request_errors);
+
+	mmc_blk_put(md);
+	return ret;
+}
+
+static ssize_t
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 current_health_show(struct device *dev, struct device_attribute *attr,
 		    char *buf)
 {
@@ -1235,7 +1266,7 @@ static int mmc_blk_cmd_error(struct request *req, const char *name, int error,
  * Otherwise we don't understand what happened, so abort.
  */
 static int mmc_blk_cmd_recovery(struct mmc_card *card, struct request *req,
-	struct mmc_blk_request *brq, int *ecc_err)
+	struct mmc_blk_request *brq, int *ecc_err, int *gen_err)
 {
 	bool prev_cmd_status_valid = true;
 	bool crc_err = false;
@@ -1278,6 +1309,16 @@ static int mmc_blk_cmd_recovery(struct mmc_card *card, struct request *req,
 	    (brq->cmd.resp[0] & R1_CARD_ECC_FAILED))
 		*ecc_err = 1;
 
+	/* Flag General errors */
+	if (!mmc_host_is_spi(card->host) && rq_data_dir(req) != READ)
+		if ((status & R1_ERROR) ||
+			(brq->stop.resp[0] & R1_ERROR)) {
+			pr_err("%s: %s: general error sending stop or status command, stop cmd response %#x, card status %#x\n",
+			       req->rq_disk->disk_name, __func__,
+			       brq->stop.resp[0], status);
+			*gen_err = 1;
+		}
+
 	/*
 	 * Check the current card state.  If it is in some data transfer
 	 * mode, tell it to stop (and hopefully transition back to TRAN.)
@@ -1298,6 +1339,13 @@ static int mmc_blk_cmd_recovery(struct mmc_card *card, struct request *req,
 			return ERR_ABORT;
 		if (stop_status & R1_CARD_ECC_FAILED)
 			*ecc_err = 1;
+		if (!mmc_host_is_spi(card->host) && rq_data_dir(req) != READ)
+			if (stop_status & R1_ERROR) {
+				pr_err("%s: %s: general error sending stop command, stop cmd response %#x\n",
+				       req->rq_disk->disk_name, __func__,
+				       stop_status);
+				*gen_err = 1;
+			}
 	}
 
 	/* Check for set block count errors */
@@ -1363,6 +1411,7 @@ static int mmc_blk_do_reset(struct mmc_blk_data *md, struct mmc_host *host)
  */
 static int mmc_blk_reset(struct mmc_blk_data *md, struct mmc_host *host,
 			 unsigned int type, int status)
+<<<<<<< HEAD
 {
 	struct mmc_card *card = host->card;
 	int result = 0;
@@ -1440,6 +1489,76 @@ static inline void mmc_blk_reset_success(struct mmc_blk_data *md,
 					 unsigned int type)
 {
 	struct mmc_card *card = host->card;
+=======
+{
+	struct mmc_card *card = host->card;
+	int result = 0;
+	int err;
+
+	/*
+	 * First reset for a request type is always free, so fall through.
+	 */
+	if (md->reset_done & type) {
+		/*
+		 * Non-removable cards are allowed one reset and then we want
+		 * to report the failure as an I/O error.
+		 */
+		if (host->caps & MMC_CAP_NONREMOVABLE)
+			return -EEXIST;
+
+		/*
+		 * Keep track of removable cards that are not stable and drop
+		 * them if the failure-to-success ratio is too high or the
+		 * total number of failures during the period is 10x the ratio.
+		 */
+		card->failures++;
+		if (card->failures >= (card->successes + 1) *
+				      md->failure_ratio ||
+		    card->failures >= md->failure_ratio * 10) {
+			pr_warning("%s: giving up on card (%u/%u, %llu/%llu)\n",
+				   mmc_hostname(host),
+				   card->failures, card->successes,
+				   card->request_errors, card->requests);
+			host->card_bad = 1;
+			mmc_card_set_removed(card);
+			mmc_detect_change(host, 0);
+			return -EIO;
+		}
+
+		/*
+		 * Hide the failure and trigger a retry.
+		 */
+		result = type & INT_MAX;
+
+		/*
+		 * For some failures, we want to report an I/O error rather
+		 * than hide it.  This will increase the chances that cards
+		 * with a bad area will function longer before being dropped.
+		 */
+		if (status == MMC_BLK_DATA_ERR ||
+		    status == MMC_BLK_ECC_ERR)
+			result = -EEXIST;
+
+		pr_info("%s: recovering card (%d); health: %u/%u, %llu/%llu\n",
+			mmc_hostname(host), status,
+			card->failures, card->successes,
+			card->request_errors, card->requests);
+	}
+
+	md->reset_done |= type;
+	err = mmc_blk_do_reset(md, host);
+	if (err != -ETIMEDOUT)	/* ignore reset timeouts */
+		result = err;
+
+	return result;
+}
+
+static inline void mmc_blk_reset_success(struct mmc_blk_data *md,
+					 struct mmc_host *host,
+					 unsigned int type)
+{
+	struct mmc_card *card = host->card;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	md->reset_done &= ~type;
 	if (card->failures > 0) {
@@ -1449,10 +1568,16 @@ static inline void mmc_blk_reset_success(struct mmc_blk_data *md,
 			pr_info("%s: forgiving card (%u/%u, %llu/%llu)\n",
 				mmc_hostname(host),
 				card->failures, card->successes,
+<<<<<<< HEAD
 				host->request_errors, host->requests);
 			card->failures = 0;
 			card->successes = 0;
 			card->failure_time = ktime_set(0, 0);
+=======
+				card->request_errors, card->requests);
+			card->failures = 0;
+			card->successes = 0;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		}
 	}
 }
@@ -1687,7 +1812,7 @@ static int mmc_blk_err_check(struct mmc_card *card,
 						    mmc_active);
 	struct mmc_blk_request *brq = &mq_mrq->brq;
 	struct request *req = mq_mrq->req;
-	int ecc_err = 0;
+	int ecc_err = 0, gen_err = 0;
 
 	/*
 	 * sbc.error indicates a problem with the set block count
@@ -1701,7 +1826,7 @@ static int mmc_blk_err_check(struct mmc_card *card,
 	 */
 	if (brq->sbc.error || brq->cmd.error || brq->stop.error ||
 	    brq->data.error) {
-		switch (mmc_blk_cmd_recovery(card, req, brq, &ecc_err)) {
+		switch (mmc_blk_cmd_recovery(card, req, brq, &ecc_err, &gen_err)) {
 		case ERR_RETRY:
 			return MMC_BLK_RETRY;
 		case ERR_ABORT:
@@ -1753,6 +1878,14 @@ static int mmc_blk_err_check(struct mmc_card *card,
 
 				return MMC_BLK_CMD_ERR;
 			}
+
+			if (status & R1_ERROR) {
+				pr_err("%s: %s: general error sending status command, card status %#x\n",
+				       req->rq_disk->disk_name, __func__,
+				       status);
+				gen_err = 1;
+			}
+
 			/*
 			 * Some cards mishandle the status bits,
 			 * so make sure to check both the busy
@@ -1760,6 +1893,13 @@ static int mmc_blk_err_check(struct mmc_card *card,
 			 */
 		} while (!(status & R1_READY_FOR_DATA) ||
 			 (R1_CURRENT_STATE(status) == R1_STATE_PRG));
+	}
+
+	/* if general error occurs, retry the write operation. */
+	if (gen_err) {
+		pr_warning("%s: retrying write for general error\n",
+				req->rq_disk->disk_name);
+		return MMC_BLK_RETRY;
 	}
 
 	if (brq->data.error) {
@@ -2768,6 +2908,7 @@ static int mmc_blk_issue_rw_rq(struct mmc_queue *mq, struct request *rqc)
 			break;
 		case MMC_BLK_CMD_ERR:
 			ret = mmc_blk_cmd_err(md, card, brq, req, ret);
+<<<<<<< HEAD
 			if (!mmc_blk_reset(md, card->host, type, status)) {
 				if (!ret) {
 					/*
@@ -2783,6 +2924,11 @@ static int mmc_blk_issue_rw_rq(struct mmc_queue *mq, struct request *rqc)
 				break;
 			}
 			goto cmd_abort;
+=======
+			if (mmc_blk_reset(md, card->host, type, status) < 0)
+				goto cmd_abort;
+			break;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		case MMC_BLK_RETRY:
 			if (retry++ < 5)
 				break;
@@ -3302,6 +3448,27 @@ static int mmc_add_disk(struct mmc_blk_data *md)
 	if (ret)
 		goto no_pack_for_random_fails;
 
+<<<<<<< HEAD
+=======
+	md->total_requests.show = total_requests_show;
+	sysfs_attr_init(&md->total_requests.attr);
+	md->total_requests.attr.name = "total_requests";
+	md->total_requests.attr.mode = S_IRUGO;
+	ret = device_create_file(disk_to_dev(md->disk),
+				 &md->total_requests);
+	if (ret)
+		goto total_requests_fails;
+
+	md->total_request_errors.show = total_request_errors_show;
+	sysfs_attr_init(&md->total_request_errors.attr);
+	md->total_request_errors.attr.name = "total_errors";
+	md->total_request_errors.attr.mode = S_IRUGO;
+	ret = device_create_file(disk_to_dev(md->disk),
+				 &md->total_request_errors);
+	if (ret)
+		goto total_request_errors_fails;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	md->current_health.show = current_health_show;
 	sysfs_attr_init(&md->current_health.attr);
 	md->current_health.attr.name = "current_health";
@@ -3341,6 +3508,15 @@ failure_ratio_fails:
 			   &md->current_health);
 current_health_fails:
 	device_remove_file(disk_to_dev(md->disk),
+<<<<<<< HEAD
+=======
+			   &md->total_request_errors);
+total_request_errors_fails:
+	device_remove_file(disk_to_dev(md->disk),
+			   &md->total_requests);
+total_requests_fails:
+	device_remove_file(disk_to_dev(md->disk),
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			   &md->no_pack_for_random);
 no_pack_for_random_fails:
 	device_remove_file(disk_to_dev(md->disk),
@@ -3404,6 +3580,13 @@ static const struct mmc_fixup blk_fixups[] =
 	MMC_FIXUP(CID_NAME_ANY, CID_MANFID_MICRON, 0x200, add_quirk_mmc,
 		  MMC_QUIRK_LONG_READ_TIME),
 
+<<<<<<< HEAD
+=======
+	/* Some INAND MCP devices advertise incorrect timeout values */
+	MMC_FIXUP("SEM04G", 0x45, CID_OEMID_ANY, add_quirk_mmc,
+		  MMC_QUIRK_INAND_DATA_TIMEOUT),
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/*
 	 * On these Samsung MoviNAND parts, performing secure erase or
 	 * secure trim can result in unrecoverable corruption due to a

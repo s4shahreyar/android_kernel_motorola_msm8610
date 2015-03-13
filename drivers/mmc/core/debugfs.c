@@ -194,6 +194,7 @@ DEFINE_SIMPLE_ATTRIBUTE(mmc_clock_fops, mmc_clock_opt_get, mmc_clock_opt_set,
 
 #ifdef CONFIG_MMC_CMD_LOG
 /*
+<<<<<<< HEAD
  * Initialize the log buffer.  The host must be claimed.
  */
 int mmc_cmd_log_size(struct mmc_host *host, unsigned int size)
@@ -257,6 +258,18 @@ void _mmc_cmd_log(struct mmc_host *host, u32 cmd, u32 arg)
 {
 	int i = host->mmc_cmd_log_idx;
 
+=======
+ * Add a command and argument to the ring buffer.  The host must be claimed.
+ */
+void mmc_cmd_log(struct mmc_host *host, u32 cmd, u32 arg)
+{
+	int i = host->mmc_cmd_log_idx;
+
+	if (!(host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_EN) ||
+			!host->mmc_cmd_log)
+		return;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	host->mmc_cmd_log[i++] = cmd;
 	host->mmc_cmd_log[i++] = arg;
 	if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_TIME)
@@ -269,6 +282,7 @@ void _mmc_cmd_log(struct mmc_host *host, u32 cmd, u32 arg)
 /*
  * Add a command response to the ring buffer.  The host must be claimed.
  */
+<<<<<<< HEAD
 void _mmc_cmd_log_resp(struct mmc_host *host, u32 resp)
 {
 	int i = host->mmc_cmd_log_idx + MMC_CMD_LOG_RECSIZE_BASE;
@@ -291,6 +305,34 @@ void _mmc_cmd_log_resp(struct mmc_host *host, u32 resp)
 		host->mmc_cmd_log[i++] = then;
 	}
 
+=======
+void mmc_cmd_log_resp(struct mmc_host *host, u32 resp)
+{
+	int i = host->mmc_cmd_log_idx + MMC_CMD_LOG_RECSIZE_BASE;
+
+	if (!(host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_EN) ||
+			!host->mmc_cmd_log)
+		return;
+
+	/* If we are measuring deltas, replace the start time with it. */
+	if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_TIME) {
+		if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_DELTA) {
+			u32 now = (u32)sched_clock();
+			u32 then = host->mmc_cmd_log[i];
+
+			if (now < then)
+				then = (UINT_MAX - then) + now;
+			else
+				then = now - then;
+			host->mmc_cmd_log[i] = then;
+		}
+		i++;
+	}
+
+	if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_RESP)
+		host->mmc_cmd_log[i++] = resp;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	host->mmc_cmd_log_idx = i;
 	if (host->mmc_cmd_log_idx >= host->mmc_cmd_log_len)
 		host->mmc_cmd_log_idx = 0;
@@ -311,18 +353,25 @@ static int _mmc_cmd_log_dump(struct mmc_host *host, struct seq_file *s)
 		u32 arg = host->mmc_cmd_log[i++];
 		u32 resp = 0;
 		u32 when = 0;
+<<<<<<< HEAD
 		u32 then = 0;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 		if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_TIME)
 			when = host->mmc_cmd_log[i++];
 		if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_RESP)
 			resp = host->mmc_cmd_log[i++];
+<<<<<<< HEAD
 		if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_LATENCY)
 			then = host->mmc_cmd_log[i++];
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 		if (i >= host->mmc_cmd_log_len)
 			i = 0;
 
+<<<<<<< HEAD
 		/* Skip empty records */
 		if (cmd == UINT_MAX)
 			continue;
@@ -332,12 +381,25 @@ static int _mmc_cmd_log_dump(struct mmc_host *host, struct seq_file *s)
 				seq_printf(s, "[%u] ", when);
 			else
 				pr_info("Start: %uns ", when);
+=======
+		/* Skip empty or partial records */
+		if (cmd == UINT_MAX || resp == UINT_MAX)
+			continue;
+
+		if ((host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_TIME) &&
+		    !(host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_DELTA)) {
+			if (s)
+				seq_printf(s, "[%u] ", when);
+			else
+				pr_info("[%u] ", when);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		}
 		if (s)
 			seq_printf(s, "CMD%d: 0x%08X", cmd & 0x3F, arg);
 		else
 			pr_info("CMD%d: 0x%08X", cmd & 0x3F, arg);
 		if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_RESP) {
+<<<<<<< HEAD
 			if (resp == UINT_MAX) {
 				if (s)
 					seq_printf(s, ", (no response)");
@@ -357,6 +419,20 @@ static int _mmc_cmd_log_dump(struct mmc_host *host, struct seq_file *s)
 				pr_info(" Latency: %uns", then);
 		}
 skip:
+=======
+			if (s)
+				seq_printf(s, " R:0x%08X", resp);
+			else
+				pr_info(" R:0x%08X", resp);
+		}
+		if ((host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_TIME) &&
+		    (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_DELTA)) {
+			if (s)
+				seq_printf(s, " %uns", when);
+			else
+				pr_info(" %uns", when);
+		}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (s)
 			seq_printf(s, "\n");
 		else
@@ -412,6 +488,10 @@ static int mmc_cmd_log_mode_get(void *data, u64 *val)
 static int mmc_cmd_log_mode_set(void *data, u64 val)
 {
 	struct mmc_host *host = data;
+<<<<<<< HEAD
+=======
+	int record_size = MMC_CMD_LOG_RECSIZE_BASE;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (val & MMC_CMD_LOG_MODE_FORCE_DUMP) {
 		mmc_cmd_log_dump(host);
@@ -420,7 +500,26 @@ static int mmc_cmd_log_mode_set(void *data, u64 val)
 
 	mmc_claim_host(host);
 
+<<<<<<< HEAD
 	mmc_cmd_log_config(host, val);
+=======
+	host->mmc_cmd_log_mode = (int)val;
+
+	if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_RESP)
+		record_size += MMC_CMD_LOG_RECSIZE_RESP;
+	if (host->mmc_cmd_log_mode & MMC_CMD_LOG_MODE_TIME)
+		record_size += MMC_CMD_LOG_RECSIZE_TIME;
+
+	/* Free the ring buffer if the record size changes */
+	if (host->mmc_cmd_log && record_size != host->mmc_cmd_log_recsize) {
+		kfree(host->mmc_cmd_log);
+		host->mmc_cmd_log = NULL;
+		host->mmc_cmd_log_len = 0;
+		host->mmc_cmd_log_idx = 0;
+	}
+
+	host->mmc_cmd_log_recsize = record_size;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	mmc_release_host(host);
 
@@ -442,10 +541,32 @@ static int mmc_cmd_log_size_get(void *data, u64 *val)
 static int mmc_cmd_log_size_set(void *data, u64 val)
 {
 	struct mmc_host *host = data;
+<<<<<<< HEAD
 
 	mmc_claim_host(host);
 
 	mmc_cmd_log_size(host, val);
+=======
+	u32 size = val;
+
+	mmc_claim_host(host);
+
+	kfree(host->mmc_cmd_log);
+	host->mmc_cmd_log = NULL;
+	host->mmc_cmd_log_len = 0;
+	host->mmc_cmd_log_idx = 0;
+
+	size *= host->mmc_cmd_log_recsize;	/* slots per command */
+	if (size > 0) {
+		host->mmc_cmd_log = kmalloc(size * sizeof(*host->mmc_cmd_log),
+				GFP_KERNEL);
+	}
+	if (host->mmc_cmd_log) {
+		memset(host->mmc_cmd_log, 0xFF,
+				size * sizeof(*host->mmc_cmd_log));
+		host->mmc_cmd_log_len = size;
+	}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	mmc_release_host(host);
 
@@ -549,6 +670,20 @@ void mmc_add_host_debugfs(struct mmc_host *host)
 			&mmc_cmd_log_size_fops))
 		goto err_node;
 #endif
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_MMC_CMD_LOG
+	if (!debugfs_create_file("cmd_log", S_IRUSR, root, host,
+			&mmc_cmd_log_fops))
+		goto err_node;
+	if (!debugfs_create_file("cmd_log_mode", S_IRUSR | S_IWUSR, root, host,
+			&mmc_cmd_log_mode_fops))
+		goto err_node;
+	if (!debugfs_create_file("cmd_log_size", S_IRUSR | S_IWUSR, root, host,
+			&mmc_cmd_log_size_fops))
+		goto err_node;
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return;
 
 err_node:

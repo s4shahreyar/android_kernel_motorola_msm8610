@@ -10,6 +10,12 @@
  * GNU General Public License for more details.
  */
 
+<<<<<<< HEAD
+=======
+/* Reserve for persistent memory - kernel hard boot */
+/memreserve/ 0x3e9e0000 0x100000;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 /* Reserve for persistent memory - ram console */
 /memreserve/ 0x3eae0000 0x20000;
 

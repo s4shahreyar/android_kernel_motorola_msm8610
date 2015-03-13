@@ -23,7 +23,10 @@
 &i2c_1 {
         stm401@39 {
                 sensor2-supply = <&pm8941_l17>;
+<<<<<<< HEAD
 		stm401_fw_version = "_p3";
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
         };
 };
 
@@ -81,6 +84,7 @@
 					  "CAM_VDIG";
 	};
 };
+<<<<<<< HEAD
 
 
 &usb3 {
@@ -88,3 +92,5 @@
         interrupt-names = "hs_phy_irq";
         dwc_usb3-adc_tm = <0>;
 };
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

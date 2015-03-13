@@ -255,6 +255,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		pin@fd51260 {
 			reg = <0xfd511260 0x10>;	/* SD_CARD_DET_N */
 			qcom,pin-num = <38>;
@@ -272,20 +273,32 @@
 			};
 		};
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		pin@fd51320 {
 			reg = <0xfd511320 0x10>;	/* TOP_SPK_AMP_EN   */
 			qcom,pin-num = <50>;
 			qcom,active@0 {
 				qcom,func = <0>;  /* gpio_in_out(50)        */
+<<<<<<< HEAD
 				qcom,pull = <1>;  /* down                 */
 				qcom,drv = <0>;   /* 2ma                    */
 				qcom,dir = <2>;   /* output low        */
+=======
+				qcom,pull = <3>;  /* pullup                 */
+				qcom,drv = <0>;   /* 2ma                    */
+				qcom,dir = <1>;   /* output high        */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			};
 			qcom,suspend@1 {
 				qcom,func = <0>;  /* gpio_in_out(50)        */
 				qcom,pull = <1>;  /* down                   */
 				qcom,drv = <0>;   /* 2ma                    */
+<<<<<<< HEAD
 				qcom,dir = <2>;   /* output low             */
+=======
+				qcom,dir = <0>;   /* input                  */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			};
 		};
 
@@ -294,15 +307,25 @@
 			qcom,pin-num = <51>;
 			qcom,active@0 {
 				qcom,func = <0>;  /* gpio_in_out(51)        */
+<<<<<<< HEAD
 				qcom,pull = <1>;  /* down                 */
 				qcom,drv = <0>;   /* 2ma                    */
 				qcom,dir = <2>;   /* output low        */
+=======
+				qcom,pull = <3>;  /* pullup                 */
+				qcom,drv = <0>;   /* 2ma                    */
+				qcom,dir = <1>;   /* output high        */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			};
 			qcom,suspend@1 {
 				qcom,func = <0>;  /* gpio_in_out(51)        */
 				qcom,pull = <1>;  /* down                   */
 				qcom,drv = <0>;   /* 2ma                    */
+<<<<<<< HEAD
 				qcom,dir = <2>;   /* output low             */
+=======
+				qcom,dir = <0>;   /* input                  */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			};
 		};
 
@@ -311,6 +334,7 @@
 			qcom,pin-num = <52>;
 			qcom,active@0 {
 				qcom,func = <0>;  /* gpio_in_out(52)        */
+<<<<<<< HEAD
 				qcom,pull = <0>;  /* no_pull                */
 				qcom,drv = <0>;   /* 2ma                    */
 				qcom,dir = <2>;   /* output low     */
@@ -320,6 +344,17 @@
 				qcom,pull = <0>;  /* down                   */
 				qcom,drv = <0>;   /* 2ma                    */
 				qcom,dir = <2>;   /* output low             */
+=======
+				qcom,pull = <3>;  /* pullup                 */
+				qcom,drv = <0>;   /* 2ma                    */
+				qcom,dir = <1>;   /* output high   TODO     */
+			};
+			qcom,suspend@1 {
+				qcom,func = <0>;  /* gpio_in_out(52)        */
+				qcom,pull = <1>;  /* down                   */
+				qcom,drv = <0>;   /* 2ma                    */
+				qcom,dir = <0>;   /* input                  */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			};
 		};
 

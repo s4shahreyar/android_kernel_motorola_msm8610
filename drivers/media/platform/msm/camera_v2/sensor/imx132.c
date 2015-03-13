@@ -15,17 +15,21 @@
 #define IMX132_SENSOR_NAME "imx132"
 DEFINE_MSM_MUTEX(imx132_mut);
 
+<<<<<<< HEAD
 #define IMX132_OTP_SIZE 3
 #define IMX132_OTP_ADDR1 0x3517
 #define IMX132_OTP_ADDR2 0x351E
 /* #define DEBUG_OTP_RAW_DUMP */
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct msm_sensor_ctrl_t imx132_s_ctrl;
 
 static struct msm_sensor_power_setting imx132_power_setting[] = {
 	{
 		.seq_type = SENSOR_GPIO,
 		.seq_val = SENSOR_GPIO_VANA,
+<<<<<<< HEAD
 		.config_val = GPIO_OUT_LOW,
 		.delay = 0,
 	},
@@ -38,6 +42,8 @@ static struct msm_sensor_power_setting imx132_power_setting[] = {
 	{
 		.seq_type = SENSOR_GPIO,
 		.seq_val = SENSOR_GPIO_VANA,
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		.config_val = GPIO_OUT_HIGH,
 		.delay = 0,
 	},
@@ -111,6 +117,7 @@ static struct msm_camera_i2c_client imx132_sensor_i2c_client = {
 	.addr_type = MSM_CAMERA_I2C_WORD_ADDR,
 };
 
+<<<<<<< HEAD
 #ifdef DEBUG_OTP_RAW_DUMP
 static void imx132_otp_raw_dump(uint8_t *data)
 {
@@ -187,6 +194,8 @@ static struct msm_sensor_fn_t imx132_func_tbl = {
 	.sensor_get_module_info = imx132_get_module_info,
 };
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct msm_sensor_ctrl_t imx132_s_ctrl = {
 	.sensor_i2c_client = &imx132_sensor_i2c_client,
 	.power_setting_array.power_setting = imx132_power_setting,
@@ -194,7 +203,10 @@ static struct msm_sensor_ctrl_t imx132_s_ctrl = {
 	.msm_sensor_mutex = &imx132_mut,
 	.sensor_v4l2_subdev_info = imx132_subdev_info,
 	.sensor_v4l2_subdev_info_size = ARRAY_SIZE(imx132_subdev_info),
+<<<<<<< HEAD
 	.func_tbl = &imx132_func_tbl,
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 static const struct of_device_id imx132_dt_match[] = {
@@ -218,6 +230,7 @@ static int32_t imx132_platform_probe(struct platform_device *pdev)
 	const struct of_device_id *match;
 
 	match = of_match_device(imx132_dt_match, &pdev->dev);
+<<<<<<< HEAD
 
 	imx132_s_ctrl.sensor_otp.otp_info = devm_kzalloc(&pdev->dev,
 		IMX132_OTP_SIZE, GFP_KERNEL);
@@ -228,6 +241,8 @@ static int32_t imx132_platform_probe(struct platform_device *pdev)
 	}
 	imx132_s_ctrl.sensor_otp.size = IMX132_OTP_SIZE;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	rc = msm_sensor_platform_probe(pdev, match->data);
 	return rc;
 }

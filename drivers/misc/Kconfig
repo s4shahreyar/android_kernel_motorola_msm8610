@@ -829,7 +829,10 @@ source "drivers/misc/altera-stapl/Kconfig"
 source "drivers/misc/sec/Kconfig"
 source "drivers/misc/capsense_prog/Kconfig"
 source "drivers/misc/stm401/Kconfig"
+<<<<<<< HEAD
 source "drivers/misc/stml0xx/Kconfig"
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 endmenu
 

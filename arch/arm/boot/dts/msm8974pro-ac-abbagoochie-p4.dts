@@ -20,21 +20,37 @@
 };
 
 &vbat_disp_vreg {
+<<<<<<< HEAD
+=======
+	/delete-property/ gpio;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	regulator-boot-on;
 };
 
 &vdd_disp_vreg {
+<<<<<<< HEAD
+=======
+	/delete-property/ gpio;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	regulator-boot-on;
 };
 
 &vci_disp_vreg {
+<<<<<<< HEAD
+=======
+	gpio = <&pm8941_gpios 14 0x0>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	regulator-boot-on;
 };
 
 &usb3 {
+<<<<<<< HEAD
         interrupt-map = <0x0 0 &intc 0 133 0>;
         interrupt-names = "hs_phy_irq";
         dwc_usb3-adc_tm = <0>;
+=======
+	qcom,otg-capability;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 &cci {
@@ -69,11 +85,17 @@
 		gpios = <&msmgpio 14 0>,        /* IRQ */
 			<&msmgpio 145 0>,       /* RESET */
 			<&msmgpio 33 0>,        /* BSLEN */
+<<<<<<< HEAD
 			<&msmgpio 95 0>,        /* WakeIRQ */
 			<&msmgpio 0 0>,         /* SH Wake */
 			<&msmgpio 1 0>;         /* SH Wake Resp */
 		lux_table = <6 70 86 1174 2800 8000>;
 		brightness_table = <12 20 25 55 80 111 165>;
+=======
+			<&msmgpio 95 0>;        /* WakeIRQ */
+		lux_table = <5 50 100 1500 3000 8000>;
+		brightness_table = <9 14 18 46 67 93 140>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		bslen_pin_active_value = <1>;
 		ct406_detect_threshold = <0x006E>;
 		ct406_undetect_threshold = <0x0050>;
@@ -82,6 +104,7 @@
 		sensor1-supply = <&pm8941_lvs1>;
 		sensor2-supply = <&pm8941_l17>;
 	};
+<<<<<<< HEAD
 
 	tfa9890@34 {
 		status = "disabled";
@@ -90,6 +113,8 @@
 	tfa9890@35 {
 		status = "disabled";
 	};
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 &i2c_1 {
@@ -120,6 +145,7 @@
 	qcom,i2c-bus-freq = <400000>;
 
 	synaptics_dsx_i2c@20 {
+<<<<<<< HEAD
 		compatible = "synaptics,synaptics_dsx_i2c";
 		reg = <0x20>;
 		interrupt-parent = <&msmgpio>;
@@ -131,6 +157,9 @@
 		synaptics,reset-on-resume;
 		synaptics,hw-reset;
 		synaptics,gpio-config;
+=======
+		status = "disabled";
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	};
 
 	atmel_mxt_ts@4a {
@@ -142,7 +171,10 @@
 			<&msmgpio 57 0>;        /* RESET */
 		touch_vdd-supply = <&pm8941_s3>;
 		touch_avdd-supply = <&pm8941_l23>;
+<<<<<<< HEAD
 		atmel,suspend-method-lpm;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		atmel,cfg {
 			atmel,family-id = <0xa4>;
 			atmel,variant-id = <0x7>;
@@ -160,8 +192,13 @@
 		qcom,quat-auxpcm-gpio-dout = <&msmgpio 61 0>;
 		qcom,quat-auxpcm-gpio-din = <&msmgpio 60 0>;
 		qcom,tfa9890-stereo;
+<<<<<<< HEAD
 		qcom,tfa9890-left-name = "tfa9890.2-0034";
 		qcom,tfa9890-right-name = "tfa9890.2-0035";
+=======
+		qcom,tfa9890-left-name = "tfa9890.2-0035";
+		qcom,tfa9890-right-name = "tfa9890.2-0034";
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,tfa9890-left-dai-name = "TFA9890 Playback Left";
 		qcom,tfa9890-right-dai-name = "TFA9890 Playback Right";
 		qcom,tfa9890-earpiece-gpio = <&pm8941_gpios 6 0x0>;
@@ -219,7 +256,10 @@
 	qcom,system-load = <100000>;
 	qcom,init-ldo-mode = <1>;
 	qcom,always-send-current;
+<<<<<<< HEAD
 	regulator-always-on;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 &spi_7 {
@@ -240,3 +280,43 @@
 		};
 	};
 };
+<<<<<<< HEAD
+=======
+
+&pm8941_vadc {
+	/delete-node/ chan@b3;
+	/delete-node/ chan@b4;
+	/delete-node/ chan@b7;
+	/delete-node/ chan@b8;
+
+	chan@b4 {
+		label = "pa_therm1";
+		reg = <0xb4>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <2>;
+		qcom,hw-settle-time = <2>;
+		qcom,fast-avg-setup = <0>;
+	};
+};
+
+&pm8941_adc_tm {
+	/delete-node/ chan@b3;
+	/delete-node/ chan@b4;
+	/delete-node/ chan@b7;
+
+	chan@b4 {
+		label = "pa_therm1";
+		reg = <0xb4>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <2>;
+		qcom,hw-settle-time = <2>;
+		qcom,fast-avg-setup = <3>;
+		qcom,btm-channel-number = <0x88>;
+		qcom,thermal-node;
+	};
+};
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

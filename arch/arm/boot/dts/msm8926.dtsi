@@ -156,6 +156,7 @@
 	regulator-max-microvolt = <14>;
 	qcom,cpr-corner-map = <1 1 2 2 3 3 3 3 3 3 3 3 3 3>;
 	qcom,cpr-quotient-adjustment = <0 72 72>;
+<<<<<<< HEAD
 	qcom,pvs-version-fuse-sel = <22 4 2 0>;
 	qcom,cpr-corner-frequency-map =
 			<1 300000000>,
@@ -178,6 +179,8 @@
 			<2 1 2 4 10>,
 			<5 1 2 4 14>;
 	qcom,cpr-quot-adjust-scaling-factor-max = <650>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	qcom,cpr-enable;
 
 	qcom,cpr-fuse-read-val = <54 42 6 7>;

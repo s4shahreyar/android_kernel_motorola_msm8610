@@ -28,7 +28,10 @@
 
 #include <asm/setup.h>
 #include <mach/mmi_watchdog.h>
+<<<<<<< HEAD
 #include <mach/msm_rtb.h>
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* from kernel/printk.c */
 int log_buf_copy(char *dest, int idx, int len);
@@ -807,9 +810,12 @@ static int apanic_mmc(struct notifier_block *this, unsigned long event,
 		return NOTIFY_DONE;
 	in_panic = 1;
 
+<<<<<<< HEAD
 	/* Make sure to disable rtb logs before starting emmc write*/
 	msm_rtb_disable();
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/*
 	 * HW watchdog may not enabled yet (e.g. panic in
 	 * suspend/resume). Enable HW watchdog to avoid hang

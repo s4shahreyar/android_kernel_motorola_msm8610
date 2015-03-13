@@ -34,6 +34,7 @@
 	regulator-boot-on;
 };
 
+<<<<<<< HEAD
 &mot_smd_1080p_cmd_v1 {
 	qcom,cont-splash-enabled;
 	qcom,partial-update-enabled;
@@ -51,6 +52,14 @@
 &mdss_dsi0 {
 	mmi,mipi-d0-sel = <&msmgpio 129 0>;
 	qcom,dsi-pref-prim-pan = <&mot_smd_1080p_cmd_v1>;
+=======
+&mot_smd_1080p_cmd_v0 {
+	qcom,cont-splash-enabled;
+};
+
+&mdss_dsi0 {
+	qcom,dsi-pref-prim-pan = <&mot_smd_1080p_cmd_v0>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	vbat_disp-supply = <&vbat_disp_vreg>;
 	vdd_disp-supply = <&vdd_disp_vreg>;
 	vci_disp-supply = <&vci_disp_vreg>;
@@ -97,11 +106,17 @@
 		gpios = <&msmgpio 14 0>,        /* IRQ */
 			<&msmgpio 145 0>,       /* RESET */
 			<&msmgpio 33 0>,        /* BSLEN */
+<<<<<<< HEAD
 			<&msmgpio 95 0>,        /* WakeIRQ */
 			<&msmgpio 0 0>,         /* SH Wake */
 			<&msmgpio 1 0>;         /* SH Wake Resp */
 		lux_table = <6 70 86 1174 2800 8000>;
 		brightness_table = <12 20 25 55 80 111 165>;
+=======
+			<&msmgpio 95 0>;        /* WakeIRQ */
+		lux_table = <5 50 100 1500 3000 8000>;
+		brightness_table = <9 14 18 46 67 93 140>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		bslen_pin_active_value = <1>;
 		ct406_detect_threshold = <0x006E>;
 		ct406_undetect_threshold = <0x0050>;
@@ -173,13 +188,21 @@
 &slim_msm {
 	taiko_codec {
 		qcom,cdc-reset-gpio = <&msmgpio 23 0>;
+<<<<<<< HEAD
 		qcom,cdc-micbias3-ext-cap;
 		qcom,cdc-micbias-ldoh-v = <0x0>;
 		qcom,cdc-micbias-cfilt2-mv = <1800>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	};
 };
 
 &i2c_3 {
+<<<<<<< HEAD
+=======
+	qcom,i2c-bus-freq = <400000>;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	synaptics_dsx_i2c@20 {
 		status = "disabled";
 	};
@@ -193,7 +216,11 @@
 			<&msmgpio 57 0>;        /* RESET */
 		touch_vdd-supply = <&pm8941_s3>;
 		touch_avdd-supply = <&pm8941_l23>;
+<<<<<<< HEAD
 
+=======
+		atmel,suspend-method-lpm;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		atmel,cfg {
 			atmel,family-id = <0xa4>;
 			atmel,variant-id = <0x7>;
@@ -201,6 +228,7 @@
 			atmel,build = <0x11>;
 			atmel,revision-id = <0x32>;
 		};
+<<<<<<< HEAD
 
 		touchstate_modes {
 			touchmode-default = <&default_active &default_suspended>;
@@ -211,6 +239,8 @@
 		default_suspended: touchstate_aod_suspended {
 			patch-data = "T100@3=0,6=1,47=32,49=32;T7@0=0,1=0,2=0;";
 		};
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	};
 };
 
@@ -243,6 +273,44 @@
 	};
 };
 
+<<<<<<< HEAD
 &sdhc_1 {
 	qcom,bus-speed-mode = "HS400_1p8v", "HS200_1p8v", "DDR_1p8v";
+=======
+&pm8941_vadc {
+	/delete-node/ chan@b3;
+	/delete-node/ chan@b4;
+	/delete-node/ chan@b7;
+	/delete-node/ chan@b8;
+
+	chan@b4 {
+		label = "pa_therm1";
+		reg = <0xb4>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <2>;
+		qcom,hw-settle-time = <2>;
+		qcom,fast-avg-setup = <0>;
+	};
+};
+
+&pm8941_adc_tm {
+	/delete-node/ chan@b3;
+	/delete-node/ chan@b4;
+	/delete-node/ chan@b7;
+
+	chan@b4 {
+		label = "pa_therm1";
+		reg = <0xb4>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <2>;
+		qcom,hw-settle-time = <2>;
+		qcom,fast-avg-setup = <3>;
+		qcom,btm-channel-number = <0x88>;
+		qcom,thermal-node;
+	};
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };

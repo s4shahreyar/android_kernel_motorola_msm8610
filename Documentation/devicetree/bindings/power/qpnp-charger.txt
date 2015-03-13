@@ -108,6 +108,7 @@ Parent node optional properties:
 - qcom,vbatdet-maxerr-mv		This property in mV is a hystersis value for the charge
 					resume voltage property qcom,vbatdet-delta-mv. If this
 					property is not defined it defaults to 50 mV.
+<<<<<<< HEAD
 - qcom,parallel-ovp-mode		When this option is enabled, it allows charging through both
 					DC and USB OVP FETs. Please note that this should only
 					be enabled in board designs with PM8941 which have DC_IN
@@ -121,6 +122,12 @@ Parent node optional properties:
 - qcom,ir-comp                          Indicates support for Fast charge / Turbo feature where
                                         IR compensaton is needed.
 - qcom,battery-model-sysfs              Indicates if battery model sysfs is required to be updated
+=======
+- qcom,step-charge-voltage              Voltage threshold for High Voltage batteries to
+                                        charge at a reduced rate.
+- qcom,step-charge-current             Reduced charge rate for High Voltage batteries
+                                        which are above a certain Voltage threshold
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 Sub node required structure:
 - A qcom,chg node must be a child of an SPMI node that has specified

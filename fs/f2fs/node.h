@@ -17,11 +17,22 @@
 /* # of pages to perform readahead before building free nids */
 #define FREE_NID_PAGES 4
 
+<<<<<<< HEAD
 /* maximum readahead size for node during getting data blocks */
 #define MAX_RA_NODE		128
 
 /* control the memory footprint threshold (10MB per 1GB ram) */
 #define DEF_RAM_THRESHOLD	10
+=======
+/* maximum # of free node ids to produce during build_free_nids */
+#define MAX_FREE_NIDS (NAT_ENTRY_PER_BLOCK * FREE_NID_PAGES)
+
+/* maximum readahead size for node during getting data blocks */
+#define MAX_RA_NODE		128
+
+/* maximum cached nat entries to manage memory footprint */
+#define NM_WOUT_THRESHOLD	(64 * NAT_ENTRY_PER_BLOCK)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* vector size for gang look-up from nat cache that consists of radix tree */
 #define NATVEC_SIZE	64
@@ -39,6 +50,7 @@ struct node_info {
 	unsigned char version;	/* version of the node */
 };
 
+<<<<<<< HEAD
 enum {
 	IS_CHECKPOINTED,	/* is it checkpointed before? */
 	HAS_FSYNCED_INODE,	/* is the inode fsynced before? */
@@ -49,6 +61,11 @@ enum {
 struct nat_entry {
 	struct list_head list;	/* for clean or dirty nat list */
 	unsigned char flag;	/* for node information bits */
+=======
+struct nat_entry {
+	struct list_head list;	/* for clean or dirty nat list */
+	bool checkpointed;	/* whether it is checkpointed or not */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct node_info ni;	/* in-memory node information */
 };
 
@@ -61,6 +78,7 @@ struct nat_entry {
 #define nat_get_version(nat)		(nat->ni.version)
 #define nat_set_version(nat, v)		(nat->ni.version = v)
 
+<<<<<<< HEAD
 #define inc_node_version(version)	(++version)
 
 static inline void set_nat_flag(struct nat_entry *ne,
@@ -87,6 +105,14 @@ static inline void nat_reset_flag(struct nat_entry *ne)
 	set_nat_flag(ne, HAS_LAST_FSYNC, true);
 }
 
+=======
+#define __set_nat_cache_dirty(nm_i, ne)					\
+	list_move_tail(&ne->list, &nm_i->dirty_nat_entries);
+#define __clear_nat_cache_dirty(nm_i, ne)				\
+	list_move_tail(&ne->list, &nm_i->nat_entries);
+#define inc_node_version(version)	(++version)
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static inline void node_info_from_raw_nat(struct node_info *ni,
 						struct f2fs_nat_entry *raw_ne)
 {
@@ -95,6 +121,7 @@ static inline void node_info_from_raw_nat(struct node_info *ni,
 	ni->version = raw_ne->version;
 }
 
+<<<<<<< HEAD
 static inline void raw_nat_from_node_info(struct f2fs_nat_entry *raw_ne,
 						struct node_info *ni)
 {
@@ -117,6 +144,8 @@ struct nat_entry_set {
 	unsigned int entry_cnt;		/* the # of nat entries in set */
 };
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 /*
  * For free nid mangement
  */
@@ -131,11 +160,16 @@ struct free_nid {
 	int state;		/* in use or not: NID_NEW or NID_ALLOC */
 };
 
+<<<<<<< HEAD
 static inline void next_free_nid(struct f2fs_sb_info *sbi, nid_t *nid)
+=======
+static inline int next_free_nid(struct f2fs_sb_info *sbi, nid_t *nid)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 {
 	struct f2fs_nm_info *nm_i = NM_I(sbi);
 	struct free_nid *fnid;
 
+<<<<<<< HEAD
 	spin_lock(&nm_i->free_nid_list_lock);
 	if (nm_i->fcnt <= 0) {
 		spin_unlock(&nm_i->free_nid_list_lock);
@@ -144,6 +178,15 @@ static inline void next_free_nid(struct f2fs_sb_info *sbi, nid_t *nid)
 	fnid = list_entry(nm_i->free_nid_list.next, struct free_nid, list);
 	*nid = fnid->nid;
 	spin_unlock(&nm_i->free_nid_list_lock);
+=======
+	if (nm_i->fcnt <= 0)
+		return -1;
+	spin_lock(&nm_i->free_nid_list_lock);
+	fnid = list_entry(nm_i->free_nid_list.next, struct free_nid, list);
+	*nid = fnid->nid;
+	spin_unlock(&nm_i->free_nid_list_lock);
+	return 0;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 /*
@@ -193,7 +236,14 @@ static inline void set_to_next_nat(struct f2fs_nm_info *nm_i, nid_t start_nid)
 {
 	unsigned int block_off = NAT_BLOCK_OFFSET(start_nid);
 
+<<<<<<< HEAD
 	f2fs_change_bit(block_off, nm_i->nat_bitmap);
+=======
+	if (f2fs_test_bit(block_off, nm_i->nat_bitmap))
+		f2fs_clear_bit(block_off, nm_i->nat_bitmap);
+	else
+		f2fs_set_bit(block_off, nm_i->nat_bitmap);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static inline void fill_node_footer(struct page *page, nid_t nid,
@@ -216,7 +266,12 @@ static inline void copy_node_footer(struct page *dst, struct page *src)
 
 static inline void fill_node_footer_blkaddr(struct page *page, block_t blkaddr)
 {
+<<<<<<< HEAD
 	struct f2fs_checkpoint *ckpt = F2FS_CKPT(F2FS_P_SB(page));
+=======
+	struct f2fs_sb_info *sbi = F2FS_SB(page->mapping->host->i_sb);
+	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct f2fs_node *rn = F2FS_NODE(page);
 
 	rn->footer.cp_ver = ckpt->checkpoint_ver;
@@ -279,7 +334,11 @@ static inline bool IS_DNODE(struct page *node_page)
 {
 	unsigned int ofs = ofs_of_node(node_page);
 
+<<<<<<< HEAD
 	if (f2fs_has_xattr_block(ofs))
+=======
+	if (ofs == XATTR_NODE_OFFSET)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		return false;
 
 	if (ofs == 3 || ofs == 4 + NIDS_PER_BLOCK ||
@@ -297,7 +356,11 @@ static inline void set_nid(struct page *p, int off, nid_t nid, bool i)
 {
 	struct f2fs_node *rn = F2FS_NODE(p);
 
+<<<<<<< HEAD
 	f2fs_wait_on_page_writeback(p, NODE);
+=======
+	wait_on_page_writeback(p);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (i)
 		rn->i.i_nid[off - NODE_DIR1_BLOCK] = cpu_to_le32(nid);

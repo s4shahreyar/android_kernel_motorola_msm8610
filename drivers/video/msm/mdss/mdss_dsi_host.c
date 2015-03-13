@@ -81,6 +81,11 @@ void mdss_dsi_ctrl_init(struct mdss_dsi_ctrl_pdata *ctrl)
 	}
 
 	ctrl->panel_mode = ctrl->panel_data.panel_info.mipi.mode;
+<<<<<<< HEAD
+=======
+
+	ctrl_list[ctrl->ndx] = ctrl;	/* keep it */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	ctrl_list[ctrl->ndx] = ctrl;	/* keep it */
 
@@ -243,8 +248,11 @@ void mdss_dsi_host_init(struct mdss_panel_data *pdata)
 
 	pinfo = &pdata->panel_info.mipi;
 
+<<<<<<< HEAD
 	pinfo->rgb_swap = DSI_RGB_SWAP_RGB;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (pinfo->mode == DSI_VIDEO_MODE) {
 		data = 0;
 		if (pinfo->pulse_mode_hsa_he)
@@ -379,7 +387,11 @@ void mdss_set_tx_power_mode(int mode, struct mdss_panel_data *pdata)
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
+<<<<<<< HEAD
 	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 1);
+=======
+	mdss_dsi_clk_ctrl(ctrl_pdata, 1);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	data = MIPI_INP((ctrl_pdata->ctrl_base) + 0x3c);
 
 	if (mode == 0)
@@ -388,7 +400,11 @@ void mdss_set_tx_power_mode(int mode, struct mdss_panel_data *pdata)
 		data |= BIT(26);
 
 	MIPI_OUTP((ctrl_pdata->ctrl_base) + 0x3c, data);
+<<<<<<< HEAD
 	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 0);
+=======
+	mdss_dsi_clk_ctrl(ctrl_pdata, 0);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 int mdss_get_tx_power_mode(struct mdss_panel_data *pdata)
@@ -399,9 +415,15 @@ int mdss_get_tx_power_mode(struct mdss_panel_data *pdata)
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
+<<<<<<< HEAD
 	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 1);
 	data = MIPI_INP((ctrl_pdata->ctrl_base) + 0x3c);
 	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 0);
+=======
+	mdss_dsi_clk_ctrl(ctrl_pdata, 1);
+	data = MIPI_INP((ctrl_pdata->ctrl_base) + 0x3c);
+	mdss_dsi_clk_ctrl(ctrl_pdata, 0);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return !!(data & BIT(26));
 }
 
@@ -882,10 +904,27 @@ int mdss_dsi_cmds_rx(struct mdss_dsi_ctrl_pdata *ctrl,
 	struct dsi_buf *tp, *rp;
 	int no_max_pkt_size;
 	char cmd;
+<<<<<<< HEAD
 	bool ctrl_restore = false, mctrl_restore = false;
 	struct mdss_dsi_ctrl_pdata *mctrl = NULL;
 	int rx_flags = 0;
 	bool long_rd_rsp_chk = false;
+=======
+	u32 dsi_ctrl, data;
+	int video_mode;
+	u32 left_dsi_ctrl = 0;
+	bool left_ctrl_restore = false;
+	int rx_flags = 0;
+	bool long_rd_rsp_chk = false;
+
+	if (ctrl->shared_pdata.broadcast_enable) {
+		if (ctrl->ndx == DSI_CTRL_0) {
+			pr_debug("%s: Broadcast mode. 1st ctrl\n",
+				 __func__);
+			return 0;
+		}
+	}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/*
 	 * In broadcast mode, the configuration for master controller
@@ -912,8 +951,11 @@ int mdss_dsi_cmds_rx(struct mdss_dsi_ctrl_pdata *ctrl,
 			mctrl_restore = __mdss_dsi_cmd_mode_config(mctrl, 1);
 	}
 
+<<<<<<< HEAD
 	ctrl_restore = __mdss_dsi_cmd_mode_config(ctrl, 1);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	no_max_pkt_size = rx_flags & CMD_REQ_NO_MAX_PKT_SIZE;
 	if (no_max_pkt_size)
 		rlen = ALIGN(rlen, 4); /* Only support rlen = 4*n */
@@ -966,9 +1008,14 @@ int mdss_dsi_cmds_rx(struct mdss_dsi_ctrl_pdata *ctrl,
 		ret = mdss_dsi_cmd_dma_tx(ctrl, tp);
 		if (IS_ERR_VALUE(ret)) {
 			mdss_dsi_disable_irq(ctrl, DSI_CMD_TERM);
+<<<<<<< HEAD
 			pr_err("%s: failed to tx max packet size\n",
 				__func__);
 			mdss_dsi_reg_dump(ctrl, "mdss_dsi_cmds_rx max packet");
+=======
+			pr_err("%s: failed to call\n",
+				__func__);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			rp->len = 0;
 			goto end;
 		}
@@ -990,9 +1037,14 @@ int mdss_dsi_cmds_rx(struct mdss_dsi_ctrl_pdata *ctrl,
 	ret = mdss_dsi_cmd_dma_tx(ctrl, tp);
 	if (IS_ERR_VALUE(ret)) {
 		mdss_dsi_disable_irq(ctrl, DSI_CMD_TERM);
+<<<<<<< HEAD
 		pr_err("%s: failed to tx read request\n",
 			__func__);
 		mdss_dsi_reg_dump(ctrl, "mdss_dsi_cmds_rx read req");
+=======
+		pr_err("%s: failed to call\n",
+			__func__);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		rp->len = 0;
 		goto end;
 	}

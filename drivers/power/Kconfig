@@ -439,6 +439,7 @@ config QPNP_CHARGER
 	  also offers relevant information to userspace via the power supply
 	  framework.
 
+<<<<<<< HEAD
 config MMI_QPNP_CHARGER
 	tristate "MMI QPNP Charger driver"
 	depends on SPMI
@@ -451,6 +452,8 @@ config MMI_QPNP_CHARGER
 	  also offers relevant information to userspace via the power supply
 	  framework.
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 config QPNP_CHARGER_FACTORY
 	tristate "QPNP Charger driver - Factory version"
 	depends on SPMI

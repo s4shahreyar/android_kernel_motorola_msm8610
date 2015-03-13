@@ -153,6 +153,7 @@ qpnp_rtc_set_time(struct device *dev, struct rtc_time *tm)
 	 * write operation
 	 */
 
+<<<<<<< HEAD
 	/* Disable RTC H/w before writing on RTC register*/
 	rtc_ctrl_reg = rtc_dd->rtc_ctrl_reg;
 	if (rtc_ctrl_reg & BIT_RTC_ENABLE) {
@@ -167,6 +168,15 @@ qpnp_rtc_set_time(struct device *dev, struct rtc_time *tm)
 			goto rtc_rw_fail;
 		}
 		rtc_dd->rtc_ctrl_reg = rtc_ctrl_reg;
+=======
+	/* Disable RTC while writing */
+	reg = 0x0;
+	rc = qpnp_write_wrapper(rtc_dd, &reg,
+				rtc_dd->rtc_base + REG_OFFSET_RTC_CTRL, 1);
+	if (rc) {
+		dev_err(dev, "Disable RTC failed\n");
+		goto rtc_rw_fail;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	/* Clear WDATA[0] */
@@ -194,6 +204,7 @@ qpnp_rtc_set_time(struct device *dev, struct rtc_time *tm)
 		goto rtc_rw_fail;
 	}
 
+<<<<<<< HEAD
 	/* Enable RTC H/w after writing on RTC register*/
 	if (rtc_disabled) {
 		rtc_ctrl_reg |= BIT_RTC_ENABLE;
@@ -206,6 +217,15 @@ qpnp_rtc_set_time(struct device *dev, struct rtc_time *tm)
 			goto rtc_rw_fail;
 		}
 		rtc_dd->rtc_ctrl_reg = rtc_ctrl_reg;
+=======
+	/* Re-enable RTC for write to take effect */
+	reg = BIT_RTC_ENABLE;
+	rc = qpnp_write_wrapper(rtc_dd, &reg,
+				rtc_dd->rtc_base + REG_OFFSET_RTC_CTRL, 1);
+	if (rc) {
+		dev_err(dev, "Enable RTC failed\n");
+		goto rtc_rw_fail;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	if (alarm_enabled) {

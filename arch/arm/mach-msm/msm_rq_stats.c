@@ -89,6 +89,8 @@ static inline cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall)
 	return idle_time;
 }
 
+EXPORT_SYMBOL(get_cpu_idle_time);
+
 static inline cputime64_t get_cpu_iowait_time(unsigned int cpu,
 							cputime64_t *wall)
 {

@@ -23,7 +23,11 @@
 #include <linux/platform_device.h>
 #include <linux/reboot.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/qpnp/power-on.h>
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 enum mmi_factory_device_list {
 	HONEYFUFU = 0,
@@ -34,7 +38,11 @@ enum mmi_factory_device_list {
 #define KP_CABLE_INDEX 1
 #define KP_WARN_INDEX 2
 #define KP_NUM_GPIOS 3
+<<<<<<< HEAD
 #define PMIO_PON_EXTRA_RESET_KUNPOW_BIT BIT(9)
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 struct mmi_factory_info {
 	int num_gpios;
 	struct gpio *list;
@@ -74,10 +82,14 @@ static void warn_irq_w(struct work_struct *w)
 	if (!warn_line) {
 		pr_info("HW User Reset!\n");
 		pr_info("2 sec to Reset.\n");
+<<<<<<< HEAD
 		qpnp_pon_store_extra_reset_info(
 			PMIO_PON_EXTRA_RESET_KUNPOW_BIT,
 			0);
 		kernel_halt();
+=======
+		kernel_restart(NULL);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		return;
 	}
 }
@@ -253,11 +265,14 @@ static int mmi_factory_probe(struct platform_device *pdev)
 	}
 
 	if ((info->dev == KUNGPOW) && (info->num_gpios == KP_NUM_GPIOS)) {
+<<<<<<< HEAD
 		/* Disable Kill if not powered up by a factory cable */
 		if (!info->factory_cable)
 			gpio_direction_output(info->list[KP_KILL_INDEX].gpio,
 						1);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		info->warn_irq = gpio_to_irq(info->list[KP_WARN_INDEX].gpio);
 		info->fac_cbl_irq =
 			gpio_to_irq(info->list[KP_CABLE_INDEX].gpio);

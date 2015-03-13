@@ -23,6 +23,10 @@
 		/* Disable ESD for now, reading fails while in command mode */
 		qcom,panel-esd-detect-disable;
 		qcom,panel-esd-power-mode-chk = <0x94>;
+<<<<<<< HEAD
+=======
+		qcom,mdss-dsi-cont-splash-skip-ov-handoff;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 		qcom,mdss-dsi-panel-name = "mipi_mot_cmd_smd_598_1080_v0";
 		qcom,mdss-dsi-panel-controller = <&mdss_dsi0>;
@@ -92,11 +96,14 @@
 		qcom,mdss-dsi-mdp-trigger = "none";
 		qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
 
+<<<<<<< HEAD
 		qcom,mdss-dsi-hbm-on-command = [
 				15 01 00 00 00 00 02 53 e0];
 		qcom,mdss-dsi-hbm-off-command = [
 				15 01 00 00 00 00 02 53 20];
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,panel-en-reset-sequence = <1 11>;
 		qcom,panel-dis-reset-sequence = <0 1>;
 		qcom,platform-supply-entry1 {

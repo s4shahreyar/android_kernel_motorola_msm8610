@@ -19,11 +19,19 @@ config F2FS_STAT_FS
 	depends on F2FS_FS && DEBUG_FS
 	default y
 	help
+<<<<<<< HEAD
 	  /sys/debug/f2fs/ contains information about all the partitions
 	  mounted as f2fs. Each file shows the whole f2fs information.
 
 	  /sys/debug/f2fs/status includes:
 	    - major filesystem information managed by f2fs currently
+=======
+	  /sys/kernel/debug/f2fs/ contains information about all the partitions
+	  mounted as f2fs. Each file shows the whole f2fs information.
+
+	  /sys/kernel/debug/f2fs/status includes:
+	    - major file system information managed by f2fs currently
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	    - average SIT information about whole segments
 	    - current memory footprint consumed by f2fs.
 
@@ -68,6 +76,10 @@ config F2FS_CHECK_FS
 	bool "F2FS consistency checking feature"
 	depends on F2FS_FS
 	help
+<<<<<<< HEAD
 	  Enables BUG_ONs which check the filesystem consistency in runtime.
+=======
+	  Enables BUG_ONs which check the file system consistency in runtime.
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	  If you want to improve the performance, say N.

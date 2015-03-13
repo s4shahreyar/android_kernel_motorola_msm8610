@@ -1075,6 +1075,7 @@ qup_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
 		mutex_unlock(&dev->mlock);
 		return -EIO;
 	}
+<<<<<<< HEAD
 	/* request runtime-PM to go active */
 	pm_runtime_get_sync(dev->dev);
 	/* if runtime PM callback was not invoked */
@@ -1083,6 +1084,11 @@ qup_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
 		i2c_qup_resume(dev);
 	}
 
+=======
+
+	pm_runtime_get_sync(dev->dev);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (dev->pdata->clk_ctl_xfer)
 		i2c_qup_pm_resume_clk(dev);
 
@@ -1878,9 +1884,21 @@ static int i2c_qup_pm_suspend_sys_noirq(struct device *device)
 {
 	struct platform_device *pdev = to_platform_device(device);
 	struct qup_i2c_dev *dev = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 
 	i2c_qup_sys_suspend(dev);
 	dev_dbg(device, "system suspend\n");
+=======
+	/* Acquire mutex to ensure current transaction is over */
+	mutex_lock(&dev->mlock);
+	dev->pwr_state = MSM_I2C_SYS_SUSPENDING;
+	mutex_unlock(&dev->mlock);
+	if (!pm_runtime_enabled(device) || !pm_runtime_suspended(device)) {
+		dev_dbg(device, "system suspend\n");
+		i2c_qup_pm_suspend(dev);
+	}
+	dev->pwr_state = MSM_I2C_SYS_SUSPENDED;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 }
 
@@ -1889,13 +1907,29 @@ static int i2c_qup_pm_resume_sys_noirq(struct device *device)
 {
 	struct platform_device *pdev = to_platform_device(device);
 	struct qup_i2c_dev *dev = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 	/*
 	 * Nothing to be done on system-pm rusume except keeping track that it
 	 * took place. Actual resuming (e.g. activation of clocks) is triggerd
 	 * by a transfer request.
 	 */
+=======
+
+	if (!pm_runtime_enabled(device) || !pm_runtime_suspended(device)) {
+
+		i2c_qup_pm_resume(dev);
+		pm_runtime_mark_last_busy(device);
+		pm_request_autosuspend(device);
+
+	} else {
+
+		dev->pwr_state = MSM_I2C_PM_SUSPENDED;
+
+	}
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	dev_dbg(device, "system resume\n");
-	dev->pwr_state = MSM_I2C_PM_SUSPENDED;
+
 	return 0;
 }
 #endif /* CONFIG_PM */

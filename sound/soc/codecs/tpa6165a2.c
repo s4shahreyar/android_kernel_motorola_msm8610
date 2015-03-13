@@ -32,7 +32,10 @@
 #include <linux/regulator/consumer.h>
 #include <linux/seq_file.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/suspend.h>
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #include <linux/string.h>
 #include <linux/uaccess.h>
 #include <linux/mfd/pm8xxx/pm8921.h>
@@ -85,9 +88,13 @@ struct tpa6165_data {
 	int mono_hs_detect_state;
 	int force_hstype;
 	int jack_detect_config;
+<<<<<<< HEAD
 	int jack_detect_config_tty;
 	atomic_t is_suspending;
 	struct notifier_block pm_notifier;
+=======
+	atomic_t is_suspending;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct mutex lock;
 	struct wake_lock wake_lock;
 	struct work_struct work;
@@ -1183,6 +1190,7 @@ static int tpa6165_poll_acc_state(struct snd_kcontrol *kcontrol,
 
 	pr_debug("tpa6165 polling enabled: %d", value);
 	mutex_lock(&tpa6165->lock);
+<<<<<<< HEAD
 
 	tpa6165->polling_state = value ? 1 : 0;
 
@@ -1193,6 +1201,16 @@ static int tpa6165_poll_acc_state(struct snd_kcontrol *kcontrol,
 	else
 		cancel_delayed_work_sync(&tpa6165->poll_work);
 
+=======
+	if (value == 1) {
+		tpa6165->polling_state = 1;
+		queue_delayed_work(tpa6165->wq, &tpa6165->poll_work, 0);
+	} else {
+		cancel_delayed_work_sync(&tpa6165->poll_work);
+		tpa6165->polling_state = 0;
+	}
+	mutex_unlock(&tpa6165->lock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 1;
 }
 
@@ -1227,7 +1245,11 @@ static int tpa6165_set_mode(struct snd_kcontrol *kcontrol,
 	if (value)
 		/* enable tty mode */
 		tpa6165_reg_write(tpa6165, TPA6165_JACK_DETECT_TEST_HW1,
+<<<<<<< HEAD
 				tpa6165->jack_detect_config_tty,
+=======
+				TPA6165_JACK_SHORT_Z|TPA6165_JACK_HP_LO_TH,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 				0xff);
 	else
 		tpa6165_reg_write(tpa6165, TPA6165_JACK_DETECT_TEST_HW1,
@@ -1319,6 +1341,7 @@ int tpa6165_hs_detect(struct snd_soc_codec *codec)
 }
 EXPORT_SYMBOL_GPL(tpa6165_hs_detect);
 
+<<<<<<< HEAD
 static int tpa6165_suspend(struct tpa6165_data *tpa6165)
 {
 	pr_debug("tpa6165: suspending ..\n");
@@ -1359,6 +1382,39 @@ static int tpa6165_pm_event(struct notifier_block *this,
 
 	return err;
 }
+=======
+#ifdef CONFIG_PM
+static int tpa6165_suspend(struct i2c_client *client, pm_message_t mesg)
+{
+	struct tpa6165_data *tpa6165 =
+					i2c_get_clientdata(tpa6165_client);
+
+	mutex_lock(&tpa6165->lock);
+	pr_debug("tpa6165: suspending ..\n");
+	if (wake_lock_active(&tpa6165->wake_lock)) {
+		pr_debug("tpa6165: detection thread ON fail suspend\n");
+		mutex_unlock(&tpa6165->lock);
+		return -EBUSY;
+	}
+	atomic_set(&tpa6165->is_suspending, 1);
+	mutex_unlock(&tpa6165->lock);
+	return 0;
+}
+
+static int tpa6165_resume(struct i2c_client *client)
+{
+	struct tpa6165_data *tpa6165 =
+					i2c_get_clientdata(tpa6165_client);
+
+	pr_debug("tpa6165: resuming ..\n");
+	atomic_set(&tpa6165->is_suspending, 0);
+	return 0;
+}
+#else
+#define tpa6165_suspend		NULL
+#define tpa6165_resume		NULL
+#endif /* CONFIG_PM */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 static irqreturn_t tpa6165_irq_handler(int irq, void *data)
 {
@@ -1434,9 +1490,13 @@ tpa6165_of_init(struct i2c_client *client)
 	pdata->jack_detect_config = TPA6165_JACK_SHORT_Z;
 	of_property_read_u32(np, "ti,tpa6165-jack-detect-config",
 				&pdata->jack_detect_config);
+<<<<<<< HEAD
 	pdata->jack_detect_config_tty = pdata->jack_detect_config;
 	of_property_read_u32(np, "ti,tpa6165-jack-detect-config-tty",
 				&pdata->jack_detect_config_tty);
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return pdata;
 }
 #else
@@ -1499,8 +1559,11 @@ static int __devinit tpa6165_probe(struct i2c_client *client,
 	 */
 	tpa6165->alwayson_micb = tpa6165_pdata->alwayson_micbias;
 	tpa6165->jack_detect_config = tpa6165_pdata->jack_detect_config;
+<<<<<<< HEAD
 	tpa6165->jack_detect_config_tty =
 				tpa6165_pdata->jack_detect_config_tty;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/* enable regulators */
 	tpa6165->vdd = regulator_get(&client->dev, "hs_det_vdd");
@@ -1560,10 +1623,13 @@ static int __devinit tpa6165_probe(struct i2c_client *client,
 	/* setup debug fs interfaces */
 	tpa6165_setup_debugfs(tpa6165);
 
+<<<<<<< HEAD
 	tpa6165->pm_notifier.notifier_call = tpa6165_pm_event;
 	err = register_pm_notifier(&tpa6165->pm_notifier);
 		pr_err("%s:Register_pm_notifier failed: %d\n", __func__, err);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	pr_info("tpa6165a2 probed successfully\n");
 
 	return 0;
@@ -1624,6 +1690,11 @@ static struct i2c_driver tpa6165_driver = {
 			.owner = THIS_MODULE,
 			.of_match_table = of_match_ptr(tpa6165_match_tbl),
 	},
+<<<<<<< HEAD
+=======
+	.suspend = tpa6165_suspend,
+	.resume = tpa6165_resume,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	.probe = tpa6165_probe,
 	.remove = __devexit_p(tpa6165_remove),
 	.id_table = tpa6165_id,

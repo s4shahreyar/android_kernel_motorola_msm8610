@@ -145,6 +145,7 @@ struct mdss_panel_recovery {
 				 - 1 clock enable
  * @MDSS_EVENT_ENABLE_PARTIAL_UPDATE: Event to update ROI of the panel.
  * @MDSS_EVENT_DSI_CMDLIST_KOFF: acquire dsi_mdp_busy lock before kickoff.
+<<<<<<< HEAD
  * @MDSS_EVENT_DSI_ULPS_CTRL:	Event to configure Ultra Lower Power Saving
  *				mode for the DSI data and clock lanes. The
  *				event arguments can have one of these values:
@@ -152,6 +153,9 @@ struct mdss_panel_recovery {
  *				- 1: Enable ULPS mode
  * @MDSS_EVENT_ENABLE_TE: Change TE state, used for factory testing only
  * @MDSS_EVENT_SET_CABC: Set CABC mode, for Motorola "Dynamic CABC" feature.
+=======
+ * @MDSS_EVENT_ENABLE_TE: Change TE state, used for factory testing only
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
  */
 enum mdss_intf_events {
 	MDSS_EVENT_RESET = 1,
@@ -171,11 +175,15 @@ enum mdss_intf_events {
 	MDSS_EVENT_PANEL_CLK_CTRL,
 	MDSS_EVENT_DSI_CMDLIST_KOFF,
 	MDSS_EVENT_ENABLE_PARTIAL_UPDATE,
+<<<<<<< HEAD
 	MDSS_EVENT_DSI_ULPS_CTRL,
 	MDSS_EVENT_REGISTER_RECOVERY_HANDLER,
 	MDSS_EVENT_ENABLE_TE,
 	MDSS_EVENT_ENABLE_HBM,
 	MDSS_EVENT_SET_CABC,
+=======
+	MDSS_EVENT_ENABLE_TE,
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 struct lcd_panel_info {
@@ -253,9 +261,6 @@ struct mipi_panel_info {
 
 	char vsync_enable;
 	char hw_vsync_mode;
-
-	char lp11_init;
-	u32  init_delay;
 };
 
 struct edp_panel_info {
@@ -336,18 +341,25 @@ struct mdss_panel_info {
 	int new_fps;
 
 	u32 cont_splash_enabled;
+<<<<<<< HEAD
 	u32 cont_splash_feature_on;
 	bool cont_splash_esd_rdy;
 	u32 no_solid_fill;
+=======
+	bool cont_splash_skip_ov_handoff;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	u32 partial_update_enabled;
 	struct ion_handle *splash_ihdl;
 	u32 panel_power_on;
 	bool hs_cmds_post_init;
+<<<<<<< HEAD
 	bool hbm_feature_enabled;
 	bool hbm_state;
 	bool dynamic_cabc_enabled;
 	enum cabc_mode cabc_mode;
 	char supplier[8];
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	uint32_t panel_dead;
 

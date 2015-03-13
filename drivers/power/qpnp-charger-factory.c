@@ -296,8 +296,11 @@ struct qpnp_chg_chip {
 	bool				btc_disabled;
 	bool				use_default_batt_values;
 	bool				duty_cycle_100p;
+<<<<<<< HEAD
 	bool				factory_cable_present;
 	bool				no_factory_kill_ic;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	unsigned int			bpd_detection;
 	unsigned int			max_bat_chg_current;
 	unsigned int			warm_bat_chg_ma;
@@ -941,10 +944,13 @@ qpnp_chg_usb_usbin_valid_irq_handler(int irq, void *_chip)
 			chip->chg_done = false;
 			chip->prev_usb_max_ma = -EINVAL;
 		} else {
+<<<<<<< HEAD
 			if (chip->no_factory_kill_ic
 				&& !chip->factory_cable_present)
 				chip->factory_cable_present = true;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			schedule_delayed_work(&chip->eoc_work,
 				msecs_to_jiffies(EOC_CHECK_PERIOD_MS));
 		}
@@ -1504,6 +1510,12 @@ qpnp_batt_external_power_changed(struct power_supply *psy)
 	if (!chip->bms_psy)
 		chip->bms_psy = power_supply_get_by_name("bms");
 
+<<<<<<< HEAD
+=======
+	chip->usb_psy->get_property(chip->usb_psy,
+			  POWER_SUPPLY_PROP_ONLINE, &ret);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* Only honour requests while USB is present */
 	if (qpnp_chg_is_usb_chg_plugged_in(chip)) {
 		chip->usb_psy->get_property(chip->usb_psy,
@@ -1527,10 +1539,13 @@ qpnp_batt_external_power_changed(struct power_supply *psy)
 			}
 		}
 		chip->prev_usb_max_ma = ret.intval;
+<<<<<<< HEAD
 	} else if (chip->no_factory_kill_ic && chip->factory_cable_present) {
 		pr_err("External Power Changed: USB cable was removed\n");
 		kernel_power_off();
 		return;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 skip_set_iusb_max:
@@ -2673,8 +2688,12 @@ qpnp_chg_load_battery_data(struct qpnp_chg_chip *chip)
 		}
 
 		rc = of_batterydata_read_data(node,
+<<<<<<< HEAD
 					      &batt_data, result.physical,
 					      NULL);
+=======
+				&batt_data, result.physical);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (rc) {
 			pr_err("failed to read battery data: %d\n", rc);
 			return 0;
@@ -3515,7 +3534,11 @@ static int qpnp_charging_reboot(struct notifier_block *nb,
 				unsigned long event, void *unused)
 {
 	struct qpnp_vadc_result res;
+<<<<<<< HEAD
 #define VBUS_OFF_THRESHOLD 2000000
+=======
+#define VBUS_OFF_THRESHOLD 900000
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/*
 	 * Hack to power down when both VBUS and BPLUS are present.
@@ -3543,8 +3566,12 @@ static int qpnp_charging_reboot(struct notifier_block *nb,
 				pr_err("VBUS ADC read error\n");
 				break;
 			} else
+<<<<<<< HEAD
 				pr_info("VBUS:= %lld microVolts\n",
 							res.physical);
+=======
+				pr_info("VBUS:= %lld mV\n", res.physical);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			msleep(100);
 		} while (res.physical > VBUS_OFF_THRESHOLD);
 
@@ -3568,6 +3595,7 @@ static bool __devinit qpnp_charger_mmi_factory(void)
 	return factory;
 }
 
+<<<<<<< HEAD
 static void qpnp_charger_mmi_no_fact_kill_ic(struct qpnp_chg_chip *chip)
 {
 	struct device_node *np = of_find_node_by_path("/chosen");
@@ -3577,6 +3605,8 @@ static void qpnp_charger_mmi_no_fact_kill_ic(struct qpnp_chg_chip *chip)
 	of_node_put(np);
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int __devinit
 qpnp_charger_fac_probe(struct spmi_device *spmi)
 {
@@ -3601,8 +3631,11 @@ qpnp_charger_fac_probe(struct spmi_device *spmi)
 	chip->prev_usb_max_ma = -EINVAL;
 	chip->dev = &(spmi->dev);
 	chip->spmi = spmi;
+<<<<<<< HEAD
 	chip->factory_cable_present = false;
 	chip->no_factory_kill_ic = false;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	chip->usb_psy = power_supply_get_by_name("usb");
 	if (!chip->usb_psy) {
@@ -3901,6 +3934,7 @@ qpnp_charger_fac_probe(struct spmi_device *spmi)
 	power_supply_set_present(chip->usb_psy,
 			qpnp_chg_is_usb_chg_plugged_in(chip));
 
+<<<<<<< HEAD
 	qpnp_charger_mmi_no_fact_kill_ic(chip);
 
 	/* Set USB psy online to avoid userspace from shutting down if battery
@@ -3912,6 +3946,13 @@ qpnp_charger_fac_probe(struct spmi_device *spmi)
 			chip->factory_cable_present = true;
 	}
 
+=======
+	/* Set USB psy online to avoid userspace from shutting down if battery
+	 * capacity is at zero and no chargers online. */
+	if (qpnp_chg_is_usb_chg_plugged_in(chip))
+		power_supply_set_online(chip->usb_psy, 1);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	rc = device_create_file(&spmi->dev,
 				&dev_attr_force_chg_auto_enable);
 	if (rc) {

@@ -19,6 +19,10 @@
 #include <linux/ct406.h>
 
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/earlysuspend.h>
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #include <linux/i2c.h>
 #include <linux/input.h>
 #include <linux/interrupt.h>
@@ -37,6 +41,19 @@
 #include <linux/uaccess.h>
 #include <linux/wakelock.h>
 #include <linux/workqueue.h>
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
+#include <linux/input/sweep2wake.h>
+#include <linux/input/doubletap2wake.h>
+#include <linux/input/tap2unlock.h>
+bool ct_suspended = false;
+bool prox_covered = false;
+bool forced = true;
+extern void touch_suspend(void);
+extern void touch_resume(void);
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define CT406_I2C_RETRIES	2
 #define CT406_I2C_RETRY_DELAY	10
@@ -166,7 +183,10 @@ struct ct406_data {
 	unsigned int als_first_report;
 	enum ct406_als_mode als_mode;
 	unsigned int wait_enabled;
+<<<<<<< HEAD
 	unsigned int power_on;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* numeric values */
 	unsigned int prox_noise_floor;
 	unsigned int prox_low_threshold;
@@ -181,6 +201,12 @@ struct ct406_data {
 	u8 prox_offset;
 	u16 pdata_max;
 	u8 ink_type;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	struct early_suspend ct406_early_suspend;
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 static struct ct406_data *ct406_misc_data;
@@ -222,6 +248,10 @@ static struct ct406_reg {
 #define CT406_DBG_IOCTL			0x00000008
 #define CT406_DBG_SUSPEND_RESUME	0x00000010
 static u32 ct406_debug = 0x00000000;
+<<<<<<< HEAD
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 module_param_named(debug_mask, ct406_debug, uint, 0644);
 
 static int ct406_i2c_read(struct ct406_data *ct, u8 *buf, int len)
@@ -552,6 +582,16 @@ static void ct406_prox_mode_uncovered(struct ct406_data *ct)
 	ct->prox_low_threshold = pilt;
 	ct->prox_high_threshold = piht;
 	ct406_write_prox_thresholds(ct);
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
+	if(s2w_switch > 0 || dt2w_switch > 0 || t2u_switch > 0)
+	{
+		prox_covered = false;
+		touch_resume();
+	}
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	pr_info("%s: Prox mode uncovered\n", __func__);
 }
 
@@ -564,17 +604,36 @@ static void ct406_prox_mode_covered(struct ct406_data *ct)
 	if (pilt > ct->pdata_max)
 		pilt = ct->pdata_max;
 
+<<<<<<< HEAD
+=======
+	
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	ct->prox_mode = CT406_PROX_MODE_COVERED;
 	ct->prox_low_threshold = pilt;
 	ct->prox_high_threshold = piht;
 	ct406_write_prox_thresholds(ct);
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
+	if(s2w_switch > 0 || dt2w_switch > 0 || t2u_switch > 0)
+	{
+		prox_covered = true;
+		touch_suspend();
+	}
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	pr_info("%s: Prox mode covered\n", __func__);
 }
 
 static void ct406_device_power_off(struct ct406_data *ct)
 {
 	int error;
+<<<<<<< HEAD
 
+=======
+	prox_covered = false;
+	
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (ct406_debug & CT406_DBG_POWER_ON_OFF)
 		pr_info("%s: initialized=%d\n", __func__, ct->regs_initialized);
 
@@ -597,7 +656,10 @@ static void ct406_device_power_off(struct ct406_data *ct)
 		}
 	}
 
+<<<<<<< HEAD
 	ct->power_on = 0;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static int ct406_device_power_on(struct ct406_data *ct)
@@ -615,9 +677,12 @@ static int ct406_device_power_on(struct ct406_data *ct)
 			return error;
 		}
 	}
+<<<<<<< HEAD
 
 	ct->power_on = 1;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 }
 
@@ -1426,11 +1491,17 @@ static void ct406_work_prox_start(struct work_struct *work)
 	mutex_unlock(&ct->mutex);
 }
 
+<<<<<<< HEAD
 static int ct406_suspend(struct ct406_data *ct)
+=======
+#ifdef CONFIG_HAS_EARLYSUSPEND
+static void ct406_suspend(struct early_suspend *handler)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 {
 	if (ct406_debug & CT406_DBG_SUSPEND_RESUME)
 		pr_info("%s\n", __func__);
 
+<<<<<<< HEAD
 	ct406_disable_als(ct);
 
 	if (!ct->prox_requested)
@@ -1442,10 +1513,26 @@ static int ct406_suspend(struct ct406_data *ct)
 }
 
 static int ct406_resume(struct ct406_data *ct)
+=======
+	mutex_lock(&ct406_misc_data->mutex);
+
+	ct406_disable_als(ct406_misc_data);
+
+	if (!ct406_misc_data->prox_requested)
+		ct406_device_power_off(ct406_misc_data);
+
+	ct406_misc_data->suspended = 1;
+
+	mutex_unlock(&ct406_misc_data->mutex);
+}
+
+static void ct406_resume(struct early_suspend *handler)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 {
 	if (ct406_debug & CT406_DBG_SUSPEND_RESUME)
 		pr_info("%s\n", __func__);
 
+<<<<<<< HEAD
 	if (ct->power_on == 0) {
 		ct406_device_power_on(ct);
 		ct406_device_init(ct);
@@ -1480,6 +1567,24 @@ static int ct406_pm_event(struct notifier_block *this,
 
 	return NOTIFY_DONE;
 }
+=======
+	mutex_lock(&ct406_misc_data->mutex);
+
+	ct406_device_power_on(ct406_misc_data);
+	ct406_device_init(ct406_misc_data);
+
+	ct406_misc_data->suspended = 0;
+
+	if (ct406_misc_data->als_requested)
+		ct406_enable_als(ct406_misc_data);
+
+	mutex_unlock(&ct406_misc_data->mutex);
+}
+#endif /* CONFIG_HAS_EARLYSUSPEND */
+
+
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #ifdef CONFIG_OF
 static struct ct406_platform_data *
@@ -1671,12 +1776,25 @@ static int ct406_probe(struct i2c_client *client,
 		pr_err("%s:device init failed: %d\n", __func__, error);
 		goto error_revision_read_failed;
 	}
+<<<<<<< HEAD
 
 	ct->pm_notifier.notifier_call = ct406_pm_event;
 	error = register_pm_notifier(&ct->pm_notifier);
 	if (error < 0) {
 		pr_err("%s:Register_pm_notifier failed: %d\n", __func__, error);
 	}
+=======
+#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
+	if (s2w_switch > 0 || dt2w_switch > 0)
+		ct406_enable_prox(ct);
+#endif
+
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	ct->ct406_early_suspend.suspend = ct406_suspend;
+	ct->ct406_early_suspend.resume = ct406_resume;
+	register_early_suspend(&ct->ct406_early_suspend);
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return 0;
 
@@ -1713,8 +1831,11 @@ static int ct406_remove(struct i2c_client *client)
 {
 	struct ct406_data *ct = i2c_get_clientdata(client);
 
+<<<<<<< HEAD
 	unregister_pm_notifier(&ct->pm_notifier);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	device_remove_file(&client->dev, &dev_attr_registers);
 
 	ct406_device_power_off(ct);
@@ -1764,6 +1885,10 @@ static struct i2c_driver ct406_i2c_driver = {
 
 static int __init ct406_init(void)
 {
+<<<<<<< HEAD
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return i2c_add_driver(&ct406_i2c_driver);
 }
 

@@ -32,8 +32,14 @@
 			<22 512 0 6400000>;
 
 		/* Fudge factors */
+<<<<<<< HEAD
 		qcom,mdss-ab-factor = <1 1>;		/* 1 times    */
 		qcom,mdss-ib-factor = <2 1>;		/* 2 times  */
+=======
+		qcom,mdss-ab-factor = <2 1>;		/* 2 times    */
+		qcom,mdss-ib-factor = <3 2>;		/* 1.5 times  */
+		qcom,mdss-high-ib-factor = <2 1>;	/* 2 times    */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,mdss-clk-factor = <5 4>;		/* 1.25 times */
 
 		qcom,max-clk-rate = <200000000>;

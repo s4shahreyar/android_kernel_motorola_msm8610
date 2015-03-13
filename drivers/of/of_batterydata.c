@@ -278,14 +278,21 @@ int of_batterydata_read_data(struct device_node *batterydata_container_node,
 			     int batt_id_uv,
 			     const char *battid_sn)
 {
+<<<<<<< HEAD
 	struct device_node *node, *best_node, *df_node, *sn_node;
+=======
+	struct device_node *node, *best_node, *df_node;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct batt_id_rng id_range;
 	size_t sz = sizeof(struct batt_id_rng) / sizeof(int);
 	struct batt_ids batt_ids;
 	int delta, best_delta, batt_id_kohm, rpull_up_kohm,
 		vadc_vdd_uv, best_id_kohm, i, rc = 0;
 	int default_kohm;
+<<<<<<< HEAD
 	const char *battid_sn_buf;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	node = batterydata_container_node;
 	OF_PROP_READ(rpull_up_kohm, "rpull-up-kohm", node, rc, false);
@@ -347,11 +354,15 @@ int of_batterydata_read_data(struct device_node *batterydata_container_node,
 	}
 
 	if (best_node == NULL) {
+<<<<<<< HEAD
 		if (battid_sn && sn_node) {
 			pr_err("No HW batt ID match using Serial Number!\n");
 			best_node = sn_node;
 			best_id_kohm = 0;
 		} else if ((default_kohm != -EINVAL) && df_node) {
+=======
+		if ((default_kohm != -EINVAL) && df_node) {
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			pr_err("No battery data found using Default\n");
 			best_node = df_node;
 			best_id_kohm = default_kohm;

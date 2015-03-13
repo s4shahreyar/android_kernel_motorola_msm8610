@@ -865,7 +865,11 @@ static int msm_wdt_tzbsp_ctx_header_check(struct msm_wdt_ctx *ctx,
 						unsigned long phys)
 {
 	const int cpu_count = get_core_count();
+<<<<<<< HEAD
 	int tzbsp_cpu_count = 0;
+=======
+	int tzbsp_cpu_count;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	struct tzbsp_dump_buf_s0 *tzctx = &ctx->p1.tzbsp.s0;
 
 	if (tzctx->magic != TZBSP_DUMP_CTX_MAGIC)

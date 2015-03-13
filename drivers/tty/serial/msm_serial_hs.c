@@ -3594,6 +3594,7 @@ static void msm_hs_shutdown(struct uart_port *uport)
 
 	/* make sure tx tasklet finishes */
 	tasklet_kill(&msm_uport->tx.tlet);
+<<<<<<< HEAD
 	ret = wait_event_timeout(msm_uport->tx.wait,
 			uart_circ_empty(tx_buf), 500);
 	if (!ret)
@@ -3605,6 +3606,14 @@ static void msm_hs_shutdown(struct uart_port *uport)
 		MSM_HS_ERR("%s(): sps_disconnect failed\n",
 					__func__);
 	/* make sure rx tasklet finishes */
+=======
+	BUG_ON(msm_uport->rx.flush < FLUSH_STOP);
+	ret = wait_event_timeout(msm_uport->rx.wait,
+			msm_uport->rx.flush == FLUSH_SHUTDOWN, HZ);
+	if (!ret)
+		pr_err("%s(): HSUART RX Stall.\n", __func__);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	tasklet_kill(&msm_uport->rx.tlet);
 	wait_event(msm_uport->rx.wait, msm_uport->rx.flush == FLUSH_SHUTDOWN);
 	cancel_delayed_work_sync(&msm_uport->rx.flip_insert_work);

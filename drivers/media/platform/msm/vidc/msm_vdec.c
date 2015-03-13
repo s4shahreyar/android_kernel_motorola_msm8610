@@ -1890,9 +1890,15 @@ int msm_vdec_ctrl_init(struct msm_vidc_inst *inst)
 				"Failed to setup super cluster\n");
 		return -EINVAL;
 	}
+<<<<<<< HEAD
 
 	v4l2_ctrl_cluster(cluster_size, inst->cluster);
 
+=======
+
+	v4l2_ctrl_cluster(cluster_size, inst->cluster);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return ret_val;
 }
 

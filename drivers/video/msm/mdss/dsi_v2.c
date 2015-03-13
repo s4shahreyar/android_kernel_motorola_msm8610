@@ -65,7 +65,10 @@ static int dsi_panel_handler(struct mdss_panel_data *pdata, int enable)
 				panel_data);
 
 	if (enable) {
+<<<<<<< HEAD
 		pdata->panel_info.panel_power_on = 1;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		if (ctrl_pdata->on)
 			ctrl_pdata->on(pdata);
 		else {
@@ -84,7 +87,10 @@ static int dsi_panel_handler(struct mdss_panel_data *pdata, int enable)
 								__func__);
 			rc = -EINVAL;
 		}
+<<<<<<< HEAD
 		pdata->panel_info.panel_power_on = 0;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 	return rc;
 }
@@ -383,6 +389,7 @@ int dsi_parse_vreg(struct device *dev, struct dss_module_power *mp,
 					__func__, rc);
 			}
 			mp->vreg_config[i].post_off_sleep = (!rc ? tmp : 0);
+			mp->vreg_config[i].boot_on = mp->boot_on;
 
 			pr_debug("%s: %s min=%d, max=%d, enable=%d, disable=%d, preonsleep=%d, postonsleep=%d, preoffsleep=%d, postoffsleep=%d\n",
 				__func__,

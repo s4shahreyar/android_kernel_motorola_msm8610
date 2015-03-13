@@ -160,9 +160,12 @@
 #define RTP_CLOSED_LOOP_ENABLE  /* Set closed loop mode for RTP */
 #define RTP_ERM_OVERDRIVE_CLAMP_VOLTAGE     0xF0
 
+<<<<<<< HEAD
 #define I2C_RETRY_DELAY		20 /* ms */
 #define I2C_RETRIES		5
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct drv260x {
 	struct class *class;
 	struct device *device;
@@ -242,6 +245,7 @@ static unsigned char LRA_autocal_sequence[] = {
 	GO_REG, GO,
 };
 
+<<<<<<< HEAD
 static unsigned char reinit_sequence[] = {
 	RATED_VOLTAGE_REG, 0,
 	AUTO_CALI_RESULT_REG, 0,
@@ -252,6 +256,8 @@ static unsigned char reinit_sequence[] = {
 	LIBRARY_SELECTION_REG, 0,
 };
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #if SKIP_LRA_AUTOCAL == 1
 static unsigned char LRA_init_sequence[] = {
 	MODE_REG, MODE_INTERNAL_TRIGGER,
@@ -329,13 +335,17 @@ static inline struct drv260x_platform_data
 static void drv260x_write_reg_val(const unsigned char *data, unsigned int size)
 {
 	int i = 0;
+<<<<<<< HEAD
 	int tries;
 	int ret;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (size % 2 != 0)
 		return;
 
 	while (i < size) {
+<<<<<<< HEAD
 		for (tries = 0; tries < I2C_RETRIES; tries++) {
 			ret = i2c_smbus_write_byte_data(drv260x->client,
 							data[i], data[i + 1]);
@@ -359,6 +369,10 @@ static void drv260x_read_reg_val(unsigned char *data, unsigned int size)
 	while (i < size) {
 		data[i + 1] = i2c_smbus_read_byte_data(drv260x->client,
 							data[i]);
+=======
+		i2c_smbus_write_byte_data(drv260x->client, data[i],
+					  data[i + 1]);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		i += 2;
 	}
 }
@@ -373,6 +387,7 @@ static void drv260x_set_go_bit(char val)
 
 static unsigned char drv260x_read_reg(unsigned char reg)
 {
+<<<<<<< HEAD
 	int tries;
 	int ret;
 
@@ -385,6 +400,9 @@ static unsigned char drv260x_read_reg(unsigned char reg)
 		msleep_interruptible(I2C_RETRY_DELAY);
 	}
 	return ret;
+=======
+	return i2c_smbus_read_byte_data(drv260x->client, reg);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static void drv2605_poll_go_bit(void)
@@ -414,8 +432,11 @@ static void drv2605_set_waveform_sequence(unsigned char *seq,
 						unsigned int size)
 {
 	unsigned char data[WAVEFORM_SEQUENCER_MAX + 1];
+<<<<<<< HEAD
 	int tries;
 	int ret;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (size > WAVEFORM_SEQUENCER_MAX)
 		return;
@@ -424,6 +445,7 @@ static void drv2605_set_waveform_sequence(unsigned char *seq,
 	memcpy(&data[1], seq, size);
 	data[0] = WAVEFORM_SEQUENCER_REG;
 
+<<<<<<< HEAD
 	for (tries = 0; tries < I2C_RETRIES; tries++) {
 		ret = i2c_master_send(drv260x->client, data, sizeof(data));
 		if (ret >= 0)
@@ -432,6 +454,9 @@ static void drv2605_set_waveform_sequence(unsigned char *seq,
 						tries+1);
 		msleep_interruptible(I2C_RETRY_DELAY);
 	}
+=======
+	i2c_master_send(drv260x->client, data, sizeof(data));
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static void drv260x_vreg_control(bool vdd_supply_enable)
@@ -456,11 +481,14 @@ static void drv260x_change_mode(char mode)
 	drv260x_vreg_control(true);
 	if (drv260x->external_trigger)
 		gpio_set_value(drv260x->en_gpio, GPIO_LEVEL_HIGH);
+<<<<<<< HEAD
 	/* POR may occur after enable,add time to stabilize the part before
 	   the I2C accesses */
 	udelay(850);
 	drv260x_write_reg_val(reinit_sequence, sizeof(reinit_sequence));
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #ifdef RTP_CLOSED_LOOP_ENABLE
 	if (mode != MODE_REAL_TIME_PLAYBACK) {
 		tmp[1] |= ERM_OpenLoop_Enabled;
@@ -711,7 +739,11 @@ static int drv260x_probe(struct i2c_client *client,
 	else
 		drv260x->overdrive_voltage = ERM_OVERDRIVE_CLAMP_VOLTAGE;
 
+<<<<<<< HEAD
 	if ((pdata->effects_library >= LIBRARY_A) &&
+=======
+	if ((pdata->effects_library >= LIBRARY_A) ||
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		(pdata->effects_library <= LIBRARY_F))
 		g_effect_bank = pdata->effects_library;
 
@@ -800,11 +832,18 @@ static void probe_work(struct work_struct *work)
 	}
 #endif
 
+<<<<<<< HEAD
 	/* Choose default effect library */
 	drv2605_select_library(g_effect_bank);
 
 	/* Read calibration results */
 	drv260x_read_reg_val(reinit_sequence, sizeof(reinit_sequence));
+=======
+	/* Read calibration results */
+	drv260x_read_reg(AUTO_CALI_RESULT_REG);
+	drv260x_read_reg(AUTO_CALI_BACK_EMF_RESULT_REG);
+	drv260x_read_reg(FEEDBACK_CONTROL_REG);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/* Read device ID */
 	device_id = (status & DEV_ID_MASK);
@@ -820,6 +859,12 @@ static void probe_work(struct work_struct *work)
 		break;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Choose default effect library */
+	drv2605_select_library(g_effect_bank);
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* Put hardware in standby */
 	drv260x_standby();
 

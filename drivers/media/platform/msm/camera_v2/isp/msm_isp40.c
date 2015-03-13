@@ -601,6 +601,7 @@ static long msm_vfe40_reset_hardware(struct vfe_device *vfe_dev ,
 	}
 	rst_val = msm_vfe40_reset_values[reset_type];
 	init_completion(&vfe_dev->reset_complete);
+<<<<<<< HEAD
 	if (blocking) {
 		msm_camera_io_w_mb(rst_val, vfe_dev->vfe_base + 0xC);
 		rc = wait_for_completion_timeout(
@@ -609,6 +610,11 @@ static long msm_vfe40_reset_hardware(struct vfe_device *vfe_dev ,
 		msm_camera_io_w_mb(0x1EF, vfe_dev->vfe_base + 0xC);
 	}
 	return rc;
+=======
+	msm_camera_io_w_mb(rst_val, vfe_dev->vfe_base + 0xC);
+	return wait_for_completion_timeout(
+		&vfe_dev->reset_complete, msecs_to_jiffies(50));
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static void msm_vfe40_axi_reload_wm(
@@ -1155,12 +1161,17 @@ static long msm_vfe40_axi_halt(struct vfe_device *vfe_dev,
 	msm_camera_io_w(0xFEFFFFFF, vfe_dev->vfe_base + 0x34);
 	init_completion(&vfe_dev->halt_complete);
 	msm_camera_io_w_mb(0x1, vfe_dev->vfe_base + 0x2C0);
+<<<<<<< HEAD
 	if (blocking) {
 		atomic_set(&vfe_dev->error_info.overflow_state, NO_OVERFLOW);
 		rc = wait_for_completion_interruptible_timeout(
 			&vfe_dev->halt_complete, msecs_to_jiffies(500));
 	}
 	return rc;
+=======
+	return wait_for_completion_timeout(
+		&vfe_dev->halt_complete, msecs_to_jiffies(500));
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static uint32_t msm_vfe40_get_wm_mask(

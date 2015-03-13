@@ -190,9 +190,13 @@ struct mdss_data_type {
 	bool mixer_switched;
 	struct mdss_panel_cfg pan_cfg;
 
+<<<<<<< HEAD
 	int handoff_pending;
 	struct mdss_prefill_data prefill_data;
 	bool ulps;
+=======
+	struct mdss_prefill_data prefill_data;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 extern struct mdss_data_type *mdss_res;
 

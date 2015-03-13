@@ -16,6 +16,7 @@
 
 
 / {
+<<<<<<< HEAD
 	qcom,msm-id = <217 0x4D 0x8000>, <217 0x4D 0x8100>;
 };
 
@@ -51,6 +52,9 @@
 
 &pm8941_chg {
 	otg-parent-supply = <&pm8941_boost>;
+=======
+	qcom,msm-id = <217 0x4D 0x8000>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 &i2c_2 {
@@ -75,6 +79,7 @@
 		status = "ok";
 	};
 };
+<<<<<<< HEAD
 
 &sdhc_1 {
 	qcom,bus-speed-mode = "HS200_1p8v", "DDR_1p8v";
@@ -99,3 +104,5 @@
 			<&msmgpio 32 0x0>; /* REG_PU */
 	};
 };
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

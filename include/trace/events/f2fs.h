@@ -69,12 +69,15 @@
 		{ GC_GREEDY,	"Greedy" },				\
 		{ GC_CB,	"Cost-Benefit" })
 
+<<<<<<< HEAD
 #define show_cpreason(type)						\
 	__print_symbolic(type,						\
 		{ CP_UMOUNT,	"Umount" },				\
 		{ CP_SYNC,	"Sync" },				\
 		{ CP_DISCARD,	"Discard" })
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 struct victim_sel_policy;
 
 DECLARE_EVENT_CLASS(f2fs__inode,
@@ -593,6 +596,7 @@ TRACE_EVENT(f2fs_fallocate,
 		__entry->ret)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(f2fs_direct_IO_enter,
 
 	TP_PROTO(struct inode *inode, loff_t offset, unsigned long len, int rw),
@@ -656,6 +660,8 @@ TRACE_EVENT(f2fs_direct_IO_exit,
 		__entry->ret)
 );
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 TRACE_EVENT(f2fs_reserve_new_block,
 
 	TP_PROTO(struct inode *inode, nid_t nid, unsigned int ofs_in_node),
@@ -728,6 +734,7 @@ DEFINE_EVENT_CONDITION(f2fs__submit_bio, f2fs_submit_read_bio,
 	TP_CONDITION(bio)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(f2fs_write_begin,
 
 	TP_PROTO(struct inode *inode, loff_t pos, unsigned int len,
@@ -788,6 +795,8 @@ TRACE_EVENT(f2fs_write_end,
 		__entry->copied)
 );
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 DECLARE_EVENT_CLASS(f2fs__page,
 
 	TP_PROTO(struct page *page, int type),
@@ -801,7 +810,10 @@ DECLARE_EVENT_CLASS(f2fs__page,
 		__field(int, dir)
 		__field(pgoff_t, index)
 		__field(int, dirty)
+<<<<<<< HEAD
 		__field(int, uptodate)
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	),
 
 	TP_fast_assign(
@@ -811,15 +823,22 @@ DECLARE_EVENT_CLASS(f2fs__page,
 		__entry->dir	= S_ISDIR(page->mapping->host->i_mode);
 		__entry->index	= page->index;
 		__entry->dirty	= PageDirty(page);
+<<<<<<< HEAD
 		__entry->uptodate = PageUptodate(page);
 	),
 
 	TP_printk("dev = (%d,%d), ino = %lu, %s, %s, index = %lu, "
 		"dirty = %d, uptodate = %d",
+=======
+	),
+
+	TP_printk("dev = (%d,%d), ino = %lu, %s, %s, index = %lu, dirty = %d",
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		show_dev_ino(__entry),
 		show_block_type(__entry->type),
 		show_file_type(__entry->dir),
 		(unsigned long)__entry->index,
+<<<<<<< HEAD
 		__entry->dirty,
 		__entry->uptodate)
 );
@@ -836,6 +855,9 @@ DEFINE_EVENT(f2fs__page, f2fs_readpage,
 	TP_PROTO(struct page *page, int type),
 
 	TP_ARGS(page, type)
+=======
+		__entry->dirty)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 );
 
 DEFINE_EVENT(f2fs__page, f2fs_set_page_dirty,
@@ -852,6 +874,7 @@ DEFINE_EVENT(f2fs__page, f2fs_vm_page_mkwrite,
 	TP_ARGS(page, type)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(f2fs_writepages,
 
 	TP_PROTO(struct inode *inode, struct writeback_control *wbc, int type),
@@ -913,6 +936,8 @@ TRACE_EVENT(f2fs_writepages,
 		__entry->range_cyclic)
 );
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 TRACE_EVENT(f2fs_submit_page_mbio,
 
 	TP_PROTO(struct page *page, int rw, int type, block_t blk_addr),
@@ -947,6 +972,7 @@ TRACE_EVENT(f2fs_submit_page_mbio,
 
 TRACE_EVENT(f2fs_write_checkpoint,
 
+<<<<<<< HEAD
 	TP_PROTO(struct super_block *sb, int reason, char *msg),
 
 	TP_ARGS(sb, reason, msg),
@@ -954,18 +980,35 @@ TRACE_EVENT(f2fs_write_checkpoint,
 	TP_STRUCT__entry(
 		__field(dev_t,	dev)
 		__field(int,	reason)
+=======
+	TP_PROTO(struct super_block *sb, bool is_umount, char *msg),
+
+	TP_ARGS(sb, is_umount, msg),
+
+	TP_STRUCT__entry(
+		__field(dev_t,	dev)
+		__field(bool,	is_umount)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		__field(char *,	msg)
 	),
 
 	TP_fast_assign(
 		__entry->dev		= sb->s_dev;
+<<<<<<< HEAD
 		__entry->reason		= reason;
+=======
+		__entry->is_umount	= is_umount;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		__entry->msg		= msg;
 	),
 
 	TP_printk("dev = (%d,%d), checkpoint for %s, state = %s",
 		show_dev(__entry),
+<<<<<<< HEAD
 		show_cpreason(__entry->reason),
+=======
+		__entry->is_umount ? "clean umount" : "consistency",
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		__entry->msg)
 );
 
@@ -992,6 +1035,7 @@ TRACE_EVENT(f2fs_issue_discard,
 		(unsigned long long)__entry->blkstart,
 		(unsigned long long)__entry->blklen)
 );
+<<<<<<< HEAD
 
 TRACE_EVENT(f2fs_issue_flush,
 
@@ -1016,6 +1060,8 @@ TRACE_EVENT(f2fs_issue_flush,
 		__entry->nobarrier ? "skip (nobarrier)" : "issue",
 		__entry->flush_merge ? " with flush_merge" : "")
 );
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #endif /* _TRACE_F2FS_H */
 
  /* This part must be outside protection */

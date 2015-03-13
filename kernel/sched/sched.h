@@ -490,6 +490,7 @@ DECLARE_PER_CPU(struct rq, runqueues);
 
 #ifdef CONFIG_INTELLI_PLUG
 struct nr_stats_s {
+<<<<<<< HEAD
  /* time-based average load */
  u64 nr_last_stamp;
  unsigned int ave_nr_running;
@@ -509,6 +510,24 @@ struct nr_stats_s {
 DECLARE_PER_CPU(struct nr_stats_s, runqueue_stats);
 #endif
 
+=======
+	/* time-based average load */
+	u64 nr_last_stamp;
+	unsigned int ave_nr_running;
+	seqcount_t ave_seqcnt;
+};
+
+#define NR_AVE_PERIOD_EXP	28
+#define NR_AVE_SCALE(x) ((x) << FSHIFT)
+#define NR_AVE_PERIOD	(1 << NR_AVE_PERIOD_EXP)
+#define NR_AVE_DIV_PERIOD(x) ((x) >> NR_AVE_PERIOD_EXP)
+
+DECLARE_PER_CPU(struct nr_stats_s, runqueue_stats);
+
+#endif
+
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #ifdef CONFIG_SMP
 
 #define rcu_dereference_check_sched_domain(p) \
@@ -910,7 +929,7 @@ extern void resched_cpu(int cpu);
 extern struct rt_bandwidth def_rt_bandwidth;
 extern void init_rt_bandwidth(struct rt_bandwidth *rt_b, u64 period, u64 runtime);
 
-extern void update_cpu_load(struct rq *this_rq);
+extern void update_idle_cpu_load(struct rq *this_rq);
 
 #ifdef CONFIG_CGROUP_CPUACCT
 #include <linux/cgroup.h>
@@ -948,6 +967,7 @@ extern void cpuacct_charge(struct task_struct *tsk, u64 cputime);
 static inline void cpuacct_charge(struct task_struct *tsk, u64 cputime) {}
 #endif
 
+<<<<<<< HEAD
 #define NR_AVE_PERIOD_EXP 27
 #define NR_AVE_SCALE(x) ((x) << FSHIFT)
 #define NR_AVE_PERIOD (1 << NR_AVE_PERIOD_EXP)
@@ -1002,15 +1022,49 @@ static inline unsigned int do_avg_nr_running(struct rq *rq)
  rq->nr_running++;
  write_seqcount_end(&nr_stats->ave_seqcnt);
 #else
+=======
+#ifdef CONFIG_INTELLI_PLUG
+static inline unsigned int do_avg_nr_running(struct rq *rq)
+{
+	struct nr_stats_s *nr_stats = &per_cpu(runqueue_stats, rq->cpu);
+	unsigned int ave_nr_running = nr_stats->ave_nr_running;
+	s64 nr, deltax;
+	deltax = rq->clock_task - nr_stats->nr_last_stamp;
+	nr = NR_AVE_SCALE(rq->nr_running);
+	if (deltax > NR_AVE_PERIOD)
+		ave_nr_running = nr;
+	else
+		ave_nr_running +=
+		NR_AVE_DIV_PERIOD(deltax * (nr - ave_nr_running));
+	return ave_nr_running;
+}
+#endif
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static inline void inc_nr_running(struct rq *rq)
 {
+#ifdef CONFIG_INTELLI_PLUG
+	struct nr_stats_s *nr_stats = &per_cpu(runqueue_stats, rq->cpu);
+#endif
 	sched_update_nr_prod(cpu_of(rq), rq->nr_running, true);
+<<<<<<< HEAD
 	write_seqcount_begin(&rq->ave_seqcnt);
 	rq->ave_nr_running = do_avg_nr_running(rq);
 	rq->nr_last_stamp = rq->clock_task;
 	rq->nr_running++;
 	write_seqcount_end(&rq->ave_seqcnt);
 #endif	
+=======
+#ifdef CONFIG_INTELLI_PLUG
+	write_seqcount_begin(&nr_stats->ave_seqcnt);
+	nr_stats->ave_nr_running = do_avg_nr_running(rq);
+	nr_stats->nr_last_stamp = rq->clock_task;
+#endif
+	rq->nr_running++;
+#ifdef CONFIG_INTELLI_PLUG
+	write_seqcount_end(&nr_stats->ave_seqcnt);
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 #ifdef CONFIG_INTELLI_PLUG
@@ -1028,12 +1082,26 @@ static inline void inc_nr_running(struct rq *rq)
 #else
 static inline void dec_nr_running(struct rq *rq)
 {
+#ifdef CONFIG_INTELLI_PLUG
+	struct nr_stats_s *nr_stats = &per_cpu(runqueue_stats, rq->cpu);
+#endif
 	sched_update_nr_prod(cpu_of(rq), rq->nr_running, false);
+<<<<<<< HEAD
 	write_seqcount_begin(&rq->ave_seqcnt);
 	rq->ave_nr_running = do_avg_nr_running(rq);
 	rq->nr_last_stamp = rq->clock_task;
 	rq->nr_running--;
 	write_seqcount_end(&rq->ave_seqcnt);
+=======
+#ifdef CONFIG_INTELLI_PLUG
+	write_seqcount_begin(&nr_stats->ave_seqcnt);
+	nr_stats->ave_nr_running = do_avg_nr_running(rq);
+	nr_stats->nr_last_stamp = rq->clock_task;
+#endif
+	rq->nr_running--;
+#ifdef CONFIG_INTELLI_PLUG
+	write_seqcount_end(&nr_stats->ave_seqcnt);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #endif
 }
 
@@ -1255,7 +1323,8 @@ extern void print_rt_stats(struct seq_file *m, int cpu);
 extern void init_cfs_rq(struct cfs_rq *cfs_rq);
 extern void init_rt_rq(struct rt_rq *rt_rq, struct rq *rq);
 
-extern void account_cfs_bandwidth_used(int enabled, int was_enabled);
+extern void cfs_bandwidth_usage_inc(void);
+extern void cfs_bandwidth_usage_dec(void);
 
 #ifdef CONFIG_NO_HZ
 enum rq_nohz_flag_bits {

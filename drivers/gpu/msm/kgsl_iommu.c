@@ -645,6 +645,12 @@ static int kgsl_iommu_pt_equal(struct kgsl_mmu *mmu,
 
 	if (iommu_pt == NULL)
 		return 0;
+<<<<<<< HEAD
+=======
+
+	domain_ptbase = iommu_get_pt_base_addr(iommu_pt->domain)
+			& KGSL_IOMMU_CTX_TTBR0_ADDR_MASK;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	domain_ptbase = iommu_get_pt_base_addr(iommu_pt->domain)
 			& KGSL_IOMMU_CTX_TTBR0_ADDR_MASK;
@@ -1828,10 +1834,13 @@ kgsl_iommu_map(struct kgsl_pagetable *pt,
 			unsigned int protflags,
 			unsigned int *tlb_flags)
 {
-	int ret;
+	int ret, lock_taken = 0;
 	unsigned int iommu_virt_addr;
 	struct kgsl_iommu_pt *iommu_pt = pt->priv;
 	int size = memdesc->size;
+	struct kgsl_device *device = pt->mmu->device;
+	struct kgsl_iommu *iommu = pt->mmu->priv;
+
 
 	BUG_ON(NULL == iommu_pt);
 
@@ -1861,6 +1870,7 @@ kgsl_iommu_map(struct kgsl_pagetable *pt,
 	}
 
 	/*
+<<<<<<< HEAD
 	 *  IOMMU V1 BFBs pre-fetch data beyond what is being used by the core.
 	 *  This can include both allocated pages and un-allocated pages.
 	 *  If an un-allocated page is cached, and later used (if it has been
@@ -1875,6 +1885,30 @@ kgsl_iommu_map(struct kgsl_pagetable *pt,
 	 */
 	if (!msm_soc_version_supports_iommu_v0())
 		kgsl_iommu_flush_tlb_pt_current(pt);
+=======
+	 * Check to see if the current thread already holds the device mutex.
+	 * If it does not, then take the device mutex which is required for
+	 * flushing the tlb
+	 */
+	if (!mutex_is_locked(&device->mutex) ||
+		device->mutex.owner != current) {
+		mutex_lock(&device->mutex);
+		lock_taken = 1;
+	}
+
+	/*
+	 * Flush the tlb only if the iommu device is attached and the pagetable
+	 * hasn't been switched yet
+	 */
+	if (kgsl_mmu_is_perprocess(pt->mmu) &&
+		iommu->iommu_units[0].dev[KGSL_IOMMU_CONTEXT_USER].attached &&
+		kgsl_iommu_pt_equal(pt->mmu, pt,
+		kgsl_iommu_get_current_ptbase(pt->mmu)))
+		kgsl_iommu_default_setstate(pt->mmu, KGSL_MMUFLAGS_TLBFLUSH);
+
+	if (lock_taken)
+		mutex_unlock(&device->mutex);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return ret;
 }

@@ -716,19 +716,33 @@ int msm_post_event(struct v4l2_event *event, int timeout)
 		return rc;
 	}
 
+<<<<<<< HEAD
 	/* should wait on session based condition */
 	rc = wait_for_completion_timeout(&cmd_ack->wait_complete,
 			msecs_to_jiffies(timeout));
+=======
+	rc = wait_event_timeout(cmd_ack->wait,
+		!list_empty_careful(&cmd_ack->command_q.list),
+		msecs_to_jiffies(timeout));
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (list_empty_careful(&cmd_ack->command_q.list)) {
 		if (!rc) {
 			pr_err("%s: Timed out for cmd = %d\n", __func__,
 				event_data->command);
+<<<<<<< HEAD
 			mutex_unlock(&session->lock);
 			return -ETIMEDOUT;
 		} else {
 			pr_err("%s: Error: No timeout but list empty!",
 					__func__);
+=======
+			rc = -ETIMEDOUT;
+		}
+		if (rc < 0) {
+			pr_err("%s: Failed for cmd = %d, rc = %d\n", __func__,
+				event_data->command, rc);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			mutex_unlock(&session->lock);
 			return -EINVAL;
 		}

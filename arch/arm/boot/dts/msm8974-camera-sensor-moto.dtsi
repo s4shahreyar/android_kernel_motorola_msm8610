@@ -78,6 +78,7 @@
 		qcom,flash-name = "lm3646";
 		qcom,flash-type = <1>;
 		qcom,gpio-no-mux = <0>;
+<<<<<<< HEAD
 		gpios = <&msmgpio 18 0>,
 		        <&msmgpio 46 0>;
 		qcom,gpio-flash-en = <0>;
@@ -88,6 +89,14 @@
 			                  "cam_led_torch";
 		qcom,cci-master = <1>;
 		flash-en-support = <1>;
+=======
+		gpios = <&msmgpio 18 0>;
+		qcom,gpio-flash-en = <0>;
+		qcom,gpio-req-tbl-num = <0>;
+		qcom,gpio-req-tbl-flags = <0>;
+		qcom,gpio-req-tbl-label = "FLASH_EN";
+		qcom,cci-master = <1>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		flash-now-support = <0>;
 	};
 

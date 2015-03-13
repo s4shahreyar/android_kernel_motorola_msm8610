@@ -91,7 +91,11 @@ static inline bool has_enough_invalid_blocks(struct f2fs_sb_info *sbi)
 	block_t invalid_user_blocks = sbi->user_block_count -
 					written_block_count(sbi);
 	/*
+<<<<<<< HEAD
 	 * Background GC is triggered with the following conditions.
+=======
+	 * Background GC is triggered with the following condition.
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	 * 1. There are a number of invalid blocks.
 	 * 2. There is not enough free space.
 	 */

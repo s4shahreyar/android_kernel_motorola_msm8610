@@ -106,6 +106,12 @@
 	usb@f9a55000 {
 		qcom,hsusb-otg-phy-init-seq =
 			<0x44 0x80 0x33 0x81 0x24 0x82 0x13 0x83 0xffffffff>;
+<<<<<<< HEAD
+=======
+		otg,id_flt_gpio = <&msmgpio 75 0x0>;
+		id_flt_active_high = <1>;
+		id_gnd_active_high = <1>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	};
 
 	gen-vkeys {
@@ -123,6 +129,27 @@
 		compatible = "gpio-keys";
 		input-name = "gpio-keys";
 
+<<<<<<< HEAD
+=======
+		camera_snapshot {
+			label = "camera_snapshot";
+			gpios = <&msmgpio 73 0x1>;
+			linux,input-type = <1>;
+			linux,code = <0x2fe>;
+			gpio-key,wakeup;
+			debounce-interval = <15>;
+		};
+
+		camera_focus {
+			label = "camera_focus";
+			gpios = <&msmgpio 74 0x1>;
+			linux,input-type = <1>;
+			linux,code = <0x210>;
+			gpio-key,wakeup;
+			debounce-interval = <15>;
+		};
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		vol_up {
 			label = "volume_up";
 			gpios = <&msmgpio 72 0x1>;
@@ -563,7 +590,10 @@
 	qcom,clk-rates = <400000 25000000 50000000 100000000 200000000>;
 	qcom,bus-speed-mode = "HS200_1p8v", "DDR_1p8v";
 	qcom,nonremovable;
+<<<<<<< HEAD
 	qcom,emmc;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	status = "ok";
 };
@@ -629,7 +659,10 @@
 	qcom,batt-cold-percentage = <80>;
 	qcom,step-charge-voltage = <4200>;
 	qcom,step-charge-current = <1250>;
+<<<<<<< HEAD
 	qcom,float-charge-timer = <1800>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	qcom,chgr@1000 {
 		status = "ok";

@@ -171,8 +171,11 @@
 /* misc define */
 #define MIN_ALS_POLL_DELAY_NS		110000000
 
+<<<<<<< HEAD
 #define STK_ALS_CORRECT_FACTOR		1300
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define STK2213_PID			0x23
 #define STK2213I_PID			0x22
 #define STK3010_PID			0x33
@@ -258,8 +261,11 @@ struct stk3x1x_data {
 	uint16_t noise_floor;
 	uint16_t max_noise_floor;
 	enum prox_state prox_mode;
+<<<<<<< HEAD
 	bool suspended;
 	bool delayed_work;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 static int32_t stk3x1x_enable_ps(struct stk3x1x_data *ps_data,
@@ -275,8 +281,11 @@ static int32_t stk3x1x_set_als_thd_l(struct stk3x1x_data *ps_data,
 static int32_t stk3x1x_set_als_thd_h(struct stk3x1x_data *ps_data,
 	uint16_t thd_h);
 static int32_t stk3x1x_get_ir_reading(struct stk3x1x_data *ps_data);
+<<<<<<< HEAD
 static void stk3x1x_set_wait_reg(struct stk3x1x_data *ps_data,
 	uint8_t wait_reg);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 
 static int stk3x1x_i2c_read_data(struct i2c_client *client,
@@ -697,6 +706,7 @@ static int32_t stk3x1x_get_flag(struct stk3x1x_data *ps_data)
 	return stk3x1x_i2c_smbus_read_byte_data(ps_data->client, STK_FLAG_REG);
 }
 
+<<<<<<< HEAD
 static void stk3x1x_set_wait_reg(struct stk3x1x_data *ps_data, uint8_t wait_reg)
 {
 	int32_t ret;
@@ -709,6 +719,8 @@ static void stk3x1x_set_wait_reg(struct stk3x1x_data *ps_data, uint8_t wait_reg)
 	}
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int32_t stk3x1x_enable_ps(struct stk3x1x_data *ps_data, uint8_t enable)
 {
 	int32_t ret;
@@ -731,6 +743,7 @@ static int32_t stk3x1x_enable_ps(struct stk3x1x_data *ps_data, uint8_t enable)
 		| STK_STATE_EN_AK_MASK);
 	if (enable) {
 		w_state_reg |= STK_STATE_EN_PS_MASK;
+<<<<<<< HEAD
 		if (!(ps_data->als_enabled)) {
 			w_state_reg |= STK_STATE_EN_WAIT_MASK;
 			stk3x1x_set_wait_reg(ps_data, ps_data->wait_reg & 0x0F);
@@ -740,6 +753,10 @@ static int32_t stk3x1x_enable_ps(struct stk3x1x_data *ps_data, uint8_t enable)
 			w_state_reg |= STK_STATE_EN_WAIT_MASK;
 			stk3x1x_set_wait_reg(ps_data, ps_data->wait_reg);
 		}
+=======
+		if(!(ps_data->als_enabled))
+			w_state_reg |= STK_STATE_EN_WAIT_MASK;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 	ret = stk3x1x_i2c_smbus_write_byte_data(ps_data->client, STK_STATE_REG,
 		w_state_reg);
@@ -810,6 +827,7 @@ static int32_t stk3x1x_enable_als(struct stk3x1x_data *ps_data, uint8_t enable)
 	}
 	w_state_reg = (uint8_t)(ret & (~(STK_STATE_EN_ALS_MASK
 		| STK_STATE_EN_WAIT_MASK)));
+<<<<<<< HEAD
 	if (enable) {
 		w_state_reg |= STK_STATE_EN_ALS_MASK;
 		if (!(ps_data->ps_enabled)) {
@@ -823,6 +841,14 @@ static int32_t stk3x1x_enable_als(struct stk3x1x_data *ps_data, uint8_t enable)
 		}
 	}
 
+=======
+	if(enable)	
+		w_state_reg |= STK_STATE_EN_ALS_MASK;	
+	else if (ps_data->ps_enabled)		
+		w_state_reg |= STK_STATE_EN_WAIT_MASK;	
+
+	
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	ret = stk3x1x_i2c_smbus_write_byte_data(ps_data->client, STK_STATE_REG,
 		w_state_reg);
 	if (ret < 0) {
@@ -1663,8 +1689,12 @@ static void stk_work_func(struct work_struct *work)
 					ps_data->als_correct_factor =
 						STK_IRC_ALS_CORREC;
 				else
+<<<<<<< HEAD
 					ps_data->als_correct_factor =
 						STK_ALS_CORRECT_FACTOR;
+=======
+					ps_data->als_correct_factor = 1000;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			}
 			dev_dbg(&ps_data->client->dev,
 				"%s: als=%d, ir=%d, als_correct_factor=%d",
@@ -1772,10 +1802,14 @@ static irqreturn_t stk_oss_irq_handler(int irq, void *data)
 {
 	struct stk3x1x_data *pData = data;
 	disable_irq_nosync(irq);
+<<<<<<< HEAD
 	if (pData->suspended)
 		pData->delayed_work = true;
 	else
 		queue_work(pData->stk_wq, &pData->stk_work);
+=======
+	queue_work(pData->stk_wq,&pData->stk_work);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return IRQ_HANDLED;
 }
 
@@ -1799,11 +1833,17 @@ static int32_t stk3x1x_init_all_setting(struct i2c_client *client,
 	ret = stk3x1x_init_all_reg(ps_data, plat_data);
 	if(ret < 0)
 		return ret;	
+<<<<<<< HEAD
 	ps_data->suspended = false;
 	ps_data->delayed_work = false;
 	ps_data->re_enable_als = false;
 	ps_data->ir_code = 0;
 	ps_data->als_correct_factor = STK_ALS_CORRECT_FACTOR;
+=======
+	ps_data->re_enable_als = false;
+	ps_data->ir_code = 0;
+	ps_data->als_correct_factor = 1000;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #ifdef STK_ALS_FIR
 	memset(&ps_data->fir, 0x00, sizeof(ps_data->fir));  
 #endif
@@ -1870,12 +1910,21 @@ static int stk3x1x_suspend(struct device *dev)
 
 	dev_dbg(&ps_data->client->dev,
 		"%s: suspend\n", __func__);
+<<<<<<< HEAD
 	mutex_lock(&ps_data->io_lock);  		
 	ps_data->suspended = true;
+=======
+#ifndef SPREADTRUM_PLATFORM	
+	mutex_lock(&ps_data->io_lock);  		
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (ps_data->als_enabled) {
 		stk3x1x_enable_als(ps_data, 0);		
 		ps_data->re_enable_als = true;
 	}  	
+<<<<<<< HEAD
+=======
+#endif	
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (ps_data->ps_enabled) {
 		if (device_may_wakeup(&client->dev)) {
 			err = enable_irq_wake(ps_data->irq);	
@@ -1889,7 +1938,13 @@ static int stk3x1x_suspend(struct device *dev)
 				"%s: not support wakeup source", __func__);
 		}		
 	}
+<<<<<<< HEAD
 	mutex_unlock(&ps_data->io_lock);		
+=======
+#ifndef SPREADTRUM_PLATFORM		
+	mutex_unlock(&ps_data->io_lock);		
+#endif	
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;	
 }
 
@@ -1901,11 +1956,19 @@ static int stk3x1x_resume(struct device *dev)
 	
 	dev_dbg(&ps_data->client->dev,
 		"%s: resume\n", __func__);
+<<<<<<< HEAD
+=======
+#ifndef SPREADTRUM_PLATFORM		
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mutex_lock(&ps_data->io_lock); 		
 	if (ps_data->re_enable_als) {
 		stk3x1x_enable_als(ps_data, 1);		
 		ps_data->re_enable_als = false;		
 	}
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (ps_data->ps_enabled) {
 		if (device_may_wakeup(&client->dev)) {
 			err = disable_irq_wake(ps_data->irq);	
@@ -1916,12 +1979,18 @@ static int stk3x1x_resume(struct device *dev)
 					__func__, ps_data->irq, err);
 		}		
 	}
+<<<<<<< HEAD
 	if (ps_data->delayed_work == true) {
 		queue_work(ps_data->stk_wq, &ps_data->stk_work);
 		ps_data->delayed_work = false;
 	}
 	ps_data->suspended = false;
 	mutex_unlock(&ps_data->io_lock);
+=======
+#ifndef SPREADTRUM_PLATFORM			
+	mutex_unlock(&ps_data->io_lock);
+#endif	
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;	
 }
 

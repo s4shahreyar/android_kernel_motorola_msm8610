@@ -50,6 +50,10 @@ irqreturn_t stm401_wake_isr(int irq, void *dev)
 	struct stm401_data *ps_stm401 = dev;
 
 	if (stm401_irq_disable) {
+<<<<<<< HEAD
+=======
+		disable_irq_wake(ps_stm401->irq);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		return IRQ_HANDLED;
 	}
 
@@ -71,6 +75,7 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 	dev_dbg(&ps_stm401->client->dev, "stm401_irq_wake_work_func\n");
 	mutex_lock(&ps_stm401->lock);
 
+<<<<<<< HEAD
 	if (ps_stm401->mode == BOOTMODE)
 		goto EXIT_NO_WAKE;
 
@@ -88,6 +93,8 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 
 	stm401_wake(ps_stm401);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* read interrupt mask register */
 	stm401_cmdbuff[0] = WAKESENSOR_STATUS;
 	err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 2);
@@ -118,11 +125,14 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 	}
 	irq3_status = stm401_readbuff[0];
 
+<<<<<<< HEAD
 	if (ps_stm401->qw_irq_status) {
 		irq_status |= ps_stm401->qw_irq_status;
 		ps_stm401->qw_irq_status = 0;
 	}
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* First, check for error messages */
 	if (irq_status & M_LOG_MSG) {
 		stm401_cmdbuff[0] = ERROR_STATUS;
@@ -161,11 +171,14 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 	/* Check all other status bits */
 	if (irq_status & M_DOCK) {
 		int state;
+<<<<<<< HEAD
 
 		dev_err(&ps_stm401->client->dev,
 			"Invalid M_DOCK bit set. irq_status = 0x%06x\n",
 			irq_status);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		stm401_cmdbuff[0] = DOCK_DATA;
 		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 1);
 		if (err < 0) {
@@ -199,6 +212,7 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 			stm401_readbuff[PROX_DISTANCE]);
 	}
 	if (irq_status & M_TOUCH) {
+<<<<<<< HEAD
 		if (stm401_display_handle_touch_locked(ps_stm401) < 0)
 			goto EXIT;
 	}
@@ -225,6 +239,38 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 		if (stm401_display_handle_quickpeek_locked(ps_stm401,
 			irq_status == M_QUICKPEEK) < 0)
 			goto EXIT;
+=======
+		u8 aod_wake_up_reason;
+		stm401_cmdbuff[0] = STM401_STATUS_REG;
+		if (stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 2)
+			< 0) {
+			dev_err(&ps_stm401->client->dev,
+				"Get status reg failed\n");
+			goto EXIT;
+		}
+		aod_wake_up_reason = (stm401_readbuff[TOUCH_REASON] >> 4) & 0xf;
+		if (aod_wake_up_reason == AOD_WAKEUP_REASON_ESD) {
+			char *envp[2];
+			envp[0] = "STM401WAKE=ESD";
+			envp[1] = NULL;
+			if (kobject_uevent_env(&ps_stm401->client->dev.kobj,
+				KOBJ_CHANGE, envp)) {
+				dev_err(&ps_stm401->client->dev,
+					"Failed to create uevent\n");
+				goto EXIT;
+			}
+			sysfs_notify(&ps_stm401->client->dev.kobj,
+				NULL, "stm401_esd");
+			dev_info(&ps_stm401->client->dev,
+				"Sent uevent, STM401 ESD wake\n");
+		} else {
+			input_report_key(ps_stm401->input_dev, KEY_POWER, 1);
+			input_report_key(ps_stm401->input_dev, KEY_POWER, 0);
+			input_sync(ps_stm401->input_dev);
+			dev_info(&ps_stm401->client->dev,
+				"Report pwrkey toggle, touch event wake\n");
+		}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 	if (irq_status & M_FLATUP) {
 		stm401_cmdbuff[0] = FLAT_DATA;
@@ -320,6 +366,7 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 		dev_dbg(&ps_stm401->client->dev, "Sending SIM Value=%d\n",
 					STM16_TO_HOST(SIM_DATA));
 	}
+<<<<<<< HEAD
 	if (irq_status & M_CHOPCHOP) {
 		stm401_cmdbuff[0] = CHOPCHOP;
 		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 2);
@@ -335,6 +382,8 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 		dev_dbg(&ps_stm401->client->dev, "ChopChop triggered. Gyro aborts=%d\n",
 				STM16_TO_HOST(CHOPCHOP_DATA));
 	}
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (irq2_status & M_MMOVEME) {
 		unsigned char status;
 		/* Client recieving action will be upper 2 most significant */
@@ -437,6 +486,7 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 			goto EXIT;
 	}
 	if (irq3_status & M_GENERIC_INTRPT) {
+<<<<<<< HEAD
 
 		dev_err(&ps_stm401->client->dev,
 			"Invalid M_GENERIC_INTRPT bit set. irq_status = 0x%06x\n",
@@ -452,5 +502,14 @@ void stm401_irq_wake_work_func(struct work_struct *work)
 EXIT:
 	stm401_sleep(ps_stm401);
 EXIT_NO_WAKE:
+=======
+		/* x (data1) : irq3_status */
+		stm401_ms_data_buffer_write(ps_stm401, DT_GENERIC_INT,
+			stm401_readbuff, 1);
+		dev_dbg(&ps_stm401->client->dev,
+			"Sending generic interrupt event:%d\n", irq3_status);
+	}
+EXIT:
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mutex_unlock(&ps_stm401->lock);
 }

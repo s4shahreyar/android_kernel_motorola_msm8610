@@ -64,8 +64,11 @@ static irqreturn_t mmc_cd_gpio_irqt(int irq, void *dev_id)
 				"HIGH" : "LOW");
 		cd->status = status;
 		host->card_bad = 0;
+<<<<<<< HEAD
 		host->requests = 0ULL;
 		host->request_errors = 0ULL;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 		/* Schedule a card detection after a debounce timeout */
 		mmc_detect_change(host, msecs_to_jiffies(100));

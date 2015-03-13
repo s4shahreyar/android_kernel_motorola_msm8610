@@ -58,5 +58,9 @@ obj-$(CONFIG_PHONE)		+= telephony/
 obj-$(CONFIG_RAMSTER)		+= ramster/
 obj-$(CONFIG_USB_WPAN_HCD)	+= ozwpan/
 
+<<<<<<< HEAD
 obj-$(CONFIG_PRIMA_WLAN)	+= prima/
 obj-$(CONFIG_PRONTO_WLAN)	+= prima/
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

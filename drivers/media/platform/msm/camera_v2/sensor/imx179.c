@@ -11,12 +11,16 @@
  *
  */
 #include "msm_sensor.h"
+<<<<<<< HEAD
 #include <linux/device.h>
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define IMX179_SENSOR_NAME "imx179"
 DEFINE_MSM_MUTEX(imx179_mut);
 
 static struct msm_sensor_ctrl_t imx179_s_ctrl;
 
+<<<<<<< HEAD
 #define IMX179_OTP_PAGE_SIZE 30
 #define IMX179_OTP_PAGE_ADDR 0x3404
 #define IMX179_OTP_NUM_PAGES 3
@@ -51,6 +55,8 @@ static int32_t imx179_otp_validate_crc(uint8_t *imx179_otp_data)
 	return crc_match;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct msm_sensor_power_setting imx179_power_setting[] = {
 	{
 		.seq_type = SENSOR_GPIO,
@@ -167,6 +173,7 @@ static int32_t imx179_platform_probe(struct platform_device *pdev)
 	int32_t rc = 0;
 	const struct of_device_id *match;
 	match = of_match_device(imx179_dt_match, &pdev->dev);
+<<<<<<< HEAD
 
 	imx179_s_ctrl.sensor_otp.otp_info = devm_kzalloc(&pdev->dev,
 		IMX179_OTP_PAGE_SIZE, GFP_KERNEL);
@@ -177,6 +184,8 @@ static int32_t imx179_platform_probe(struct platform_device *pdev)
 	}
 	imx179_s_ctrl.sensor_otp.size = IMX179_OTP_PAGE_SIZE;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	rc = msm_sensor_platform_probe(pdev, match->data);
 	return rc;
 }
@@ -201,6 +210,7 @@ static void __exit imx179_exit_module(void)
 	return;
 }
 
+<<<<<<< HEAD
 #ifdef DEBUG_OTP_RAW_DUMP
 static void imx179_otp_raw_dump(uint8_t *data)
 {
@@ -346,6 +356,8 @@ static struct msm_sensor_fn_t imx179_func_tbl = {
 	.sensor_match_id = imx179_sensor_match_id,
 };
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static struct msm_sensor_ctrl_t imx179_s_ctrl = {
 	.sensor_i2c_client = &imx179_sensor_i2c_client,
 	.power_setting_array.power_setting = imx179_power_setting,
@@ -353,7 +365,10 @@ static struct msm_sensor_ctrl_t imx179_s_ctrl = {
 	.msm_sensor_mutex = &imx179_mut,
 	.sensor_v4l2_subdev_info = imx179_subdev_info,
 	.sensor_v4l2_subdev_info_size = ARRAY_SIZE(imx179_subdev_info),
+<<<<<<< HEAD
 	.func_tbl = &imx179_func_tbl,
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 module_init(imx179_init_module);

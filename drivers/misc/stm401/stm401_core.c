@@ -33,6 +33,10 @@
 #include <linux/miscdevice.h>
 #include <linux/module.h>
 #include <linux/poll.h>
+<<<<<<< HEAD
+=======
+#include <linux/pm_runtime.h>
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #include <linux/regulator/consumer.h>
 #include <linux/slab.h>
 #include <linux/switch.h>
@@ -43,6 +47,12 @@
 
 #include <linux/stm401.h>
 
+<<<<<<< HEAD
+=======
+
+#define NAME			     "stm401"
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define I2C_RETRIES			5
 #define RESET_RETRIES			2
 #define STM401_DELAY_USEC		10
@@ -57,7 +67,11 @@ long stm401_time_delta;
 unsigned int stm401_irq_disable;
 module_param_named(irq_disable, stm401_irq_disable, uint, 0644);
 
+<<<<<<< HEAD
 unsigned short stm401_i2c_retry_delay = 13;
+=======
+unsigned short stm401_i2c_retry_delay = 10;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* Remember the sensor state */
 unsigned short stm401_g_acc_delay;
@@ -65,8 +79,11 @@ unsigned short stm401_g_mag_delay;
 unsigned short stm401_g_gyro_delay;
 unsigned short stm401_g_baro_delay;
 unsigned short stm401_g_step_counter_delay;
+<<<<<<< HEAD
 unsigned short stm401_g_ir_gesture_delay;
 unsigned short stm401_g_ir_raw_delay;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 unsigned long stm401_g_nonwake_sensor_state;
 unsigned short stm401_g_wake_sensor_state;
 unsigned short stm401_g_algo_state;
@@ -77,7 +94,10 @@ unsigned char stm401_g_mag_cal[STM401_MAG_CAL_SIZE];
 unsigned short stm401_g_control_reg_restore;
 unsigned char stm401_g_ir_config_reg[STM401_IR_CONFIG_REG_SIZE];
 bool stm401_g_ir_config_reg_restore;
+<<<<<<< HEAD
 bool stm401_g_booted;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* Store error message */
 unsigned char stat_string[ESR_SIZE+1];
@@ -85,7 +105,11 @@ unsigned char stat_string[ESR_SIZE+1];
 struct stm401_algo_requst_t stm401_g_algo_requst[STM401_NUM_ALGOS];
 
 unsigned char stm401_cmdbuff[512];
+<<<<<<< HEAD
 unsigned char stm401_readbuff[READ_CMDBUFF_SIZE];
+=======
+unsigned char stm401_readbuff[512];
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* per algo config, request, and event registers */
 const struct stm401_algo_info_t stm401_algo_info[STM401_NUM_ALGOS] = {
@@ -104,6 +128,7 @@ const struct stm401_algo_info_t stm401_algo_info[STM401_NUM_ALGOS] = {
 
 struct stm401_data *stm401_misc_data;
 
+<<<<<<< HEAD
 void stm401_wake(struct stm401_data *ps_stm401)
 {
 	if (ps_stm401 != NULL && ps_stm401->pdata != NULL) {
@@ -246,6 +271,8 @@ void stm401_detect_lowpower_mode(unsigned char *cmdbuff)
 	}
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 int stm401_i2c_write_read_no_reset(struct stm401_data *ps_stm401,
 			u8 *buf, int writelen, int readlen)
 {
@@ -267,9 +294,12 @@ int stm401_i2c_write_read_no_reset(struct stm401_data *ps_stm401,
 	if (buf == NULL || writelen == 0 || readlen == 0)
 		return -EFAULT;
 
+<<<<<<< HEAD
 	if (ps_stm401->mode == BOOTMODE)
 		return -EFAULT;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	tries = 0;
 	do {
 		err = i2c_transfer(ps_stm401->client->adapter, msgs, 2);
@@ -279,12 +309,22 @@ int stm401_i2c_write_read_no_reset(struct stm401_data *ps_stm401,
 	if (err != 2) {
 		dev_err(&ps_stm401->client->dev, "Read transfer error\n");
 		err = -EIO;
+<<<<<<< HEAD
+=======
+		ps_stm401->stm401_i2c_fail_count++;
+		if (ps_stm401->stm401_i2c_fail_count > STM401_I2C_FAIL_LIMIT)
+			ps_stm401->stm401_hub_fail = 1;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	} else {
 		err = 0;
 		dev_dbg(&ps_stm401->client->dev, "Read from STM401: ");
 		for (tries = 0; tries < readlen; tries++)
 			dev_dbg(&ps_stm401->client->dev, "%02x",
 				stm401_readbuff[tries]);
+<<<<<<< HEAD
+=======
+		ps_stm401->stm401_i2c_fail_count = 0;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	return err;
@@ -297,10 +337,13 @@ int stm401_i2c_read_no_reset(struct stm401_data *ps_stm401,
 
 	if (buf == NULL || len == 0)
 		return -EFAULT;
+<<<<<<< HEAD
 
 	if (ps_stm401->mode == BOOTMODE)
 		return -EFAULT;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	tries = 0;
 	do {
 		err = i2c_master_recv(ps_stm401->client, buf, len);
@@ -310,10 +353,20 @@ int stm401_i2c_read_no_reset(struct stm401_data *ps_stm401,
 	if (err < 0) {
 		dev_err(&ps_stm401->client->dev, "i2c read transfer error\n");
 		err = -EIO;
+<<<<<<< HEAD
+=======
+		ps_stm401->stm401_i2c_fail_count++;
+		if (ps_stm401->stm401_i2c_fail_count > STM401_I2C_FAIL_LIMIT)
+			ps_stm401->stm401_hub_fail = 1;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	} else {
 		dev_dbg(&ps_stm401->client->dev, "i2c read was successsful:\n");
 		for (tries = 0; tries < err ; tries++)
 			dev_dbg(&ps_stm401->client->dev, "%02x", buf[tries]);
+<<<<<<< HEAD
+=======
+		ps_stm401->stm401_i2c_fail_count = 0;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	return err;
@@ -325,9 +378,12 @@ int stm401_i2c_write_no_reset(struct stm401_data *ps_stm401,
 	int err = 0;
 	int tries = 0;
 
+<<<<<<< HEAD
 	if (ps_stm401->mode == BOOTMODE)
 		return -EFAULT;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	do {
 		err = i2c_master_send(ps_stm401->client, buf, len);
 		if (err < 0)
@@ -335,13 +391,25 @@ int stm401_i2c_write_no_reset(struct stm401_data *ps_stm401,
 	} while ((err < 0) && (++tries < I2C_RETRIES));
 
 	if (err < 0) {
+<<<<<<< HEAD
 		dev_err(&ps_stm401->client->dev,
 			"i2c write error - 0x%x - 0x%x\n", buf[0], -err);
 		err = -EIO;
+=======
+		dev_err(&ps_stm401->client->dev, "i2c write error\n");
+		err = -EIO;
+		ps_stm401->stm401_i2c_fail_count++;
+		if (ps_stm401->stm401_i2c_fail_count > STM401_I2C_FAIL_LIMIT)
+			ps_stm401->stm401_hub_fail = 1;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	} else {
 		dev_dbg(&ps_stm401->client->dev,
 			"i2c write successful\n");
 		err = 0;
+<<<<<<< HEAD
+=======
+		ps_stm401->stm401_i2c_fail_count = 0;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 
 	return err;
@@ -393,9 +461,12 @@ int stm401_i2c_write_read(struct stm401_data *ps_stm401, u8 *buf,
 {
 	int tries, err = 0;
 
+<<<<<<< HEAD
 	if (ps_stm401->mode == BOOTMODE)
 		return -EFAULT;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (buf == NULL || writelen == 0 || readlen == 0)
 		return -EFAULT;
 
@@ -423,10 +494,13 @@ int stm401_i2c_read(struct stm401_data *ps_stm401, u8 *buf, int len)
 
 	if (buf == NULL || len == 0)
 		return -EFAULT;
+<<<<<<< HEAD
 
 	if (ps_stm401->mode == BOOTMODE)
 		return -EFAULT;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	tries = 0;
 	do {
 		err = stm401_i2c_read_no_reset(ps_stm401, buf, len);
@@ -447,9 +521,12 @@ int stm401_i2c_write(struct stm401_data *ps_stm401, u8 *buf, int len)
 	int err = 0;
 	int tries = 0;
 
+<<<<<<< HEAD
 	if (ps_stm401->mode == BOOTMODE)
 		return -EFAULT;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	tries = 0;
 	do {
 		err = stm401_i2c_write_no_reset(ps_stm401, buf, len);
@@ -529,6 +606,7 @@ stm401_of_init(struct i2c_client *client)
 	pdata->gpio_reset = of_get_gpio(np, 1);
 	pdata->gpio_bslen = of_get_gpio(np, 2);
 	pdata->gpio_wakeirq = of_get_gpio(np, 3);
+<<<<<<< HEAD
 	if (of_gpio_count(np) >= 6) {
 		pdata->gpio_sh_wake = of_get_gpio(np, 4);
 		pdata->gpio_sh_wake_resp = of_get_gpio(np, 5);
@@ -540,6 +618,12 @@ stm401_of_init(struct i2c_client *client)
 	}
 	stm401_misc_data->sh_wakeup_count = 0;
 
+=======
+#if 0
+	pdata->gpio_mipi_req = of_get_gpio(np, 4);
+	pdata->gpio_mipi_busy = of_get_gpio(np, 5);
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (of_get_property(np, "lux_table", &len) == NULL) {
 		dev_err(&stm401_misc_data->client->dev,
 			"lux_table len access failure\n");
@@ -675,6 +759,7 @@ static int stm401_gpio_init(struct stm401_platform_data *pdata,
 		goto free_bslen;
 	}
 
+<<<<<<< HEAD
 	if ((pdata->gpio_sh_wake >= 0) && (pdata->gpio_sh_wake_resp >= 0)) {
 		/* pin to pull the stm chip out of lowpower mode */
 		err = gpio_request(pdata->gpio_sh_wake, "stm401 sh_wake");
@@ -759,6 +844,85 @@ free_sh_wake_resp:
 free_wake_sh:
 	if (pdata->gpio_sh_wake >= 0)
 		gpio_free(pdata->gpio_sh_wake);
+=======
+	if (gpio_is_valid(pdata->gpio_wakeirq)) {
+		err = gpio_request(pdata->gpio_wakeirq, "stm401 wakeirq");
+		if (err) {
+			dev_err(&stm401_misc_data->client->dev,
+				"wakeirq gpio_request failed: %d\n", err);
+			goto free_bslen;
+		}
+		gpio_direction_input(pdata->gpio_wakeirq);
+		err = gpio_export(pdata->gpio_wakeirq, 0);
+		if (err) {
+			dev_err(&stm401_misc_data->client->dev,
+				"wakeirq gpio_export failed: %d\n", err);
+			goto free_wakeirq;
+		}
+
+		err = gpio_export_link(&pdev->dev, "wakeirq",
+						pdata->gpio_wakeirq);
+		if (err) {
+			dev_err(&stm401_misc_data->client->dev,
+				"wakeirq link failed: %d\n", err);
+			goto free_wakeirq;
+		}
+	} else {
+		pr_warn("%s: gpio wake irq not specified\n", __func__);
+	}
+
+#if 0
+	if (gpio_is_valid(pdata->gpio_mipi_req)) {
+		err = gpio_request(pdata->gpio_mipi_req, "mipi_d0_req");
+		if (err) {
+			dev_err(&stm401_misc_data->client->dev,
+				"mipi_req_gpio gpio_request failed: %d\n", err);
+			goto free_wakeirq;
+		}
+		gpio_direction_output(pdata->gpio_mipi_req, 0);
+		err = gpio_export(pdata->gpio_mipi_req, 0);
+		if (err) {
+			dev_err(&stm401_misc_data->client->dev,
+				"mipi_req_gpio gpio_export failed: %d\n", err);
+			goto free_mipi_req;
+		}
+		stm401_misc_data->ap_stm401_handoff_ctrl = true;
+	} else {
+		stm401_misc_data->ap_stm401_handoff_ctrl = false;
+		pr_warn("%s: gpio mipi req not specified\n", __func__);
+	}
+
+	if (gpio_is_valid(pdata->gpio_mipi_busy)) {
+		err = gpio_request(pdata->gpio_mipi_busy, "mipi_d0_busy");
+		if (err) {
+			dev_err(&stm401_misc_data->client->dev,
+				"mipi_d0_busy gpio_request failed: %d\n", err);
+			goto free_mipi_req;
+		}
+		gpio_direction_input(pdata->gpio_mipi_busy);
+		err = gpio_export(pdata->gpio_mipi_busy, 0);
+		if (err) {
+			dev_err(&stm401_misc_data->client->dev,
+				"mipi_d0_busy gpio_export failed: %d\n", err);
+			goto free_mipi_busy;
+		}
+	} else {
+		stm401_misc_data->ap_stm401_handoff_ctrl = false;
+		pr_warn("%s: gpio mipi busy not specified\n", __func__);
+	}
+#endif
+
+	return 0;
+
+#if 0
+free_mipi_busy:
+	gpio_free(pdata->gpio_mipi_busy);
+free_mipi_req:
+	gpio_free(pdata->gpio_mipi_req);
+#endif
+free_wakeirq:
+	gpio_free(pdata->gpio_wakeirq);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 free_bslen:
 	gpio_free(pdata->gpio_bslen);
 free_reset:
@@ -774,6 +938,7 @@ static void stm401_gpio_free(struct stm401_platform_data *pdata)
 	gpio_free(pdata->gpio_reset);
 	gpio_free(pdata->gpio_bslen);
 	gpio_free(pdata->gpio_wakeirq);
+<<<<<<< HEAD
 	if (pdata->gpio_sh_wake >= 0)
 		gpio_free(pdata->gpio_sh_wake);
 	if (pdata->gpio_sh_wake_resp >= 0)
@@ -861,6 +1026,12 @@ void clear_interrupt_status_work_func(struct work_struct *work)
 	stm401_sleep(ps_stm401);
 EXIT:
 	mutex_unlock(&ps_stm401->lock);
+=======
+#if 0
+	gpio_free(pdata->gpio_mipi_req);
+	gpio_free(pdata->gpio_mipi_busy);
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static int stm401_probe(struct i2c_client *client,
@@ -932,6 +1103,7 @@ static int stm401_probe(struct i2c_client *client,
 	}
 
 	mutex_init(&ps_stm401->lock);
+<<<<<<< HEAD
 	mutex_init(&ps_stm401->sh_wakeup_lock);
 
 	mutex_lock(&ps_stm401->lock);
@@ -940,6 +1112,12 @@ static int stm401_probe(struct i2c_client *client,
 		"stm401_reset");
 
 	mutex_init(&ps_stm401->aod_enabled.vote_lock);
+=======
+	mutex_lock(&ps_stm401->lock);
+	wake_lock_init(&ps_stm401->wakelock, WAKE_LOCK_SUSPEND, "stm401");
+
+	ps_stm401->ap_stm401_handoff_enable = false;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	/* Set to passive mode by default */
 	stm401_g_nonwake_sensor_state = 0;
@@ -949,8 +1127,11 @@ static int stm401_probe(struct i2c_client *client,
 
 	INIT_WORK(&ps_stm401->irq_work, stm401_irq_work_func);
 	INIT_WORK(&ps_stm401->irq_wake_work, stm401_irq_wake_work_func);
+<<<<<<< HEAD
 	INIT_WORK(&ps_stm401->clear_interrupt_status_work,
 		clear_interrupt_status_work_func);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	ps_stm401->irq_work_queue = create_singlethread_workqueue("stm401_wq");
 	if (!ps_stm401->irq_work_queue) {
@@ -1078,7 +1259,10 @@ static int stm401_probe(struct i2c_client *client,
 	input_set_drvdata(ps_stm401->input_dev, ps_stm401);
 	input_set_capability(ps_stm401->input_dev, EV_KEY, KEY_POWER);
 	input_set_capability(ps_stm401->input_dev, EV_KEY, KEY_CAMERA);
+<<<<<<< HEAD
 	input_set_capability(ps_stm401->input_dev, EV_SW, SW_LID);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	ps_stm401->input_dev->name = "sensorprocessor";
 
 	err = input_register_device(ps_stm401->input_dev);
@@ -1089,6 +1273,7 @@ static int stm401_probe(struct i2c_client *client,
 		goto err9;
 	}
 
+<<<<<<< HEAD
 #if defined(CONFIG_FB)
 	ps_stm401->fb_notif.notifier_call = stm401_fb_notifier_callback;
 	err = fb_register_client(&ps_stm401->fb_notif);
@@ -1123,6 +1308,9 @@ static int stm401_probe(struct i2c_client *client,
 	stm401_quickwakeup_init(ps_stm401);
 
 	ps_stm401->is_suspended = false;
+=======
+	pm_runtime_enable(&client->dev);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	switch_stm401_mode(NORMALMODE);
 
@@ -1132,12 +1320,15 @@ static int stm401_probe(struct i2c_client *client,
 
 	return 0;
 
+<<<<<<< HEAD
 err11:
 #if defined(CONFIG_FB)
 	fb_unregister_client(&ps_stm401->fb_notif);
 err10:
 #endif
 	input_unregister_device(ps_stm401->input_dev);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 err9:
 	input_free_device(ps_stm401->input_dev);
 err8:
@@ -1156,8 +1347,11 @@ err1:
 	mutex_destroy(&ps_stm401->lock);
 	wake_unlock(&ps_stm401->wakelock);
 	wake_lock_destroy(&ps_stm401->wakelock);
+<<<<<<< HEAD
 	wake_unlock(&ps_stm401->reset_wakelock);
 	wake_lock_destroy(&ps_stm401->reset_wakelock);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	stm401_gpio_free(pdata);
 err_gpio_init:
 	regulator_disable(ps_stm401->regulator_2);
@@ -1190,14 +1384,18 @@ static int stm401_remove(struct i2c_client *client)
 	mutex_destroy(&ps_stm401->lock);
 	wake_unlock(&ps_stm401->wakelock);
 	wake_lock_destroy(&ps_stm401->wakelock);
+<<<<<<< HEAD
 	wake_unlock(&ps_stm401->reset_wakelock);
 	wake_lock_destroy(&ps_stm401->reset_wakelock);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	disable_irq_wake(ps_stm401->irq);
 
 	regulator_disable(ps_stm401->regulator_2);
 	regulator_disable(ps_stm401->regulator_1);
 	regulator_put(ps_stm401->regulator_2);
 	regulator_put(ps_stm401->regulator_1);
+<<<<<<< HEAD
 
 	destroy_workqueue(ps_stm401->quickpeek_work_queue);
 	wake_unlock(&ps_stm401->quickpeek_wakelock);
@@ -1205,11 +1403,14 @@ static int stm401_remove(struct i2c_client *client)
 #if defined(CONFIG_FB)
 	fb_unregister_client(&ps_stm401->fb_notif);
 #endif
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	kfree(ps_stm401);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static void stm401_process_ignored_interrupts_locked(
 						struct stm401_data *ps_stm401)
 {
@@ -1331,6 +1532,111 @@ static const struct dev_pm_ops stm401_pm_ops = {
 	.suspend_late = stm401_suspend_late,
 	.suspend_noirq = stm401_suspend_noirq,
 	.resume_early = stm401_resume_early,
+=======
+static int stm401_resume(struct device *dev)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+	struct stm401_data *ps_stm401 = i2c_get_clientdata(client);
+	int count = 0, level = 0;
+	int stm401_req = ps_stm401->pdata->gpio_mipi_req;
+	int stm401_busy = ps_stm401->pdata->gpio_mipi_busy;
+	dev_dbg(&stm401_misc_data->client->dev, "stm401_resume\n");
+	mutex_lock(&ps_stm401->lock);
+
+	ps_stm401->is_suspended = false;
+
+	if ((ps_stm401->ap_stm401_handoff_enable)
+		&& (ps_stm401->ap_stm401_handoff_ctrl)) {
+		gpio_set_value(stm401_req, 0);
+		dev_dbg(&ps_stm401->client->dev, "STM401 REQ is set %d\n",
+			 gpio_get_value(stm401_req));
+	}
+
+	/* read interrupt mask register to clear
+		any interrupt during suspend state */
+	stm401_cmdbuff[0] = INTERRUPT_STATUS;
+	stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 2);
+
+	if ((ps_stm401->ap_stm401_handoff_enable)
+		&& (ps_stm401->ap_stm401_handoff_ctrl)) {
+		do {
+			usleep_range(STM401_BUSY_SLEEP_USEC,
+					 STM401_BUSY_SLEEP_USEC);
+			level = gpio_get_value(stm401_busy);
+			count++;
+		} while ((level) && (count < STM401_BUSY_RESUME_COUNT));
+
+		if (count == STM401_BUSY_RESUME_COUNT)
+			dev_err(&ps_stm401->client->dev,
+				"timedout while waiting for STM401 BUSY LOW\n");
+	}
+	ps_stm401->ap_stm401_handoff_enable = false;
+
+	mutex_unlock(&ps_stm401->lock);
+	return 0;
+}
+
+static int stm401_suspend(struct device *dev)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+	struct stm401_data *ps_stm401 = i2c_get_clientdata(client);
+	int count = 0, level = 0;
+	int stm401_req = ps_stm401->pdata->gpio_mipi_req;
+	int stm401_busy = ps_stm401->pdata->gpio_mipi_busy;
+
+	dev_dbg(&ps_stm401->client->dev, "stm401_suspend\n");
+	mutex_lock(&ps_stm401->lock);
+
+	ps_stm401->is_suspended = true;
+
+	if ((ps_stm401->ap_stm401_handoff_enable)
+		 && (ps_stm401->ap_stm401_handoff_ctrl)) {
+
+		gpio_set_value(stm401_req, 1);
+		dev_dbg(&ps_stm401->client->dev, "STM401 REQ is set %d\n",
+			 gpio_get_value(stm401_req));
+
+		do {
+			usleep_range(STM401_BUSY_SLEEP_USEC,
+				STM401_BUSY_SLEEP_USEC);
+			level = gpio_get_value(stm401_busy);
+			count++;
+		} while ((!level) && (count < STM401_BUSY_SUSPEND_COUNT));
+
+		if (count == STM401_BUSY_SUSPEND_COUNT)
+			dev_err(&ps_stm401->client->dev,
+				"timedout while waiting for STM401 BUSY HIGH\n");
+	}
+
+	mutex_unlock(&ps_stm401->lock);
+	return 0;
+}
+
+#ifdef CONFIG_PM_RUNTIME
+static int stm401_runtime_resume(struct device *dev)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+	struct stm401_data *ps_stm401 = i2c_get_clientdata(client);
+	dev_err(&ps_stm401->client->dev, "stm401_runtime_resume\n");
+	return stm401_resume(dev);
+}
+
+static int stm401_runtime_suspend(struct device *dev)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+	struct stm401_data *ps_stm401 = i2c_get_clientdata(client);
+	dev_err(&ps_stm401->client->dev, "stm401_runtime_suspend\n");
+	return stm401_suspend(dev);
+}
+#endif
+
+static const struct dev_pm_ops stm401_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(stm401_suspend,
+						stm401_resume)
+	SET_RUNTIME_PM_OPS(stm401_runtime_suspend,
+						stm401_runtime_resume,
+						NULL)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 static const struct i2c_device_id stm401_id[] = {

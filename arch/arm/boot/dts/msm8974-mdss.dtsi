@@ -33,7 +33,12 @@
 
 		/* Fudge factors */
 		qcom,mdss-ab-factor = <2 1>;		/* 2 times    */
+<<<<<<< HEAD
 		qcom,mdss-ib-factor = <6 5>;		/* 1.2 times  */
+=======
+		qcom,mdss-ib-factor = <3 2>;		/* 1.5 times  */
+		qcom,mdss-high-ib-factor = <2 1>;	/* 2 times    */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,mdss-clk-factor = <5 4>;		/* 1.25 times */
 
 		qcom,max-clk-rate = <320000000>;
@@ -93,7 +98,13 @@
 		mdss_fb0: qcom,mdss_fb_primary {
 			cell-index = <0>;
 			compatible = "qcom,mdss-fb";
+<<<<<<< HEAD
 			qcom,memblock-reserve = <0x03200000 0x00800000>;
+=======
+			qcom,memory-reservation-type = "EBI1";
+			qcom,memory-reservation-size = <0x1000000>;
+			qcom,memblock-reserve = <0x03200000 0x01E00000>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		};
 
 		mdss_fb1: qcom,mdss_fb_external {

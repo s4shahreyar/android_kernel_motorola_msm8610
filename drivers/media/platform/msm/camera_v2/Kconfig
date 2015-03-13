@@ -127,6 +127,7 @@ config IMX179
 		4 mipi lanes, preview config = 3280 x 2464 at 30 fps,
 		snapshot config = 3280 x 2464 at 30 fps
 
+<<<<<<< HEAD
 config S5K5E2
 	bool "Sensor S5K5E2 (BAYER 5MP)"
 	depends on MSMB_CAMERA
@@ -144,6 +145,8 @@ config MT9V113
                 640 * 480. It does not support auto focus. It supports
                 few special effects like saturation.
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 config IMX134
 	bool "Sensor IMX134 (BAYER 8M)"
 	depends on MSMB_CAMERA

@@ -47,6 +47,7 @@ static irqreturn_t c55_ctrl_isr(int irq, void *data)
 	/* Interrupt is active low */
 	if (gpio_get_value(cdata->int_gpio) == 0)
 		wake_lock(&cdata->wake_lock);
+<<<<<<< HEAD
 	else {
 		/*
 		 * Release after 200ms to prevent a suspend before the app
@@ -54,6 +55,10 @@ static irqreturn_t c55_ctrl_isr(int irq, void *data)
 		 */
 		wake_lock_timeout(&cdata->wake_lock, msecs_to_jiffies(200));
 	}
+=======
+	else
+		wake_unlock(&cdata->wake_lock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return IRQ_HANDLED;
 }

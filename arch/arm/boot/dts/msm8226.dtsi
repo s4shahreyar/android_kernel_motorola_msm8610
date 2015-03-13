@@ -980,12 +980,15 @@
 		interrupts = <0 96 0>;
 		interrupt-names = "qup_err_intr";
 		qcom,i2c-bus-freq = <100000>;
+<<<<<<< HEAD
 		qcom,i2c-src-freq = <19200000>;
 		qcom,sda-gpio = <&msmgpio 6 0>;
 		qcom,scl-gpio = <&msmgpio 7 0>;
 		qcom,noise-rjct-scl = <1>;
 		qcom,noise-rjct-sda = <1>;
 		qcom,master-id = <86>;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		status = "disabled";
 	};
 

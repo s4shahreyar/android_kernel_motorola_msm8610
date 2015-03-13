@@ -23,6 +23,10 @@
 
 #include <linux/delay.h>
 #include <linux/device.h>
+<<<<<<< HEAD
+=======
+#include <linux/earlysuspend.h>
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #include <linux/freezer.h>
 #include <linux/gpio.h>
 #include <linux/input.h>
@@ -34,7 +38,10 @@
 #include <linux/of_gpio.h>
 #include <linux/module.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/suspend.h>
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #include <linux/uaccess.h>
 #include <linux/workqueue.h>
 #include <linux/akm8963.h>
@@ -57,6 +64,13 @@ struct akm8963_data {
 	struct class		*compass;
 	struct work_struct	work;
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	struct early_suspend	akm_early_suspend;
+#endif
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	wait_queue_head_t	drdy_wq;
 	wait_queue_head_t	open_wq;
 
@@ -80,8 +94,11 @@ struct akm8963_data {
 	char	outbit;
 	int	irq;
 	int	rstn;
+<<<<<<< HEAD
 
 	struct notifier_block pm_notifier;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 static struct akm8963_data *s_akm;
@@ -1301,6 +1318,7 @@ static irqreturn_t akm8963_irq(int irq, void *handle)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static int akm8963_suspend(struct akm8963_data *akm)
 {
 	dev_info(&akm->i2c->dev, "%s: Suspend\n", __func__);
@@ -1353,6 +1371,40 @@ static int akm8963_pm_event(struct notifier_block *this,
 
 	return NOTIFY_DONE;
 }
+=======
+#ifdef CONFIG_HAS_EARLYSUSPEND
+static void akm8963_suspend(struct early_suspend *handler)
+{
+	dev_info(&s_akm->i2c->dev, "%s: Suspend\n", __func__);
+
+	disable_irq(s_akm->irq);
+
+	mutex_lock(&s_akm->state_mutex);
+	s_akm->suspend_flag = 1;
+	s_akm->drdy_flag = 0;
+	s_akm->busy_flag = 0;
+	s_akm->active_flag = 0;
+	mutex_unlock(&s_akm->state_mutex);
+
+	wake_up(&s_akm->open_wq);
+}
+
+static void akm8963_resume(struct early_suspend *handler)
+{
+	dev_info(&s_akm->i2c->dev, "%s: Resume\n", __func__);
+
+	mutex_lock(&s_akm->state_mutex);
+	if (s_akm->enable_flag != 0)
+		s_akm->active_flag = 1;
+	s_akm->suspend_flag = 0;
+	mutex_unlock(&s_akm->state_mutex);
+
+	enable_irq(s_akm->irq);
+
+	wake_up(&s_akm->open_wq);
+}
+#endif /* CONFIG_HAS_EARLYSUSPEND */
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #ifdef CONFIG_OF
 static struct akm8963_platform_data *
@@ -1457,9 +1509,15 @@ int akm8963_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		udelay(10);
 		gpio_set_value(s_akm->rstn, 1);
 	}
+<<<<<<< HEAD
 	/** Wait for at least 100us before starting I2C talking **/
 	usleep_range(100, 100);
 
+=======
+
+	/** Wait for at least 100us before starting I2C talking **/
+	usleep_range(100, 100);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/***** I2C initialization *****/
 	s_akm->i2c = client;
 	/* check connection */
@@ -1535,18 +1593,29 @@ int akm8963_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		goto exit_sfs_fail;
 	}
 
+<<<<<<< HEAD
 	s_akm->pm_notifier.notifier_call = akm8963_pm_event;
 	err = register_pm_notifier(&s_akm->pm_notifier);
 	if (err < 0) {
 		pr_err("%s:Register_pm_notifier failed: %d\n", __func__, err);
 		goto exit_pm_fail;
 	}
+=======
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	s_akm->akm_early_suspend.suspend = akm8963_suspend;
+	s_akm->akm_early_suspend.resume = akm8963_resume;
+	register_early_suspend(&s_akm->akm_early_suspend);
+#endif
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	dev_info(&client->dev, "%s: success", __func__);
 	return 0;
 
+<<<<<<< HEAD
 exit_pm_fail:
 	remove_sysfs_interfaces(s_akm);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 exit_sfs_fail:
 	misc_deregister(&akm8963_dev);
 exit_register_fail:
@@ -1569,13 +1638,20 @@ exit_i2c_fail:
 static int akm8963_remove(struct i2c_client *client)
 {
 	struct akm8963_data *akm = i2c_get_clientdata(client);
+<<<<<<< HEAD
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (akm->vdd != NULL) {
 		regulator_disable(akm->vdd);
 		regulator_put(akm->vdd);
 	}
 
+<<<<<<< HEAD
 	unregister_pm_notifier(&akm->pm_notifier);
+=======
+	unregister_early_suspend(&akm->akm_early_suspend);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	remove_sysfs_interfaces(akm);
 	if (misc_deregister(&akm8963_dev) < 0)
 		dev_err(&client->dev, "%s: misc deregister failed.", __func__);

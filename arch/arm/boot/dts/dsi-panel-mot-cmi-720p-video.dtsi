@@ -36,7 +36,11 @@
                 qcom,mdss-dsi-h-back-porch = <64>;
                 qcom,mdss-dsi-h-pulse-width = <8>;
                 qcom,mdss-dsi-h-sync-skew = <0>;
+<<<<<<< HEAD
                 qcom,mdss-dsi-v-back-porch = <7>;
+=======
+                qcom,mdss-dsi-v-back-porch = <1>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
                 qcom,mdss-dsi-v-front-porch = <6>;
                 qcom,mdss-dsi-v-pulse-width = <1>;
                 qcom,mdss-dsi-h-left-border = <0>;
@@ -46,7 +50,11 @@
                 qcom,mdss-dsi-bpp = <24>;
                 qcom,mdss-dsi-underflow-color = <0xff>;
                 qcom,mdss-dsi-border-color = <0>;
+<<<<<<< HEAD
 		qcom,splash-no-solid-fill;
+=======
+		qcom,mdss-dsi-cont-splash-skip-ov-handoff;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
                 qcom,mdss-dsi-tune-h-front-porch = <62>;
                 qcom,mdss-dsi-tune-h-back-porch = <62>;
@@ -60,7 +68,11 @@
 			29 01 00 00 00 00 02 4c 00
 			29 01 00 00 00 00 02 fb 01
 			29 01 00 00 00 00 02 ff 00
+<<<<<<< HEAD
 			29 01 00 00 00 00 04 3b 03 04 03
+=======
+			29 01 00 00 00 00 04 3b 03 01 03
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			29 01 00 00 00 00 02 fb 01
 			29 01 00 00 78 00 02 11 00      /* exit sleep */
 			29 01 00 00 00 00 02 51 ff      /* led_pwm1 */
@@ -143,7 +155,11 @@
 		qcom,mdss-dsi-h-back-porch = <64>;
 		qcom,mdss-dsi-h-pulse-width = <8>;
 		qcom,mdss-dsi-h-sync-skew = <0>;
+<<<<<<< HEAD
 		qcom,mdss-dsi-v-back-porch = <7>;
+=======
+		qcom,mdss-dsi-v-back-porch = <1>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,mdss-dsi-v-front-porch = <6>;
 		qcom,mdss-dsi-v-pulse-width = <1>;
 		qcom,mdss-dsi-h-left-border = <0>;
@@ -153,7 +169,11 @@
 		qcom,mdss-dsi-bpp = <24>;
 		qcom,mdss-dsi-underflow-color = <0xff>;
 		qcom,mdss-dsi-border-color = <0>;
+<<<<<<< HEAD
 		qcom,splash-no-solid-fill;
+=======
+		qcom,mdss-dsi-cont-splash-skip-ov-handoff;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 		qcom,mdss-dsi-tune-h-front-porch = <62>;
 		qcom,mdss-dsi-tune-h-back-porch = <62>;
@@ -201,7 +221,11 @@
 			29 01 00 00 00 00 02 4c 00
 			29 01 00 00 00 00 02 fb 01
 			29 01 00 00 00 00 02 ff 00
+<<<<<<< HEAD
 			29 01 00 00 00 00 04 3b 03 04 03
+=======
+			29 01 00 00 00 00 04 3b 03 01 03
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			29 01 00 00 00 00 02 fb 01
 			29 01 00 00 78 00 02 11 00      /* exit sleep */
 			29 01 00 00 00 00 02 ff 04
@@ -287,7 +311,11 @@
 		qcom,mdss-dsi-h-back-porch = <64>;
 		qcom,mdss-dsi-h-pulse-width = <8>;
 		qcom,mdss-dsi-h-sync-skew = <0>;
+<<<<<<< HEAD
 		qcom,mdss-dsi-v-back-porch = <7>;
+=======
+		qcom,mdss-dsi-v-back-porch = <1>;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		qcom,mdss-dsi-v-front-porch = <6>;
 		qcom,mdss-dsi-v-pulse-width = <1>;
 		qcom,mdss-dsi-h-left-border = <0>;
@@ -297,7 +325,11 @@
 		qcom,mdss-dsi-bpp = <24>;
 		qcom,mdss-dsi-underflow-color = <0xff>;
 		qcom,mdss-dsi-border-color = <0>;
+<<<<<<< HEAD
 		qcom,splash-no-solid-fill;
+=======
+		qcom,mdss-dsi-cont-splash-skip-ov-handoff;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 		qcom,mdss-dsi-tune-h-front-porch = <62>;
 		qcom,mdss-dsi-tune-h-back-porch = <62>;

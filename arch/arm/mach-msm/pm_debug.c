@@ -30,6 +30,7 @@ static int pmdbg_gpio_irq_index;
 static int pmdbg_gic_irq_index;
 static int pmdbg_pmic_irq_index;
 
+<<<<<<< HEAD
 static int suspend_uah_is_valid;
 static int pmdbg_suspend_uah;
 static int pmdbg_resume_uah;
@@ -42,6 +43,11 @@ module_param_named(
 	timeout, stuck_wakelock_timeout_in_sec, int, S_IRUGO | S_IWUSR | S_IWGRP
 );
 
+=======
+static uint64_t pmdbg_suspend_time;
+static uint64_t pmdbg_resume_time;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static void stuck_wakelock_timeout(unsigned long data);
 static void stuck_wakelock_wdset(void);
 static void stuck_wakelock_wdclr(void);
@@ -68,10 +74,14 @@ static void stuck_wakelock_timeout(unsigned long data)
  */
 static void stuck_wakelock_wdset()
 {
+<<<<<<< HEAD
 	int ret;
 	ret = mod_timer(&stuck_wakelock_wd,
 		jiffies + (HZ * stuck_wakelock_timeout_in_sec));
 	pr_debug("pmdbg: %s: mod_timer returns %d\n", __func__, ret);
+=======
+	mod_timer(&stuck_wakelock_wd, jiffies + (HZ * 600));
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 /**
@@ -81,9 +91,13 @@ static void stuck_wakelock_wdset()
  */
 static void stuck_wakelock_wdclr(void)
 {
+<<<<<<< HEAD
 	int ret;
 	ret = del_timer_sync(&stuck_wakelock_wd);
 	pr_debug("pmdbg: %s: del_timer_sync returns %d\n", __func__, ret);
+=======
+	del_timer_sync(&stuck_wakelock_wd);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 }
 
 static int pmdbg_display_notify(struct notifier_block *nb,
@@ -228,6 +242,7 @@ static uint64_t pmdbg_gettimeofday_ms(void)
 
 int pmdbg_suspend(struct device *dev)
 {
+<<<<<<< HEAD
 	union power_supply_propval val;
 	struct power_supply *psy = power_supply_get_by_name("bms");
 
@@ -240,11 +255,15 @@ int pmdbg_suspend(struct device *dev)
 		pr_info("pm_debug: suspend uah=%d\n", pmdbg_suspend_uah);
 	} else
 		suspend_uah_is_valid = 0;
+=======
+	pmdbg_suspend_time = pmdbg_gettimeofday_ms();
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 }
 
 int pmdbg_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	char *envp[8];
 	char buf[7][PMDBG_UEVENT_ENV_BUFF];
 	int env_index = 0, i;
@@ -300,6 +319,52 @@ int pmdbg_resume(struct device *dev)
 	envp[i] = NULL;
 	kobject_uevent_env(&dev->kobj, KOBJ_ONLINE, envp);
 
+=======
+	char *envp[6];
+	char buf[5][PMDBG_UEVENT_ENV_BUFF];
+	int env_index = 0;
+
+	if (pmdbg_suspend_time == 0)
+		return 0;
+
+	pmdbg_resume_time = pmdbg_gettimeofday_ms();
+
+	snprintf(buf[0], 33, "suspend_time=%019lld", pmdbg_suspend_time);
+	snprintf(buf[1], 32, "resume_time=%019lld", pmdbg_resume_time);
+	envp[0] = buf[0];
+	envp[1] = buf[1];
+	env_index = 2;
+
+	if (pmdbg_gic_irq_index > 0) {
+		wakeup_source_uevent_env(buf[env_index], "GIC",
+					pmdbg_gic_irq,
+					pmdbg_gic_irq_index);
+		pmdbg_gic_irq_index = 0;
+		envp[env_index] = buf[env_index];
+		env_index++;
+	}
+
+	if (pmdbg_gpio_irq_index > 0) {
+		wakeup_source_uevent_env(buf[env_index], "GPIO",
+					pmdbg_gpio_irq,
+					pmdbg_gpio_irq_index);
+		pmdbg_gpio_irq_index = 0;
+		envp[env_index] = buf[env_index];
+		env_index++;
+	}
+
+	if (pmdbg_pmic_irq_index > 0) {
+		wakeup_source_uevent_env(buf[env_index], "PMIC",
+					pmdbg_pmic_irq,
+					pmdbg_pmic_irq_index);
+		pmdbg_pmic_irq_index = 0;
+		envp[env_index] = buf[env_index];
+		env_index++;
+	}
+
+	envp[env_index] = NULL;
+	kobject_uevent_env(&dev->kobj, KOBJ_ONLINE, envp);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 }
 
@@ -323,6 +388,7 @@ static struct platform_driver pmdbg_driver = {
 	},
 };
 
+<<<<<<< HEAD
 static int pm_dbg_pm_callback(struct notifier_block *nb,
 			unsigned long action, void *ptr)
 {
@@ -339,6 +405,8 @@ static int pm_dbg_pm_callback(struct notifier_block *nb,
 	return NOTIFY_OK;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int __init pmdbg_init(void)
 {
 	int err;
@@ -347,8 +415,11 @@ static int __init pmdbg_init(void)
 	err = platform_driver_register(&pmdbg_driver);
 	pr_debug("pmdbg_driver register %d\n", err);
 
+<<<<<<< HEAD
 	pm_notifier(pm_dbg_pm_callback, 0);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	return 0;
 }
 

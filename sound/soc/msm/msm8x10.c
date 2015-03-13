@@ -26,7 +26,7 @@
 #include <sound/jack.h>
 #include <asm/mach-types.h>
 #include <mach/socinfo.h>
-#include <qdsp6v2/msm-pcm-routing-v2.h>
+#include "qdsp6v2/msm-pcm-routing-v2.h"
 #include <sound/q6afe-v2.h>
 #include <linux/module.h>
 #include <mach/gpiomux.h>
@@ -90,7 +90,11 @@ static void param_set_mask(struct snd_pcm_hw_params *p, int n, unsigned bit)
 }
 
 
+<<<<<<< HEAD
 #if !defined(CONFIG_SND_SOC_FSA8500) && !defined(CONFIG_SND_SOC_TPA6165A2)
+=======
+#ifndef CONFIG_SND_SOC_TPA6165A2
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static void *def_msm8x10_wcd_mbhc_cal(void);
 #endif
 static int msm8x10_enable_codec_ext_clk(struct snd_soc_codec *codec, int enable,
@@ -180,7 +184,10 @@ static const struct snd_soc_dapm_widget msm8x10_dapm_widgets[] = {
 static const struct snd_soc_dapm_route msm8x10_spk_map[] = {
 	{"Lineout amp", NULL, "SPK_OUT"},
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #ifdef CONFIG_SND_SOC_TPA6165A2
 static int msm_ext_hp_event(struct snd_soc_dapm_widget *w,
 		struct snd_kcontrol *kcontrol, int event)
@@ -591,6 +598,7 @@ static int msm_audrx_init(struct snd_soc_pcm_runtime *rtd)
 	pr_debug("%s(),dev_name%s\n", __func__, dev_name(cpu_dai->dev));
 	msm8x10_ext_spk_power_amp_init();
 
+<<<<<<< HEAD
 	snd_soc_dapm_new_controls(dapm, msm8x10_dapm_widgets,
 				ARRAY_SIZE(msm8x10_dapm_widgets));
 
@@ -638,6 +646,9 @@ static int msm_audrx_init(struct snd_soc_pcm_runtime *rtd)
 
 	return ret;
 #else
+=======
+#ifndef CONFIG_SND_SOC_TPA6165A2
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mbhc_cfg.calibration = def_msm8x10_wcd_mbhc_cal();
 	if (mbhc_cfg.calibration) {
 		ret = msm8x10_wcd_hs_detect(codec, &mbhc_cfg);
@@ -649,7 +660,45 @@ static int msm_audrx_init(struct snd_soc_pcm_runtime *rtd)
 		ret = -ENOMEM;
 		goto exit;
 	}
+#endif
 
+<<<<<<< HEAD
+=======
+	snd_soc_dapm_new_controls(dapm, msm8x10_dapm_widgets,
+				ARRAY_SIZE(msm8x10_dapm_widgets));
+
+	snd_soc_dapm_add_routes(dapm, msm8x10_spk_map,
+				ARRAY_SIZE(msm8x10_spk_map));
+
+	snd_soc_dapm_enable_pin(dapm, "Lineout amp");
+	snd_soc_dapm_sync(dapm);
+
+	ret = snd_soc_add_codec_controls(codec, msm_snd_controls,
+					 ARRAY_SIZE(msm_snd_controls));
+	if (ret < 0)
+		return ret;
+
+#ifdef CONFIG_SND_SOC_TPA6165A2
+	ret = tpa6165_hs_detect(codec);
+	if (!ret) {
+		pr_info("%s:tpa6165 hs det mechanism is used", __func__);
+		/* dapm controls for tpa6165 */
+		snd_soc_dapm_new_controls(dapm, tpa6165_dapm_widgets,
+				ARRAY_SIZE(tpa6165_dapm_widgets));
+
+		snd_soc_dapm_add_routes(dapm, tpa6165_hp_map,
+				ARRAY_SIZE(tpa6165_hp_map));
+
+		snd_soc_dapm_enable_pin(dapm, "TPA6165 Headphone");
+		snd_soc_dapm_enable_pin(dapm, "TPA6165 Headset Mic");
+		snd_soc_dapm_sync(dapm);
+	}
+
+	return ret;
+#endif
+
+#ifndef CONFIG_SND_SOC_TPA6165A2
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 exit:
 	if (gpio_is_valid(ext_spk_amp_gpio))
 		gpio_free(ext_spk_amp_gpio);
@@ -658,7 +707,11 @@ exit:
 #endif
 }
 
+<<<<<<< HEAD
 #if !defined(CONFIG_SND_SOC_FSA8500) && !defined(CONFIG_SND_SOC_TPA6165A2)
+=======
+#ifndef CONFIG_SND_SOC_TPA6165A2
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static void *def_msm8x10_wcd_mbhc_cal(void)
 {
 	void *msm8x10_wcd_cal;

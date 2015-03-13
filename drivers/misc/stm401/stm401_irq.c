@@ -48,6 +48,10 @@ irqreturn_t stm401_isr(int irq, void *dev)
 	struct stm401_data *ps_stm401 = dev;
 
 	if (stm401_irq_disable) {
+<<<<<<< HEAD
+=======
+		disable_irq_wake(ps_stm401->irq);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		return IRQ_HANDLED;
 	}
 
@@ -68,6 +72,7 @@ void stm401_irq_work_func(struct work_struct *work)
 	dev_dbg(&ps_stm401->client->dev, "stm401_irq_work_func\n");
 	mutex_lock(&ps_stm401->lock);
 
+<<<<<<< HEAD
 	stm401_wake(ps_stm401);
 
 	if (ps_stm401->mode == BOOTMODE)
@@ -76,6 +81,8 @@ void stm401_irq_work_func(struct work_struct *work)
 	if (ps_stm401->is_suspended)
 		goto EXIT;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* read interrupt mask register */
 	stm401_cmdbuff[0] = INTERRUPT_STATUS;
 	err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 3);
@@ -107,10 +114,13 @@ void stm401_irq_work_func(struct work_struct *work)
 			STM16_TO_HOST(ACCEL_RD_Z));
 	}
 	if (irq_status & M_LIN_ACCEL) {
+<<<<<<< HEAD
 		dev_err(&ps_stm401->client->dev,
 			"Invalid M_LIN_ACCEL bit set. irq_status = 0x%06x\n",
 			irq_status);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		/* read linear accelerometer values from STM401 */
 		stm401_cmdbuff[0] = LIN_ACCEL_X;
 		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 6);
@@ -272,10 +282,13 @@ void stm401_irq_work_func(struct work_struct *work)
 			"Sending temp(x)value:%d\n", STM16_TO_HOST(TEMP_VALUE));
 	}
 	if (irq_status & M_PRESSURE) {
+<<<<<<< HEAD
 		dev_err(&ps_stm401->client->dev,
 			"Invalid M_PRESSURE bit set. irq_status = 0x%06x\n",
 			irq_status);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		/*Read pressure value */
 		stm401_cmdbuff[0] = CURRENT_PRESSURE;
 		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 4);
@@ -291,10 +304,13 @@ void stm401_irq_work_func(struct work_struct *work)
 			STM32_TO_HOST(PRESSURE_VALUE));
 	}
 	if (irq_status & M_GRAVITY) {
+<<<<<<< HEAD
 		dev_err(&ps_stm401->client->dev,
 			"Invalid M_GRAVITY bit set. irq_status = 0x%06x\n",
 			irq_status);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		/* read gravity values from STM401 */
 		stm401_cmdbuff[0] = GRAVITY_X;
 		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 6);
@@ -360,6 +376,7 @@ void stm401_irq_work_func(struct work_struct *work)
 			stm401_readbuff, STM401_IR_SZ_RAW, 0);
 		dev_dbg(&ps_stm401->client->dev, "Sending raw IR data\n");
 	}
+<<<<<<< HEAD
 	if (irq_status & M_IR_OBJECT) {
 		stm401_cmdbuff[0] = IR_STATE;
 		err = stm401_i2c_write_read(ps_stm401, stm401_cmdbuff, 1, 1);
@@ -375,6 +392,10 @@ void stm401_irq_work_func(struct work_struct *work)
 
 EXIT:
 	stm401_sleep(ps_stm401);
+=======
+
+EXIT:
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	/* For now HAE needs events even if the activity is still */
 	mutex_unlock(&ps_stm401->lock);
 }

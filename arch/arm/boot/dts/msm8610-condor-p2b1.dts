@@ -28,6 +28,7 @@
 	fan5646 {
 		gpios = <&msmgpio 67 0x2>; /* COMM GPIO, GPIOF_DIR_OUT | GPIOF_INIT_HIGH */
 	};
+<<<<<<< HEAD
 
 	factory_support {
 		compatible = "mmi,factory-support-kungpow";
@@ -38,4 +39,6 @@
 			"factory_cable_detect",
 			"factory_warn";
 	};
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };

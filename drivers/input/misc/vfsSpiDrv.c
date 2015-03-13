@@ -45,7 +45,11 @@
 #include <linux/gpio.h>
 #include <linux/i2c/twl.h>
 #include <linux/wait.h>
+<<<<<<< HEAD
 #include <linux/uaccess.h>
+=======
+#include <asm-generic/uaccess.h>
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #include <linux/irq.h>
 
 #include <asm-generic/siginfo.h>
@@ -825,9 +829,15 @@ vfsspi_probe_cs_failed:
 vfsspi_probe_sleep_failed:
 	gpio_free(vfsspi_device->drdy_pin);
 vfsspi_probe_drdy_failed:
+<<<<<<< HEAD
 	mutex_destroy(&vfsspi_device->buffer_mutex);
 	mutex_destroy(&vfsspi_device->kernel_lock);
 	kfree(vfsspi_device);
+=======
+	kfree(vfsspi_device);
+	mutex_destroy(&vfsspi_device->buffer_mutex);
+	mutex_destroy(&vfsspi_device->kernel_lock);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	pr_err("vfsspi_probe failed!!\n");
 	return status;
 }

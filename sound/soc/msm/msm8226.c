@@ -34,10 +34,13 @@
 #ifdef CONFIG_SND_SOC_TPA6165A2
 #include "../codecs/tpa6165a2-core.h"
 #endif
+<<<<<<< HEAD
 
 #define SAMPLING_RATE_48KHZ 48000
 #define SAMPLING_RATE_96KHZ 96000
 #define SAMPLING_RATE_192KHZ 192000
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define DRV_NAME "msm8226-asoc-tapan"
 
@@ -157,8 +160,11 @@ static struct clk *codec_clk;
 static int clk_users;
 static int ext_spk_amp_gpio = -1;
 static int ext_top_spk_amp_gpio = -1;
+<<<<<<< HEAD
 static int ext_top_spk_amp_boost_bp_gpio = -1;
 static int ext_top_spk_amp_boost_en_gpio = -1;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static int ext_bot_spk_amp_gpio = -1;
 static int ext_spk_rcv_sel_gpio = -1;
 static int vdd_spkr_gpio = -1;
@@ -315,6 +321,7 @@ static void msm8226_ext_spk_power_amp_on(u32 spk)
 		gpio_is_valid(ext_bot_spk_amp_gpio) &&
 		gpio_is_valid(ext_spk_rcv_sel_gpio)) {
 		if (spk & LO_1_SPK_AMP) {
+<<<<<<< HEAD
 			if (gpio_is_valid(ext_top_spk_amp_boost_en_gpio) &&
 				gpio_is_valid(ext_top_spk_amp_boost_bp_gpio)) {
 				if (ext_top_spk_amp_boost_bp_gpio >= 0) {
@@ -332,11 +339,14 @@ static void msm8226_ext_spk_power_amp_on(u32 spk)
 						1);
 				}
 			}
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 			if (ext_top_spk_amp_gpio >= 0) {
 				pr_debug("%s enable power-TOP amp", __func__);
 				msm8226_ext_spk_power_amp_enable(
 					ext_top_spk_amp_gpio, 1);
 			}
+<<<<<<< HEAD
 			/* SPK_RCV_SEL is a switch. Always set a value */
 			if (ext_spk_rcv_sel_gpio >= 0) {
 				pr_debug("%s  switch to mode: %s", __func__,
@@ -346,6 +356,8 @@ static void msm8226_ext_spk_power_amp_on(u32 spk)
 					ext_spk_rcv_sel_gpio,
 					(spk & SPK_RCV_SWITCH) == 0 ? 0 : 1);
 			}
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		}
 		if (spk & LO_2_SPK_AMP) {
 			if (ext_bot_spk_amp_gpio >= 0) {
@@ -354,6 +366,16 @@ static void msm8226_ext_spk_power_amp_on(u32 spk)
 					ext_bot_spk_amp_gpio, 1);
 			}
 		}
+<<<<<<< HEAD
+=======
+		if (spk & SPK_RCV_SWITCH) {
+			if (ext_spk_rcv_sel_gpio >= 0) {
+				pr_debug("%s  switch to Ear mode", __func__);
+				msm8226_ext_spk_power_amp_enable(
+					ext_spk_rcv_sel_gpio, 1);
+			}
+		}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 }
 
@@ -387,6 +409,7 @@ static void msm8226_ext_spk_power_amp_off(u32 spk)
 				msm8226_ext_spk_power_amp_enable(
 					ext_top_spk_amp_gpio, 0);
 			}
+<<<<<<< HEAD
 			/* SPK_RCV_SEL is a switch. default to speaker */
 			if (ext_spk_rcv_sel_gpio >= 0) {
 				pr_debug("%s  switch back to speaker mode",
@@ -411,6 +434,8 @@ static void msm8226_ext_spk_power_amp_off(u32 spk)
 						0);
 				}
 			}
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		}
 		if (spk & LO_2_SPK_AMP) {
 			if (ext_bot_spk_amp_gpio >= 0) {
@@ -419,6 +444,17 @@ static void msm8226_ext_spk_power_amp_off(u32 spk)
 					ext_bot_spk_amp_gpio, 0);
 			}
 		}
+<<<<<<< HEAD
+=======
+		if (spk & SPK_RCV_SWITCH) {
+			if (ext_spk_rcv_sel_gpio >= 0) {
+				pr_debug("%s  switch back to speaker mode",
+					__func__);
+				msm8226_ext_spk_power_amp_enable(
+					ext_spk_rcv_sel_gpio, 0);
+			}
+		}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	}
 }
 
@@ -528,6 +564,7 @@ static const struct soc_enum msm_btsco_enum[] = {
 	SOC_ENUM_SINGLE_EXT(2, btsco_rate_text),
 };
 
+<<<<<<< HEAD
 static int slim0_rx_sample_rate_get(struct snd_kcontrol *kcontrol,
 	struct snd_ctl_elem_value *ucontrol)
 {
@@ -580,6 +617,8 @@ static int slim0_rx_sample_rate_put(struct snd_kcontrol *kcontrol,
 	return 0;
 }
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #ifdef CONFIG_SND_SOC_TPA6165A2
 static int msm_ext_hp_event(struct snd_soc_dapm_widget *w,
 		struct snd_kcontrol *kcontrol, int event)
@@ -2658,6 +2697,7 @@ static __devinit int msm8226_asoc_machine_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
 	ext_top_spk_amp_boost_bp_gpio = of_get_named_gpio(pdev->dev.of_node,
 			"fih,cdc-lineout-topspkr-boost-bp-gpio", 0);
 	if (ext_top_spk_amp_boost_bp_gpio < 0) {
@@ -2700,6 +2740,8 @@ static __devinit int msm8226_asoc_machine_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	ext_bot_spk_amp_gpio = of_get_named_gpio(pdev->dev.of_node,
 			"fih,cdc-lineout-botspkr-gpios", 0);
 	if (ext_bot_spk_amp_gpio < 0) {
@@ -2716,7 +2758,11 @@ static __devinit int msm8226_asoc_machine_probe(struct platform_device *pdev)
 			dev_err(card->dev,
 				"%s: Failed to request tapan amp spkr gpio %d\n",
 				__func__, ext_bot_spk_amp_gpio);
+<<<<<<< HEAD
 			goto err_lineout_top_spkr_en;
+=======
+			goto err_lineout_top_spkr;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		}
 	}
 
@@ -2780,6 +2826,7 @@ err_lineout_bot_spkr:
 		ext_bot_spk_amp_gpio = -1;
 	}
 
+<<<<<<< HEAD
 err_lineout_top_spkr_en:
 	if (ext_top_spk_amp_boost_en_gpio >= 0) {
 		gpio_free(ext_top_spk_amp_boost_en_gpio);
@@ -2793,6 +2840,8 @@ err_lineout_top_spkr_bp:
 		ext_top_spk_amp_boost_bp_gpio = -1;
 	}
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 err_lineout_top_spkr:
 	if (ext_top_spk_amp_gpio >= 0) {
 		gpio_free(ext_top_spk_amp_gpio);

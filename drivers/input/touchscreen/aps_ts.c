@@ -519,7 +519,11 @@ static irqreturn_t aps_ts_interrupt(int irq, void *data)
 	u8 buf[MAX_FINGER_NUM * FINGER_EVENT_SZ] = {0};
 	int result;
 	u8 packet_size = 0;
+<<<<<<< HEAD
 	int last = 0;
+=======
+	int last;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (info->perf_irq_data) {
 		last = ++info->perf_irq_last;
@@ -1526,8 +1530,13 @@ static int aps_ts_probe(struct i2c_client *client,
 		goto out_free_irq;
 	}
 #if defined(CONFIG_MMI_PANEL_NOTIFICATIONS) && defined(CONFIG_FB)
+<<<<<<< HEAD
 	info->panel_nb.pre_display_off = aps_ts_suspend;
 	info->panel_nb.display_on = aps_ts_resume;
+=======
+	info->panel_nb.suspend = aps_ts_suspend;
+	info->panel_nb.resume = aps_ts_resume;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	info->panel_nb.dev = &client->dev;
 	if (!mmi_panel_register_notifier(&info->panel_nb))
 		pr_info("registered MMI panel notifier\n");

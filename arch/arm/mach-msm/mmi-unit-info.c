@@ -74,6 +74,7 @@ int __init setup_androidboot_radio_init(char *s)
 __setup("androidboot.radio=", setup_androidboot_radio_init);
 
 static char msm_hw[MSMHW_MAX_LEN+1];
+<<<<<<< HEAD
 static struct mmi_unit_info *mui;
 
 void mmi_set_pureason(uint32_t val)
@@ -84,6 +85,8 @@ void mmi_set_pureason(uint32_t val)
 				__func__, mui->pureason);
 	}
 }
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 void mach_cpuinfo_show(struct seq_file *m, void *v)
 {
@@ -130,6 +133,11 @@ static void __init mmi_of_populate_setup(void)
 
 static int __init mmi_unit_info_init(void)
 {
+<<<<<<< HEAD
+=======
+	struct mmi_unit_info *mui;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	mmi_of_populate_setup();
 
 	#define SMEM_KERNEL_RESERVE_SIZE 1024
@@ -152,9 +160,12 @@ static int __init mmi_unit_info_init(void)
 	strlcpy(mui->carrier, carrier, CARRIER_MAX_LEN);
 	strlcpy(mui->device, androidboot_device, DEVICE_MAX_LEN);
 	mui->radio = androidboot_radio;
+<<<<<<< HEAD
 	mui->pureason = bi_powerup_reason();
 	pr_debug("%s: Set modem PU reason value in SMEM to %d\n",
 			__func__, mui->pureason);
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (mui->version != MMI_UNIT_INFO_VER) {
 		pr_err("%s: unexpected unit_info version %d in SMEM\n",

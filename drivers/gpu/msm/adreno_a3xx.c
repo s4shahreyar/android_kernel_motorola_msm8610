@@ -3131,7 +3131,12 @@ static void a3xx_err_callback(struct adreno_device *adreno_dev, int bit)
 			reg & (1 << 24) ? "WRITE" : "READ",
 			(reg & 0x1FFFF) >> 2);
 		break;
+<<<<<<< HEAD
 	}
+=======
+
+		return;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	case A3XX_INT_CP_AHB_ERROR_HALT:
 		KGSL_DRV_CRIT(device, "ringbuffer AHB error interrupt\n");
 		break;

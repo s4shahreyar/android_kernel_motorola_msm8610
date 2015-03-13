@@ -125,6 +125,7 @@ fw_upd_end:
 }
 EXPORT_SYMBOL(cycapsense_fw_update);
 
+<<<<<<< HEAD
 int cycapsense_reset(void)
 {
 	if (ctrl_data == NULL || ctrl_data->dev == NULL) {
@@ -141,6 +142,8 @@ int cycapsense_reset(void)
 }
 EXPORT_SYMBOL(cycapsense_reset);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 static ssize_t cycapsense_fw_store(struct device *dev,
 					struct device_attribute *attr,
 					const char *buf, size_t count)
@@ -155,12 +158,15 @@ static ssize_t cycapsense_fw_store(struct device *dev,
 		*(char *)cp = 0;
 
 	ctrl_data->issp_d.inf.fw_name = buf;
+<<<<<<< HEAD
 
 	if (!strcmp(buf, "reset")) {
 		cycapsense_reset();
 		return count;
 	}
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	if (!strcmp(buf, "1"))
 		ctrl_data->issp_d.inf.fw_name = NULL;
 	cycapsense_fw_update();
@@ -211,8 +217,11 @@ static int __devinit cycapsense_prog_probe(struct platform_device *pdev)
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	gpio_export(ctrl_data->issp_d.rst_gpio, false);
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	ctrl_data->issp_d.c_gpio = of_get_gpio(np, 1);
 	/*request only, direction == 2. Will be set by firmware loader*/
 	error = cycapsense_validate_gpio(&pdev->dev,

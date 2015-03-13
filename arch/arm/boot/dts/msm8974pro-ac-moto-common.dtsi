@@ -18,4 +18,10 @@
 &sdhc_1 {
 	qcom,pad-pull-on = <0x0 0x3 0x3 0x0>; /* no-pull, pull-up, pull-up, no-pull */
 	qcom,pad-pull-off = <0x0 0x3 0x3 0x0>; /* no-pull, pull-up, pull-up, no-pull */
+<<<<<<< HEAD
+=======
+
+	qcom,clk-rates = <400000 20000000 25000000 50000000 100000000 192000000 384000000>;
+	qcom,bus-speed-mode = "HS400_1p8v", "HS200_1p8v", "DDR_1p8v";
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };

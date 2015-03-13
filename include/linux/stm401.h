@@ -99,13 +99,27 @@
 		_IOW(STM401_IOCTL_BASE, 38, char*)
 #define STM401_IOCTL_SET_POSIX_TIME	\
 		_IOW(STM401_IOCTL_BASE, 39, unsigned long)
+<<<<<<< HEAD
 /* 40-42 unused */
+=======
+#define STM401_IOCTL_SET_CONTROL_REG	\
+		_IOW(STM401_IOCTL_BASE, 40, char*)
+#define STM401_IOCTL_GET_STATUS_REG	\
+		_IOR(STM401_IOCTL_BASE, 41, char*)
+#define STM401_IOCTL_GET_TOUCH_REG	\
+		_IOR(STM401_IOCTL_BASE, 42, char*)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define STM401_IOCTL_SET_ALGO_REQ \
 		_IOR(STM401_IOCTL_BASE, 43, char*)
 #define STM401_IOCTL_GET_ALGO_EVT \
 		_IOR(STM401_IOCTL_BASE, 44, char*)
+<<<<<<< HEAD
 #define STM401_IOCTL_ENABLE_BREATHING \
 		_IOW(STM401_IOCTL_BASE, 45, unsigned char)
+=======
+#define STM401_IOCTL_GET_AOD_INSTRUMENTATION_REG \
+		_IOR(STM401_IOCTL_BASE, 45, char*)
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define STM401_IOCTL_WRITE_REG \
 		_IOR(STM401_IOCTL_BASE, 46, char*)
 #define STM401_IOCTL_READ_REG \
@@ -116,6 +130,7 @@
 		_IOWR(STM401_IOCTL_BASE, 49, char*)
 #define STM401_IOCTL_SET_IR_CONFIG \
 		_IOW(STM401_IOCTL_BASE, 50, char*)
+<<<<<<< HEAD
 #define STM401_IOCTL_SET_IR_GESTURE_DELAY	\
 		_IOW(STM401_IOCTL_BASE, 51,  unsigned short)
 #define STM401_IOCTL_SET_IR_RAW_DELAY	\
@@ -126,6 +141,8 @@
 		_IOW(STM401_IOCTL_BASE, 54, char)
 #define STM401_IOCTL_SET_FLUSH \
 		_IOW(STM401_IOCTL_BASE, 55, int)
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define FW_VERSION_SIZE 12
 #define STM401_CONTROL_REG_SIZE 200
@@ -160,14 +177,20 @@
 
 #define M_UNCALIB_GYRO		0x008000
 #define M_UNCALIB_MAG		0x010000
+<<<<<<< HEAD
 #define M_IR_OBJECT		0x020000
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* wake sensor status */
 #define M_DOCK			0x000001
 #define M_PROXIMITY		0x000002
 #define M_TOUCH			0x000004
+<<<<<<< HEAD
 #define M_COVER			0x000008
 #define M_QUICKPEEK		0x000010
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define M_HUB_RESET		0x000080
 
 #define M_FLATUP		0x000100
@@ -176,7 +199,10 @@
 #define M_CAMERA_ACT		0x000800
 #define M_NFC			0x001000
 #define M_SIM			0x002000
+<<<<<<< HEAD
 #define M_CHOPCHOP		0x004000
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define M_LOG_MSG		0x008000
 
 #define M_IR_WAKE_GESTURE	0x200000
@@ -236,7 +262,10 @@ enum STM401_data_types {
 	DT_DISP_BRIGHT,
 	DT_DOCK,
 	DT_PROX,
+<<<<<<< HEAD
 	DT_COVER,
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	DT_FLAT_UP,
 	DT_FLAT_DOWN,
 	DT_STOWED,
@@ -248,16 +277,23 @@ enum STM401_data_types {
 	DT_ACCUM_MVMT,
 	DT_IR_GESTURE,
 	DT_IR_RAW,
+<<<<<<< HEAD
 	DT_IR_OBJECT,
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	DT_SIM,
 	DT_RESET,
 	DT_GENERIC_INT,
 	DT_STEP_COUNTER,
 	DT_STEP_DETECTOR,
 	DT_UNCALIB_GYRO,
+<<<<<<< HEAD
 	DT_UNCALIB_MAG,
 	DT_CHOPCHOP,
 	DT_FLUSH,
+=======
+	DT_UNCALIB_MAG
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 enum {
@@ -294,6 +330,7 @@ struct stm_response {
 };
 
 #ifdef __KERNEL__
+<<<<<<< HEAD
 #include <linux/fb_quickdraw.h>
 #if defined(CONFIG_FB)
 #include <linux/notifier.h>
@@ -301,15 +338,21 @@ struct stm_response {
 #endif
 
 #define NAME			     "stm401"
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* STM401 memory map */
 #define ID                              0x00
 #define REV_ID                          0x01
 #define ERROR_STATUS                    0x02
+<<<<<<< HEAD
 #define LOWPOWER_REG                    0x03
 
 #define STM401_PEEKDATA_REG             0x09
 #define STM401_PEEKSTATUS_REG           0x0A
+=======
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define STM401_STATUS_REG               0x0B
 #define STM401_TOUCH_REG                0x0C
 #define STM401_CONTROL_REG              0x0D
@@ -325,6 +368,7 @@ struct stm_response {
 #define NONWAKESENSOR_CONFIG            0x1A
 #define WAKESENSOR_CONFIG               0x1B
 
+<<<<<<< HEAD
 #define IR_STATUS                       0x11
 #define IR_GESTURE_RATE                 0x12
 #define IR_RAW_RATE                     0x13
@@ -332,6 +376,11 @@ struct stm_response {
 #define IR_RAW                          0x1D
 #define IR_CONFIG                       0x1E
 #define IR_STATE                        0x1F
+=======
+#define IR_GESTURE                      0x1C
+#define IR_RAW                          0x1D
+#define IR_CONFIG                       0x1E
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define MOTION_DUR                      0x20
 #define ZRMOTION_DUR                    0x22
@@ -362,8 +411,11 @@ struct stm_response {
 
 #define DOCK_DATA                       0x3F
 
+<<<<<<< HEAD
 #define COVER_DATA                      0x40
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define TEMPERATURE_DATA                0x41
 
 #define GYRO_X                          0x43
@@ -380,7 +432,10 @@ struct stm_response {
 #define CAMERA                          0x4C
 #define NFC                             0x4D
 #define SIM                             0x4E
+<<<<<<< HEAD
 #define CHOPCHOP                        0x4F
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define ALGO_CFG_ACCUM_MODALITY         0x5D
 #define ALGO_REQ_ACCUM_MODALITY         0x60
@@ -414,8 +469,11 @@ struct stm_response {
 #define RESET                           0x7F
 /* STM401 memory map end */
 
+<<<<<<< HEAD
 #define READ_CMDBUFF_SIZE 512
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define LIGHTING_TABLE_SIZE 32
 
 #define STM401_AS_DATA_QUEUE_SIZE       0x20
@@ -425,6 +483,7 @@ struct stm_response {
 
 #define STM401_CLIENT_MASK		0xF0
 
+<<<<<<< HEAD
 #define STM401_BUSY_STATUS_MASK	0x80
 #define STM401_BUSY_SLEEP_USEC	10000
 #define STM401_BUSY_RESUME_COUNT	14
@@ -449,12 +508,19 @@ struct stm_response {
 #define AOD_QP_ENABLED_VOTE_KERN		0x01
 #define AOD_QP_ENABLED_VOTE_USER		0x02
 #define AOD_QP_ENABLED_VOTE_MASK		0x03
+=======
+#define AOD_WAKEUP_REASON_ESD		4
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define STM401_MAX_GENERIC_DATA		512
 
 #define ESR_SIZE			128
 
+<<<<<<< HEAD
 #define STM401_RESET_DELAY		50
+=======
+#define STM401_RESET_DELAY		400
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 #define I2C_RESPONSE_LENGTH		8
 
@@ -462,8 +528,13 @@ struct stm_response {
 
 #define STM401_IR_GESTURE_CNT      8
 #define STM401_IR_SZ_GESTURE       4
+<<<<<<< HEAD
 #define STM401_IR_SZ_RAW           20
 #define STM401_IR_CONFIG_REG_SIZE  255
+=======
+#define STM401_IR_SZ_RAW           18
+#define STM401_IR_CONFIG_REG_SIZE  50
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* stm401_readbuff offsets. */
 #define IRQ_WAKE_LO  0
@@ -476,7 +547,10 @@ struct stm_response {
 
 #define DOCK_STATE	0
 #define PROX_DISTANCE	0
+<<<<<<< HEAD
 #define COVER_STATE	0
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define TOUCH_REASON	1
 #define FLAT_UP		0
 #define FLAT_DOWN	0
@@ -512,20 +586,27 @@ struct stm_response {
 #define CAMERA_VALUE	0
 #define IR_GESTURE_EVENT    0
 #define IR_GESTURE_ID       1
+<<<<<<< HEAD
 #define IR_STATE_STATE  0
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 #define STEP8_DATA	0
 #define STEP16_DATA	2
 #define STEP32_DATA	4
 #define STEP64_DATA	6
 #define SIM_DATA	0
 #define STEP_DETECT	0
+<<<<<<< HEAD
 #define CHOPCHOP_DATA   0
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 /* The following macros are intended to be called with the stm IRQ handlers */
 /* only and refer to local variables in those functions. */
 #define STM16_TO_HOST(x) ((short) be16_to_cpu(*((u16 *) (stm401_readbuff+(x)))))
 #define STM32_TO_HOST(x) ((short) be32_to_cpu(*((u32 *) (stm401_readbuff+(x)))))
 
+<<<<<<< HEAD
 struct stm401_quickpeek_message {
 	u8 message;
 	u8 panel_state;
@@ -543,6 +624,8 @@ struct stm401_aod_enabled_vote {
 	unsigned int resolved_vote;
 };
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 struct stm401_platform_data {
 	int (*init)(void);
 	void (*exit)(void);
@@ -552,8 +635,13 @@ struct stm401_platform_data {
 	int gpio_bslen;
 	int gpio_wakeirq;
 	int gpio_int;
+<<<<<<< HEAD
 	int gpio_sh_wake;
 	int gpio_sh_wake_resp;
+=======
+	int gpio_mipi_req;
+	int gpio_mipi_busy;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	unsigned int bslen_pin_active_value;
 	u16 lux_table[LIGHTING_TABLE_SIZE];
 	u8 brightness_table[LIGHTING_TABLE_SIZE];
@@ -571,6 +659,7 @@ struct stm401_data {
 	struct mutex lock;
 	struct work_struct irq_work;
 	struct work_struct irq_wake_work;
+<<<<<<< HEAD
 	struct work_struct clear_interrupt_status_work;
 	struct workqueue_struct *irq_work_queue;
 	struct wake_lock wakelock;
@@ -581,6 +670,12 @@ struct stm401_data {
 	int sh_wakeup_count;
 	int sh_lowpower_enabled;
 
+=======
+	struct workqueue_struct *irq_work_queue;
+	struct wake_lock wakelock;
+	struct input_dev *input_dev;
+
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	int hw_initialized;
 
 	atomic_t enabled;
@@ -609,10 +704,16 @@ struct stm401_data {
 	int stm401_ms_data_buffer_head;
 	int stm401_ms_data_buffer_tail;
 	wait_queue_head_t stm401_ms_data_wq;
+<<<<<<< HEAD
+=======
+	bool ap_stm401_handoff_ctrl;
+	bool ap_stm401_handoff_enable;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	struct regulator *regulator_1;
 	struct regulator *regulator_2;
 
+<<<<<<< HEAD
 	/* Quick peek data */
 	struct workqueue_struct *quickpeek_work_queue;
 	struct work_struct quickpeek_work;
@@ -635,6 +736,12 @@ struct stm401_data {
 	struct notifier_block fb_notif;
 #endif
 	bool pending_wake_work;
+=======
+	unsigned int stm401_i2c_fail_count;
+	unsigned int stm401_hub_fail;
+
+	bool is_suspended;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 /* per algo config, request, and event registers */
@@ -646,10 +753,16 @@ struct stm401_algo_info_t {
 	unsigned short evt_size;
 };
 
+<<<<<<< HEAD
 #define ALGO_RQST_DATA_SIZE 28
 struct stm401_algo_requst_t {
 	char size;
 	char data[ALGO_RQST_DATA_SIZE];
+=======
+struct stm401_algo_requst_t {
+	char size;
+	char data[28];
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 };
 
 irqreturn_t stm401_isr(int irq, void *dev);
@@ -662,7 +775,11 @@ int stm401_process_ir_gesture(struct stm401_data *ps_stm401);
 long stm401_misc_ioctl(struct file *file, unsigned int cmd,
 	unsigned long arg);
 
+<<<<<<< HEAD
 void stm401_reset(struct stm401_platform_data *pdata, unsigned char *cmdbuff);
+=======
+void stm401_reset(struct stm401_platform_data *pdata);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 int stm401_reset_and_init(void);
 
 int stm401_as_data_buffer_write(struct stm401_data *ps_stm401,
@@ -687,6 +804,7 @@ int stm401_i2c_read(struct stm401_data *ps_stm401, u8 *buf, int len);
 int stm401_i2c_write(struct stm401_data *ps_stm401, u8 *buf, int len);
 int stm401_enable(struct stm401_data *ps_stm401);
 
+<<<<<<< HEAD
 void stm401_wake(struct stm401_data *ps_stm401);
 void stm401_sleep(struct stm401_data *ps_stm401);
 void stm401_detect_lowpower_mode(unsigned char *cmdbuff);
@@ -712,6 +830,9 @@ int stm401_display_handle_touch_locked(struct stm401_data *ps_stm401);
 int stm401_display_handle_quickpeek_locked(struct stm401_data *ps_stm401,
 	bool releaseWakelock);
 void stm401_quickwakeup_init(struct stm401_data *ps_stm401);
+=======
+int stm401_load_brightness_table(struct stm401_data *ps_stm401);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 int stm401_boot_flash_erase(void);
 int stm401_get_version(struct stm401_data *ps_stm401);
@@ -724,8 +845,11 @@ extern unsigned short stm401_g_acc_delay;
 extern unsigned short stm401_g_mag_delay;
 extern unsigned short stm401_g_gyro_delay;
 extern unsigned short stm401_g_baro_delay;
+<<<<<<< HEAD
 extern unsigned short stm401_g_ir_gesture_delay;
 extern unsigned short stm401_g_ir_raw_delay;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 extern unsigned short stm401_g_step_counter_delay;
 extern unsigned long stm401_g_nonwake_sensor_state;
 extern unsigned short stm401_g_algo_state;
@@ -736,7 +860,10 @@ extern unsigned char stm401_g_mag_cal[STM401_MAG_CAL_SIZE];
 extern unsigned short stm401_g_control_reg_restore;
 extern unsigned char stm401_g_ir_config_reg[STM401_IR_CONFIG_REG_SIZE];
 extern bool stm401_g_ir_config_reg_restore;
+<<<<<<< HEAD
 extern bool stm401_g_booted;
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 extern unsigned char stm401_cmdbuff[];
 extern unsigned char stm401_readbuff[];

@@ -140,6 +140,12 @@ int msm_flash_led_init(struct msm_led_flash_ctrl_t *fctrl)
 			gpio_num[1],
 			GPIO_OUT_HIGH);
 
+	if (fctrl->flash_now_support)
+		gpio_set_value_cansleep(
+			flashdata->gpio_conf->gpio_num_info->
+			gpio_num[1],
+			GPIO_OUT_HIGH);
+
 	if (fctrl->flash_i2c_client && fctrl->reg_setting) {
 		rc = fctrl->flash_i2c_client->i2c_func_tbl->i2c_write_table(
 			fctrl->flash_i2c_client,
@@ -287,12 +293,23 @@ static int32_t msm_flash_init_gpio_pin_tbl(struct device_node *of_node,
 		&fctrl->flash_now_support);
 	CDBG("%s flash-now-support %d, rc %d\n", __func__,
 		fctrl->flash_now_support, rc);
+<<<<<<< HEAD
+=======
 	if (rc < 0) {
 		pr_err("%s:%d read flash-now-support failed rc %d\n",
 			__func__, __LINE__, rc);
 		goto ERROR;
 	}
 
+	rc = of_property_read_u32(of_node, "qcom,gpio-flash-en", &val);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
+	if (rc < 0) {
+		pr_err("%s:%d read flash-now-support failed rc %d\n",
+			__func__, __LINE__, rc);
+		goto ERROR;
+	}
+
+<<<<<<< HEAD
 	/* Figure out if our hardware have flash enable pin */
 	rc = of_property_read_u32(of_node, "flash-en-support",
 		&fctrl->flash_en_support);
@@ -355,6 +372,25 @@ static int32_t msm_flash_init_gpio_pin_tbl(struct device_node *of_node,
 		fctrl->torch_gpio_num = gpio_array[val];
 		CDBG("%s torch_gpio_num %d\n", __func__, fctrl->torch_gpio_num);
 	}
+=======
+	if (fctrl->flash_now_support == 1) {
+		rc = of_property_read_u32(of_node, "qcom,gpio-flash-now", &val);
+		if (rc < 0) {
+			pr_err("%s:%d read qcom,gpio-flash-now failed rc %d\n",
+				__func__, __LINE__, rc);
+			goto ERROR;
+		} else if (val >= gpio_array_size) {
+			pr_err("%s:%d qcom,gpio-flash-now invalid %d\n",
+				__func__, __LINE__, val);
+			goto ERROR;
+		}
+		/*index 1 is for qcom,gpio-flash-now */
+		gconf->gpio_num_info->gpio_num[1] =
+			gpio_array[val];
+		CDBG("%s qcom,gpio-flash-now %d\n", __func__,
+			gconf->gpio_num_info->gpio_num[1]);
+	}
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return rc;
 
@@ -702,17 +738,29 @@ int msm_flash_probe(struct platform_device *pdev,
 	}
 	fctrl->pdev = pdev;
 
+<<<<<<< HEAD
 	/* Set device type as Platform*/
 	fctrl->flash_device_type = MSM_CAMERA_PLATFORM_DEVICE;
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	rc = msm_led_get_dt_data(pdev->dev.of_node, fctrl);
 	if (rc < 0) {
 		pr_err("%s failed line %d\n", __func__, __LINE__);
 		return rc;
 	}
+<<<<<<< HEAD
 	/* Assign name for sub device */
 	snprintf(fctrl->msm_sd.sd.name, sizeof(fctrl->msm_sd.sd.name),
 			"%s", fctrl->flashdata->sensor_name);
+=======
+
+	/* Assign name for sub device */
+	snprintf(fctrl->msm_sd.sd.name, sizeof(fctrl->msm_sd.sd.name),
+			"%s", fctrl->flashdata->sensor_name);
+	/* Set device type as Platform*/
+	fctrl->flash_device_type = MSM_CAMERA_PLATFORM_DEVICE;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	if (NULL == fctrl->flash_i2c_client) {
 		pr_err("%s flash_i2c_client NULL\n",

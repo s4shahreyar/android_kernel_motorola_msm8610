@@ -20,7 +20,11 @@ layout, but also for selecting allocation and cleaning algorithms.
 
 The following git tree provides the file system formatting tool (mkfs.f2fs),
 a consistency checking tool (fsck.f2fs), and a debugging tool (dump.f2fs).
+<<<<<<< HEAD
 >> git://git.kernel.org/pub/scm/linux/git/jaegeuk/f2fs-tools.git
+=======
+>> git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 For reporting bugs and sending patches, please use the following mailing list:
 >> linux-f2fs-devel@lists.sourceforge.net
@@ -122,6 +126,7 @@ disable_ext_identify   Disable the extension list configured by mkfs, so f2fs
 inline_xattr           Enable the inline xattrs feature.
 inline_data            Enable the inline data feature: New created small(<~3.4k)
                        files can be written into inode block.
+<<<<<<< HEAD
 inline_dentry          Enable the inline dir feature: data in new created
                        directory entries can be written into inode block. The
                        space of inode block which is used to store inline
@@ -135,15 +140,24 @@ nobarrier              This option can be used if underlying storage guarantees
 		       If this option is set, no cache_flush commands are issued
 		       but f2fs still guarantees the write ordering of all the
 		       data writes.
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 ================================================================================
 DEBUGFS ENTRIES
 ================================================================================
 
+<<<<<<< HEAD
 /sys/debug/f2fs/ contains information about all the partitions mounted as
 f2fs. Each file shows the whole f2fs information.
 
 /sys/debug/f2fs/status includes:
+=======
+/sys/kernel/debug/f2fs/ contains information about all the partitions mounted as
+f2fs. Each file shows the whole f2fs information.
+
+/sys/kernel/debug/f2fs/status includes:
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
  - major file system information managed by f2fs currently
  - average SIT information about whole segments
  - current memory footprint consumed by f2fs.
@@ -182,11 +196,17 @@ Files in /sys/fs/f2fs/<devname>
 
  reclaim_segments             This parameter controls the number of prefree
                               segments to be reclaimed. If the number of prefree
+<<<<<<< HEAD
 			      segments is larger than the number of segments
 			      in the proportion to the percentage over total
 			      volume size, f2fs tries to conduct checkpoint to
 			      reclaim the prefree segments to free segments.
 			      By default, 5% over total # of segments.
+=======
+			      segments is larger than this number, f2fs tries to
+			      conduct checkpoint to reclaim the prefree segments
+			      to free segments. By default, 100 segments, 200MB.
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
  max_small_discards	      This parameter controls the number of discard
 			      commands that consist small blocks less than 2MB.
@@ -196,15 +216,22 @@ Files in /sys/fs/f2fs/<devname>
 
  ipu_policy                   This parameter controls the policy of in-place
                               updates in f2fs. There are five policies:
+<<<<<<< HEAD
                                0x01: F2FS_IPU_FORCE, 0x02: F2FS_IPU_SSR,
                                0x04: F2FS_IPU_UTIL,  0x08: F2FS_IPU_SSR_UTIL,
                                0x10: F2FS_IPU_FSYNC.
+=======
+                               0: F2FS_IPU_FORCE, 1: F2FS_IPU_SSR,
+                               2: F2FS_IPU_UTIL,  3: F2FS_IPU_SSR_UTIL,
+                               4: F2FS_IPU_DISABLE.
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
  min_ipu_util                 This parameter controls the threshold to trigger
                               in-place-updates. The number indicates percentage
                               of the filesystem utilization, and used by
                               F2FS_IPU_UTIL and F2FS_IPU_SSR_UTIL policies.
 
+<<<<<<< HEAD
  min_fsync_blocks             This parameter controls the threshold to trigger
                               in-place-updates when F2FS_IPU_FSYNC mode is set.
 			      The number indicates the number of dirty pages
@@ -212,11 +239,14 @@ Files in /sys/fs/f2fs/<devname>
 			      the number is less than this value, it triggers
 			      in-place-updates.
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
  max_victim_search	      This parameter controls the number of trials to
 			      find a victim segment when conducting SSR and
 			      cleaning operations. The default value is 4096
 			      which covers 8GB block address range.
 
+<<<<<<< HEAD
  dir_level                    This parameter controls the directory level to
 			      support large directory. If a directory has a
 			      number of files, it can reduce the file lookup
@@ -228,6 +258,8 @@ Files in /sys/fs/f2fs/<devname>
 			      by free nids and cached nat entries. By default,
 			      10 is set, which indicates 10 MB / 1 GB RAM.
 
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 ================================================================================
 USAGE
 ================================================================================
@@ -477,11 +509,17 @@ The number of blocks and buckets are determined by,
   # of blocks in level #n = |
                             `- 4, Otherwise
 
+<<<<<<< HEAD
                              ,- 2^(n + dir_level),
 			     |        if n + dir_level < MAX_DIR_HASH_DEPTH / 2,
   # of buckets in level #n = |
                              `- 2^((MAX_DIR_HASH_DEPTH / 2) - 1),
 			              Otherwise
+=======
+                             ,- 2^n, if n < MAX_DIR_HASH_DEPTH / 2,
+  # of buckets in level #n = |
+                             `- 2^((MAX_DIR_HASH_DEPTH / 2) - 1), Otherwise
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 When F2FS finds a file name in a directory, at first a hash value of the file
 name is calculated. Then, F2FS scans the hash table in level #0 to find the

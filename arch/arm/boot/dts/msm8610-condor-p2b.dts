@@ -29,6 +29,7 @@
 		ti,tpa6165-jack-detect-config = <0xC0>;
 	};
 };
+<<<<<<< HEAD
 
 &soc {
 	factory_support {
@@ -41,3 +42,5 @@
 			"factory_warn";
 	};
 };
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4

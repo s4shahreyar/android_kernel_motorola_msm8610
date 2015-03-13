@@ -878,7 +878,10 @@ config USB_G_ANDROID
 config USB_ANDROID_USBNET
 	boolean "Android gadget usbnet function"
 	depends on USB_ANDROID
+<<<<<<< HEAD
 	default y
+=======
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 	help
 	  Provides usbnet function for android gadget driver.
 

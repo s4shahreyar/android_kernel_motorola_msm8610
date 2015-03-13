@@ -105,11 +105,15 @@
 
 ENTRY(__copy_from_user)
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_MSM8974
 #include "copy_template_8974.S"
 #else
 #include "copy_template.S"
 #endif
+=======
+#include "copy_template.S"
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 ENDPROC(__copy_from_user)
 

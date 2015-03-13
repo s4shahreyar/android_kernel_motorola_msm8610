@@ -1145,6 +1145,12 @@ static int __devinit qpnp_pon_probe(struct spmi_device *spmi)
 		dev_err(&pon->spmi->dev, "Unable to read PON_RESASON1 reg\n");
 		return rc;
 	}
+<<<<<<< HEAD
+=======
+	index = ffs(pon_sts);
+	if ((index > PON_REASON_MAX) || (index < 0))
+		index = 0;
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	rc = of_property_read_u32(pon->spmi->dev.of_node,
 				"qcom,pon-dbc-delay", &delay);
@@ -1207,6 +1213,7 @@ static int __devinit qpnp_pon_probe(struct spmi_device *spmi)
 	if (sys_reset)
 		sys_reset_dev = pon;
 
+<<<<<<< HEAD
 	index = ffs(pon_sts) - 1;
 	cold_boot = !qpnp_pon_is_warm_reset();
 	if (index >= ARRAY_SIZE(qpnp_pon_reason) || index < 0)
@@ -1238,6 +1245,12 @@ static int __devinit qpnp_pon_probe(struct spmi_device *spmi)
 				"PMIC@SID%d: Power-off reason: %s\n",
 				pon->spmi->sid,
 				qpnp_poff_reason[index]);
+=======
+	cold_boot = !qpnp_pon_is_warm_reset();
+	pr_info("PMIC@SID%d Power-on reason: %s and '%s' boot\n",
+		pon->spmi->sid, index ? qpnp_pon_reason[index - 1] :
+		"Unknown", cold_boot ? "cold" : "warm");
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 
 	return rc;
 }

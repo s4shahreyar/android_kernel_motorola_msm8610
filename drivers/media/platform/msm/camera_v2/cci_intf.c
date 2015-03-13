@@ -98,7 +98,11 @@ static int32_t cci_intf_xfer(struct v4l2_subdev *sd,
 		cci_ctrl.cfg.cci_i2c_write_cfg.addr_type =
 			(xfer->reg.width == 1 ?
 				MSM_CAMERA_I2C_BYTE_ADDR :
+<<<<<<< HEAD
 				MSM_CAMERA_I2C_WORD_ADDR);
+=======
+				MSM_CAMERA_I2C_BYTE_ADDR);
+>>>>>>> f674d0881c3ecec6016d7aa8b91132f1d40432d4
 		cci_ctrl.cfg.cci_i2c_write_cfg.data_type =
 			MSM_CAMERA_I2C_BYTE_DATA;
 		cci_ctrl.cfg.cci_i2c_write_cfg.size = xfer->data.count;

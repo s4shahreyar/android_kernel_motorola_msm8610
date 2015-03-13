@@ -44,24 +44,14 @@ Description:
 		 Controls the FS utilization condition for the in-place-update
 		 policies.
 
-What:		/sys/fs/f2fs/<disk>/min_fsync_blocks
-Date:		September 2014
-Contact:	"Jaegeuk Kim" <jaegeuk@kernel.org>
-Description:
-		 Controls the dirty page count condition for the in-place-update
-		 policies.
 
-What:		/sys/fs/f2fs/<disk>/max_small_discards
-Date:		November 2013
-Contact:	"Jaegeuk Kim" <jaegeuk.kim@samsung.com>
-Description:
-		 Controls the issue rate of small discard commands.
 
 What:		/sys/fs/f2fs/<disk>/max_victim_search
 Date:		January 2014
 Contact:	"Jaegeuk Kim" <jaegeuk.kim@samsung.com>
 Description:
 		 Controls the number of trials to find a victim segment.
+
 
 What:		/sys/fs/f2fs/<disk>/dir_level
 Date:		March 2014
@@ -74,3 +64,4 @@ Date:		March 2014
 Contact:	"Jaegeuk Kim" <jaegeuk.kim@samsung.com>
 Description:
 		 Controls the memory footprint used by f2fs.
+
